@@ -26,8 +26,8 @@ In back-office :
     - Comments administration (yes or not).
     - Category administration
     - Post Creation with CKeditor with upload files (ex:pictures) possibility.
-    Post administration (display, update, delete a post)
-    Comments administration (display, authorize, delete a comment)
+    - Post administration (display, update, delete a post)
+    - Comments administration (display, authorize, delete a comment)
 
 Requisite :
 

@@ -1,0 +1,8 @@
+Options +Includes
+
+AddType text/html .html
+AddOutputFilter INCLUDES .html .php
+
+Options -Indexes
+
+

@@ -6,6 +6,7 @@ require_once 'core/messageAlert.trait.php';
 require_once 'core/fichier.trait.php';
 
 require_once 'core/Exception.class.php';
+require_once 'core/CommunDbRequest.trait.php';
 
 /**
  * Classe Articles
@@ -22,7 +23,7 @@ require_once 'core/Exception.class.php';
  */
 class Articles
 {	
-	use MessageAlert, Fichiers;
+	use MessageAlert, Fichiers, CommunDbRequest;
 	
 	//attributs de configuration du blog
 	public $nbrTotalAffiche;	
@@ -69,10 +70,15 @@ class Articles
 	*/	
 	private function TraiteDateCreation($dDate){
 
-		if (date('Y') == date('Y', strtotime($dDate))) 
-			$sDateTraite = strftime('%d %B', strtotime($dDate));
-		else $sDateTraite = strftime('%d %B %Y', strtotime($dDate));
-		
+		if (Admin::$lang == 'FR'){
+			if (date('Y') == date('Y', strtotime($dDate))) 
+				$sDateTraite = strftime('%d %B', strtotime($dDate));
+			else $sDateTraite = strftime('%d %B %Y', strtotime($dDate));
+		}
+		elseif(Admin::$lang == 'EN'){
+			if (date('Y') == date('Y', strtotime($dDate))) $sDateTraite = date('F d', strtotime($dDate));
+			else $sDateTraite = date('F d, Y', strtotime($dDate));
+		}
 		return strtoupper((string) $sDateTraite);
 	}
 	
@@ -357,17 +363,13 @@ class Articles
 	  * @param int id commentaire
 	  * @return string 'com' (ccmmentaire) ou 'rep'
 	  */
- 		public function ConfirmValideCommentaire($id, $type, $email_valid){
-
+ 		public function ConfirmValideCommentaire($id, $type, $email_valid, $msg_email_ok, $msg_email_ko){
+			$btnOK = "admin.php?p=gest_art&a=gest_com&id=$id&t=$type&c=valid&v=$email_valid&eng=yes";
  			if ($email_valid == 0) {
- 				$titre = "Vous êtes sur le point de valider un commentaire alors que l'internaute n'a pas validé son email";
- 				$btnOK = "admin.php?p=gest_art&a=gest_com&id=$id&t=$type&c=valid&v=$email_valid&eng=yes";
- 				$this -> DemanderConfirmation('modif', $titre, $btnOK, 'admin.php?p=gest_art&a=gest_com&c=init' );
+ 				$this -> DemanderConfirmation('modif', $msg_email_ko, $btnOK, 'admin.php?p=gest_art&a=gest_com&c=init', Admin::$lang );
  			}
  			elseif ($email_valid == 1){
- 				$titre = "Confirmez-vous la publication du commentaire ?";
- 				$btnOK = "admin.php?p=gest_art&a=gest_com&id=$id&t=$type&c=valid&v=$email_valid&eng=yes";
- 				$this -> DemanderConfirmation('creer', $titre, $btnOK, 'admin.php?p=gest_art&a=gest_com&c=init' );	
+ 				$this -> DemanderConfirmation('creer', $msg_email_ok, $btnOK, 'admin.php?p=gest_art&a=gest_com&c=init', Admin::$lang );	
  			}
  		}
 
@@ -378,7 +380,7 @@ class Articles
 	  * @param type comentaire_ici
 	  * @return type comentaire_ici
 	  */
-	 public function ValiderCommentaire($id, $type){
+	 public function ValiderCommentaire($id, $type, $successTitle, $dangerTitle){
 		 if ($type == 'com') $sReq = "UPDATE commentaires_blog SET valid_com = :valid WHERE id_com=$id"; 
 		 elseif ($type == 'rep') $sReq = "UPDATE commentaires_rep SET valid_rep = :valid WHERE id_rep=$id";
 
@@ -391,9 +393,10 @@ class Articles
 			 echo $e->getMessage();
 		 }
 
-		 if ($resultOK) $this->AfficheAlert('success', 'Commentaire validé avec succés', '', "admin.php?p=gest_art&a=gest_com&c=init");
-
-
+		 //if ($resultOK) $this->AfficheAlert('success', 'Commentaire validé avec succés', '', "admin.php?p=gest_art&a=gest_com&c=init");
+		 $this->AfficherResultatRqt($resultOK, 'admin.php?p=gest_art&a=gest_com&c=init', $successTitle, $dangerTitle);
+		  
+	
 	}
 
 
@@ -409,7 +412,7 @@ class Articles
 	  * @param int $id SOIT l'id de l'article (pour un commentaire) SOIT l'id du commentaire (pour une réponse à un commentaire)
 	  * @param string $type_comm 'new'=>cas du commentaire ; 'rep'=>cas d'une réponse.
 	  **/
-	public function EngNouvComm($nom, $mail, $siteweb, $contenu, $id, $type_comm){
+	public function EngNouvComm($nom, $mail, $siteweb, $contenu, $id, $type_comm, $aMsg){
 		//Filtrage des données de type $_POST
 		$aPost = array('nom'=>$nom, 'mail'=>$mail, 'web'=>$siteweb, 'contenu'=>$contenu ,'id'=>$id);
 		$sFiltres = array('nom'=>FILTER_SANITIZE_STRING,
@@ -513,8 +516,8 @@ class Articles
 		if ($resultOK) {
 			if ($ctr_comm == 1) {
 				//Si controle des commentaires=>envoyer un email
-				$MsgAlert = 'Les commentaires de ce site sont controlés. Vous allez recevoir un mail afin que vous puissiez confirmer la publication de votre commentaire';
-				$this->AfficheAlert('success', 'Confirmation d\'enregistrement', $MsgAlert, "blog.php?id=$id_art");
+				$MsgAlert = $aMsg[Admin::$lang]['msg_comments_ctrl'];
+				$this->AfficheAlert('success', $aMsg[Admin::$lang]['msg_confirm'], $MsgAlert, "blog.php?id=$id_art");
 
 				$this->lecture_config();
 				
@@ -533,7 +536,7 @@ class Articles
 					$result =  $query->fetchAll();
 					$id = $result[0]['id_com'];
 
-					$sLien = "http://localhost/magnetiseur-paca/valid_comm.php?com=$id&t=$sJeton";
+					$sLien = "http://localhost/phpscripts/valid_comm.php?com=$id&t=$sJeton";
 				}
 				elseif($type_comm == 'rep'){
 					//Détermination du id_rep (qui vient d'être créé)
@@ -541,12 +544,13 @@ class Articles
 					$result = $query->fetchAll();
 					$id = $result[0]['id_rep'];	
 
-					$sLien = "http://localhost/magnetiseur-paca/valid_comm.php?rep=$id&t=$sJeton";
+					$sLien = "http://localhost/phpscripts/valid_comm.php?rep=$id&t=$sJeton";
 				}
 				
 				//Contruction du contenu : remplacement de 'VALID' par le lien
 				
-				$sLink = "<a href='$sLien'>".'Confirmez votre commentaire</a>';
+				//$sLink = "<a href='$sLien'>".'Confirmez votre commentaire</a>';
+				$sLink = "<a href='$sLien'>". $aMsg[Admin::$lang]['msg_publish_confirm'] . '</a>';
 				$mail_txt = $this->mail_txt;
 				$pos = strpos($mail_txt, 'VALID');
 				$mail_exp = str_replace ('VALID' , $sLink, $mail_txt );			
@@ -558,11 +562,13 @@ class Articles
 				//Envoi du mail
 				$oUtil = new Utilitaires();
 				$bSendOK = $oUtil -> sendEmail($mail, $obj, nl2br($mail_exp), $from_name, $from_adr, $replay_name, $replay_adr);
-				if(!$bSendOK) $this->AfficheAlert('danger', 'Le mail de confirmation n\'a pas pu être envoyé', '', "blog.php?id=$id_art");
+				//if(!$bSendOK) $this->AfficheAlert('danger', 'Le mail de confirmation n\'a pas pu être envoyé', '', "blog.php?id=$id_art");
+				if(!$bSendOK) $this->AfficheAlert('danger', $aMsg[Admin::$lang]['msg_conf_not_send'], '', "blog.php?id=$id_art");
 
 			}
 			elseif ($ctr_comm == 0){
-				$this->AfficheAlert('success', 'Merci pour votre commentaire', '', "blog.php?id=$id_art");
+				//$this->AfficheAlert('success', 'Merci pour votre commentaire', '', "blog.php?id=$id_art");
+				$this->AfficheAlert('success', $aMsg[Admin::$lang]['msg_thank_comment'], '', "blog.php?id=$id_art");
 			}
         }       
         //redirection (suppresion dans l'url de la partie "&new=x') 
@@ -641,6 +647,7 @@ class Articles
 		 }
 	
 		$this->AfficherResultatRqt($result, 'admin.php?p=gest_art&a=gest_cat&c=init');
+
 	 }
 
 
@@ -703,7 +710,7 @@ class Articles
 	 *
 	 * @param string 'creer'=>insert into articles ; 'modif'=>update articles
      */ 	  
-	 public function SauveArticle($action){
+	 public function SauveArticle($action, $msg_result_ok, $msg_result_ko){
 	
 		//Sauvegarde du formulaire dans des variables de session
 	
@@ -770,19 +777,16 @@ class Articles
 			 echo $e->getMessage();
 		 }
 		unset($oImage);
-		$this->AfficherResultatRqt($result, 'admin.php?p=gest_art&a=modif');
+		//$this->AfficherResultatRqt($result, 'admin.php?p=gest_art&a=modif');
+
+		$this-> AfficherResultatRqt($result, 'admin.php?p=gest_art&a=modif', $msg_result_ok, $msg_result_ko);
 
 	 }
 	 
 	 
 
 
-	 /**
-	 * Affichage résultat de la requête par alert bootstrap via la méthode "AfficheAlert"
-	 *
-	 * @param string $bSauveOK = 'success' ou 'danger'
-	 * @param string $lienBrn Liens HTML pour continuer.
-     */ 
+/*
 	 private function AfficherResultatRqt($bSauveOK, $lienBtn)
 	 {
 		$MsgAlert = '';
@@ -798,32 +802,8 @@ class Articles
 		$this -> AfficheAlert($typeAlert, $titreAlert, $MsgAlert, $lienBtn);		 
 	 }
 	 
+*/
 
-	 /**
-	  * Suppression d'une information (articles, commentaires...) en base
-	  *
-	  * @param string Requete SQL de suppression
-	  * @param string Liens HTML pour revenir au tableau des informations
-	  */
-	 public function SupprimerInformation($req, $lien){
-		if (isset($_GET['token']) && isset($_SESSION['token']) && $_GET['token'] === $_SESSION['token']){
-			
-			$supp = SPDO::getInstance()->prepare($req);		
-			
-			 try {
-				 $resultOK = $supp->execute();
-			 } catch(CustomException $e){	 
-			 //Sauvegarde code qui fonctionne
-			 $err =  $e->getMessage();
-			 //$dDateJour = date('Y-m-d H:i:s');
-			 //error_log("\n" . $dDateJour . ' : [DB: query @'.$_SERVER['REQUEST_URI']."][$req]: $err", 3, "C:/wamp/www/magnetiseur-paca/tmp/php_logs/php_errors.log");			 
-			}
-			
-			$this->AfficherResultatRqt($resultOK, $lien);
-
-		}
-
-	 }
 
 	 
 	 /*

@@ -6,6 +6,8 @@ session_start();
 require_once 'core/SPDO_admin.class.php';
 require_once 'core/blog/classes/articles.class.php';
 require_once 'core/Securite.class.php';
+require_once 'core/admin/admin.class.php';
+require_once 'core/CommunDbRequest.trait.php';
 
 define('SITE_ROOT', realpath(dirname(__FILE__)));
 
@@ -57,16 +59,28 @@ $oMetaArt = new Articles;
 
                         <ul class="nav navbar-nav">
                             <li><a href="admin.php" class="glyphicon glyphicon-home"></a></li>
-
-                            <li><a href="#">Blog</a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="admin.php?p=gest_art&a=config">Configuration</a></li>
-                                    <li><a href="admin.php?p=gest_art&a=gest_cat&c=init">Gestion des catégories</a></li>
-                                    <li role="separator" class="divider"></li>
-                                    <li><a href="admin.php?p=gest_art&a=creer">Créer article</a></li>
-                                    <li><a href="admin.php?p=gest_art&a=modif">Gestion des articles</a></li>
-                                    <li role="separator" class="divider"></li>
-                                    <li><a href="admin.php?p=gest_art&a=gest_com&c=init">Gestion des commentaires</a></li>
+                            <?php
+                            $oAdmin = new Admin();  
+                            $aLang = $oAdmin -> getLanguageSetting();
+                            $lang = $aLang['language'];
+                            $aItems = $oAdmin->getItemTransation('BLOG', 'BACK', $lang, 'MENU');
+                            $lib_conf = $aItems[$lang]['lib_config'];
+                            $lib_set_cat = $aItems[$lang]['lib_set_cat'];
+                            $lib_crea_post = $aItems[$lang]['lib_crea_post'];
+                            $lib_adm_post = $aItems[$lang]['lib_adm_post'];
+                            $lib_adm_com = $aItems[$lang]['lib_adm_com'];                            
+                            $lib_trans = $aItems[$lang]['lib_translation'];
+                            echo "<li><a href='admin.php?p=trans&c=init'>$lib_trans</a></li>";
+                            echo "<li><a href='#''>Blog</a>";
+                                echo "<ul class='dropdown-menu'>";                                    
+                                    echo "<li><a href='admin.php?p=gest_art&a=config'>$lib_conf</a></li>";
+                                    echo "<li><a href='admin.php?p=gest_art&a=gest_cat&c=init'>$lib_set_cat</a></li>";
+                                    echo "<li role='separator' class='divider'></li>";
+                                    echo "<li><a href='admin.php?p=gest_art&a=creer'>$lib_crea_post</a></li>";
+                                    echo "<li><a href='admin.php?p=gest_art&a=modif'>$lib_adm_post</a></li>";
+                                    echo "<li role='separator' class='divider'></li>";
+                                    echo "<li><a href='admin.php?p=gest_art&a=gest_com&c=init'>$lib_adm_com</a></li>";
+                                    ?>
                                 </ul>
                             </li>
                             <li><a href="#">Page 2</a>
@@ -96,6 +110,13 @@ $oMetaArt = new Articles;
          * GESTION MODULE "BLOG"
          * *********************** 
          */
+echo "<div class='margintop70'></div>";
+        $oAdmin = new Admin();  
+       
+        $aLang = $oAdmin -> getLanguageSetting();
+        $lang = $aLang['language'];
+
+        $aItems = $oAdmin->getItemTransation('BLOG', 'BACK', $lang, 'HOME');
 
        //Filtrage des variables $_GET
        // p:page (module général)
@@ -115,16 +136,31 @@ $oMetaArt = new Articles;
             $t       = filter_input(INPUT_GET, 't', FILTER_SANITIZE_STRING);
        
             $v       = filter_input(INPUT_GET, 'v', FILTER_SANITIZE_NUMBER_INT);
-       
-            echo "<div class='margintop70'></div>";
 
+        //Filter $_POST values
+        $p_lang      = filter_input(INPUT_POST, 'opt-lang', FILTER_SANITIZE_STRING);
+        //translations
+        $search_module = filter_input(INPUT_POST, 'search_module', FILTER_SANITIZE_STRING);
+        $search_lang = filter_input(INPUT_POST, 'search_lang', FILTER_SANITIZE_STRING);
+        $search_office = filter_input(INPUT_POST, 'search_office', FILTER_SANITIZE_STRING);
+        $search_type = filter_input(INPUT_POST, 'search_type', FILTER_SANITIZE_STRING);
 
-        if (isset($p) && 'gest_art' === $p && $_SESSION['loginOK'] === true) {
+     
+        if (isset ($_POST['val_update'])) $bUpdate = filter_input(INPUT_POST,'val_update', FILTER_VALIDATE_BOOLEAN);
+        else $bUpdate = FALSE;
+
+        if ( !isset($p) && $_SESSION['loginOK'] === true ) {
+            if ($bUpdate == FALSE) include 'core/admin/view/home-view.php';
+            
+            if ($bUpdate) $oAdmin->setLanguageSetting($p_lang);
+        }   
+        elseif (isset($p) && 'gest_art' === $p && $_SESSION['loginOK'] === true) {
             
             $oArticles = new Articles;
 
             //Menu "GESTION ARTICLE" => Affichage du tableau de gestion des articles
             if (isset($a) && 'modif' == $a) {
+                $aMsgPost = $oAdmin->getItemTransation('BLOG', 'BACK', $lang, 'MSG_POSTS_ADMIN'); 
 
                 //Si aucun article n'a été choisi alors afficher tableau de gestion
                 if (!isset($id)) {
@@ -154,12 +190,12 @@ $oMetaArt = new Articles;
                     if ((isset($eng) && 'yes' == $eng) && (!isset($conf))) {
                         $oArticles->sauvDonneesArticle();
                         $btOk = 'admin.php?p=gest_art&a=modif&id=' . $id . '&eng=yes&conf=yes';
-                        $oArticles->DemanderConfirmation('modif', 'Confirmez-vous la mise à jour ?', $btOk, 'admin.php?p=gest_art');
+                        $oArticles->DemanderConfirmation('modif', $aMsgPost[$lang]['msg_update_confirm'], $btOk, 'admin.php?p=gest_art', $lang);
                     }
 
                     //Si confirmation d'enregistrement alors sauvegarder en base.   
                     if (isset($conf) && 'yes' == $conf) {
-                       $bSauveOK = $oArticles->SauveArticle('modif');
+                       $bSauveOK = $oArticles->SauveArticle('modif', $aMsgPost[$lang]['msg_result_ok'], $aMsgPost[$lang]['msg_result_ko']);
                     }               
                 }
             } // fin Menu "gestion article"
@@ -181,7 +217,7 @@ $oMetaArt = new Articles;
                 if (isset($eng) && (!isset($conf))) {
                     //Sauvegarde des données uniquement aprés validation formulaire
                     $oArticles->sauvDonneesArticle();
-                    $oArticles->DemanderConfirmation('creer', 'Confirmez-vous la création de l\'article ?', 'admin.php?p=gest_art&a=creer&eng=yes&conf=yes', 'admin.php?p=gest_art&a=modif');
+                    $oArticles->DemanderConfirmation('creer', $aMsgPost[$lang]['msg_creat_confirm'], 'admin.php?p=gest_art&a=creer&eng=yes&conf=yes', 'admin.php?p=gest_art&a=modif', $lang);
                 } elseif (isset($eng) && isset($conf)) {
                     $bSauveOK = $oArticles->SauveArticle('creer');
                 }
@@ -192,10 +228,10 @@ $oMetaArt = new Articles;
 					$sToken = $oSecure->creation_jeton();
 					
                     $btOk = 'admin.php?p=gest_art&a=supp&id=' . $id . '&conf=yes&token='.$_SESSION['token'];
-                    $oArticles->DemanderConfirmation('supp', 'Confirmez-vous la suppression de l\'article ?', $btOk, 'admin.php?p=gest_art&a=modif');
+                    $oArticles->DemanderConfirmation('supp', $aMsgPost[$lang]['msg_delete_confirm'], $btOk, 'admin.php?p=gest_art&a=modif', $lang);
                 } else {
                     $req = 'delete from articles where id_art=' . $id;
-                    $oArticles->SupprimerInformation($req, 'admin.php?p=gest_art&a=modif');
+                    $oAdmin->SupprimerInformation($req, 'admin.php?p=gest_art&a=modif');
                 }
             }
             
@@ -215,7 +251,8 @@ $oMetaArt = new Articles;
 
             // *** Menu "Gestion des commentaires" ***
             elseif (isset($a) && 'gest_com' === $a  ){
-                
+                $aMsgCmt = array();
+                $aMsgCmt = $oAdmin->getItemTransation('BLOG', 'BACK', $lang, 'MSG_COMMENTS_ADMIN'); 
                 // sous Menu initial
                 if ( isset($c) && 'init' === $c ){
                     $aComm = $oArticles->LireTousLesCommentaires();
@@ -225,12 +262,12 @@ $oMetaArt = new Articles;
                     if(!isset($valid)) {
                         $sToken = $oSecure->creation_jeton();
                         $btOk = 'admin.php?p=gest_art&a=gest_com&id=' . $id . '&t='. $t . '&c=delete&valid&token=' . $_SESSION['token'];
-                        $oArticles->DemanderConfirmation('supp', 'Confirmez-vous la suppression du commentaire ?', $btOk, 'admin.php?p=gest_art&a=gest_com&c=init');
+                        $oArticles->DemanderConfirmation('supp', $aMsgCmt[$lang]['msg_delete_confirm'], $btOk, 'admin.php?p=gest_art&a=gest_com&c=init', $lang);
                     }
                     else{ // Confirmation suppression
                         if ($t == 'com') $req = 'delete from commentaires_blog where id_com=' . $id;
                         elseif ($t == 'rep') $req = 'delete from commentaires_rep where id_rep=' . $id;
-                        $oArticles->SupprimerInformation($req, 'admin.php?p=gest_art&a=gest_com&c=init');
+                        $oAdmin->SupprimerInformation($req, 'admin.php?p=gest_art&a=gest_com&c=init');
                     }        
                 }
                 // Affichage un commentaire
@@ -240,14 +277,17 @@ $oMetaArt = new Articles;
                 }
                 // Valider un commentaire
                 elseif (isset ($c) && 'valid' === $c){
-                    if ( !isset($eng) ) $oArticles -> ConfirmValideCommentaire($id, $t, $v);
-                    else $oArticles -> ValiderCommentaire($id, $t);
+                    $msg_email_ok = $aMsgCmt[$lang]['msg_cmt_email_ok'];
+                    $msg_email_ko = $aMsgCmt[$lang]['msg_cmt_email_ko'];
+                    if ( !isset($eng) ) $oArticles -> ConfirmValideCommentaire($id, $t, $v, $msg_email_ok, $msg_email_ko);
+                    else $oArticles -> ValiderCommentaire($id, $t, $aMsgCmt[$lang]['lib_resultOK'], $aMsgCmt[$lang]['lib_resultKO']);
                 }
             } 
                 
             // *** Menu "Gestion des catégories" ***    
             elseif (isset($a) && 'gest_cat' === $a){
-            
+                $aMsg = array();
+                $aMsg = $oAdmin->getItemTransation('BLOG', 'BACK', $lang, 'MSG_CAT_ADMIN'); 
                 $nom_cat = filter_input(INPUT_POST, 'nom_cat', FILTER_SANITIZE_STRING);
                 if (isset($nom_cat)) $_SESSION['nom_cat'] = $nom_cat;
 
@@ -259,14 +299,14 @@ $oMetaArt = new Articles;
                     if (isset($c) && 'update' === $c){
                         if ( isset($valid) && 'no' === $valid ){
                             $btOk = "admin.php?p=gest_art&a=gest_cat&c=update&valid=yes";
-                            $oArticles->DemanderConfirmation('modif', 'Confirmez-vous la modification de la catégorie ?', $btOk, 'admin.php?p=gest_art&a=gest_cat&c=init');
+                            $oArticles->DemanderConfirmation('modif', $aMsg[$lang]['msg_update_confirm'], $btOk, 'admin.php?p=gest_art&a=gest_cat&c=init', $lang);                        
                         }
                         else $oArticles -> UpdateCategory();      
                     }
                     elseif (isset($c) && 'add' === $c){
                         if ( isset($valid) && 'no' === $valid ){
                             $btOk = "admin.php?p=gest_art&a=gest_cat&c=add&valid=yes";
-                            $oArticles->DemanderConfirmation('modif', 'Confirmez-vous la création de la catégorie ?', $btOk, 'admin.php?p=gest_art&a=gest_cat&c=init');
+                            $oArticles->DemanderConfirmation('modif', $aMsg[$lang]['msg_creat_confirm'], $btOk, 'admin.php?p=gest_art&a=gest_cat&c=init', $lang);
                         }
                         else $oArticles -> CreateCategory();
                     }
@@ -274,21 +314,68 @@ $oMetaArt = new Articles;
                         if ( isset ($valid) && 'no' === $valid ){
                             $sToken = $oSecure->creation_jeton();
                             $btOk = 'admin.php?p=gest_art&a=gest_cat&id=' . $id . '&t='. $t . '&c=delete&valid&token=' . $_SESSION['token'];        
-                            $oArticles->DemanderConfirmation('supp', 'Confirmez-vous la suppression de la catégorie ?', $btOk, 'admin.php?p=gest_art&a=gest_cat&c=init');                            
+                            $oArticles->DemanderConfirmation('supp', $aMsg[$lang]['msg_delete_confirm'], $btOk, 'admin.php?p=gest_art&a=gest_cat&c=init', $language);                            
                         }
                         else{
                             $sReq = 'delete from cat_article where id_cat=' . $id;
-                            $oArticles -> SupprimerInformation($sReq, 'admin.php?p=gest_art&a=gest_cat&c=init');
+                            $oAdmin -> SupprimerInformation($sReq, 'admin.php?p=gest_art&a=gest_cat&c=init');
                         }
                     }                            
                 }
-
-
-
             }  
-
-
         } // Fin Module blog
+        elseif (isset($p) && 'trans' === $p && $_SESSION['loginOK'] === true){
+            //  *** TRANSLATION MENU ***
+            $aMsg = $oAdmin->getItemTransation('BLOG', 'BACK', $lang, 'MSG_TRANS'); 
+            
+
+            if ( (!isset ($valid)) ) {
+
+                if (isset($c) && 'search' === $c){
+                    $aTrans = $oAdmin->getSearchTranslations($search_module, $search_lang, $search_office, $search_type);
+                }
+                else{
+                    $aTrans = $oAdmin->getAllTranslations();
+                }
+              
+                include 'core/admin/view/adm-translation.php';
+            }
+            else{
+                $oAdmin->filterPostValues();
+
+                if (isset($c) && 'update' === $c){                    
+                    if ( isset($valid) && 'no' === $valid ){
+                        $btOk = "admin.php?p=trans&a=adm_trans&c=update&valid=yes";
+                        $oAdmin->DemanderConfirmation('modif', $aMsg[$lang]['msg_update_confirm'], $btOk, 'admin.php?p=trans&a=adm_trans&c=init', $lang);
+                    }
+                    else $oAdmin -> UpdateTranslation();      
+                }
+                elseif (isset($c) && 'add' === $c){
+                    if ( isset($valid) && 'no' === $valid ){
+                        $btOk = "admin.php?p=trans&a=adm_trans&c=add&valid=yes";
+                        $oAdmin->DemanderConfirmation('modif', $aMsg[$lang]['msg_creat_confirm'], $btOk, 'admin.php?p=trans&a=adm_trans&c=init', $lang );
+                    }
+                    else{
+                        $oAdmin->CreateTranslation();
+                    }    
+                }
+                elseif (isset($c) && 'delete' === $c) {
+                    $sReq = 'delete from adm_translation where id=' . $id;
+                    if ( isset ($valid) && 'no' === $valid ){
+                        $sToken = $oSecure->creation_jeton();
+                        $btOk = 'admin.php?p=trans&a=adm_trans&id=' . $id . '&t='. $t . '&c=delete&valid&token=' . $_SESSION['token'];  
+                        $oAdmin->DemanderConfirmation('supp',  $aMsg[$lang]['msg_delete_confirm'], $btOk, 'admin.php?p=transt&a=adm_trans&c=init', $lang);
+                    }
+                    else{    
+                        $oAdmin-> SupprimerInformation($sReq, 'admin.php?p=trans&a=adm_trans&c=init');
+                    }    
+
+                }    
+
+            }
+
+        }// fin traduction
+
         ?>
 
 
@@ -302,7 +389,6 @@ $oMetaArt = new Articles;
     <script>
         CKEDITOR.replace('texte_article');
     </script>	
-
 
     <!-- mediaquery -->
     <script src="addons/js/css3-mediaqueries.min.js"></script>

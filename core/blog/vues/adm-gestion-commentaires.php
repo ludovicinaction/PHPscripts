@@ -5,6 +5,8 @@
  * @category Vue du module "Blog"
  */
 
+$aItems = $oAdmin->getItemTransation('BLOG', 'BACK', $lang, 'SUBMENU_CMT_ADMIN');
+
 if (count($aComm) == 0) {
     echo "Il n'y a aucun commentaire.";
     
@@ -16,11 +18,11 @@ else{
             echo "<table class='table table-hover'>";
                 echo "<thead>";
                     echo "<tr>";
-                        echo "<th>"; echo "Titre article"; echo "</th>";
+                        echo "<th>"; echo "{$aItems[$lang]['lib_title_name']}"; echo "</th>";
                         echo "<th>"; echo "Date"; echo "</th>";
-                        echo "<th>"; echo "Nom"; echo "</th>";                        
+                        echo "<th>"; echo "{$aItems[$lang]['lib_name_title']}"; echo "</th>";                        
                         echo "<th>"; echo "Mail"; echo "</th>";
-                        echo "<th>"; echo "Texte"; echo "</th>";
+                        echo "<th>"; echo "{$aItems[$lang]['lib_contents_title']}"; echo "</th>";
                         echo "<th>"; echo "Email<br />OK"; echo "</th>";
                         echo "<th>"; echo "Publication<br />OK"; echo "</th>";
                         echo "<th>"; echo "Actions"; echo "</th>";

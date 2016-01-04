@@ -1,8 +1,5 @@
 <?php
-
-//$c = filter_input(INPUT_GET, 'c', FILTER_SANITIZE_STRING);
-//var_dump($c);
-//echo "<div class='margintop70'></div>";
+$aItems = $oAdmin->getItemTransation('BLOG', 'BACK', $lang, 'SUBMENU_CAT_ADM');
 
 if (isset ($_SESSION['id_cat']) ) $id_cat=$_SESSION['id_cat'];
 
@@ -19,7 +16,7 @@ else{
 		echo "<table class='table table-bordered table-striped table-condensed'>";
 			echo "<thead>";
 				echo "<tr>";
-					echo "<th>"; echo "Nom catégorie"; echo "</th>";
+					echo "<th>"; echo $aItems[$lang]['title_cat_name']; echo "</th>";
 					echo "<th>"; echo "Actions"; echo "</th>";
 				echo "</tr>";
 			echo "</thead>";
@@ -57,8 +54,8 @@ else{
 		echo "</tr>";
 
 		echo "</table>";	
-			if ( isset ($c) && 'update' === $c) echo "<button class='btn btn-primary' type='submit'>Modifier</button>";
-			elseif ( isset($c) && 'add' === $c)	echo "<button class='btn btn-primary' type='submit'>Créer</button>";
+			if ( isset ($c) && 'update' === $c) echo "<button class='btn btn-primary' type='submit'>{$aItems[$lang]['lib_edit_btt']}</button>";
+			elseif ( isset($c) && 'add' === $c)	echo "<button class='btn btn-primary' type='submit'>{$aItems[$lang]['lib_create_btt']}</button>";
 			
 
 	echo "</form>";

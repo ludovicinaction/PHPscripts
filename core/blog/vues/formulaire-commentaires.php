@@ -4,6 +4,14 @@
  * @package BLOG
  * @category Vue du module "Blog"
  */
+
+// init translation
+$sLang = filter_var($_SESSION['lang'], FILTER_SANITIZE_STRING);
+
+//Items Translation
+$aItems = $oAdmin->getItemTransation('BLOG', 'FRONT', $sLang, 'FORM1');
+
+
 if (!$bFormNew){
 
 	if (isset($aArticle['id_com'])) $id_com = $aArticle['id_com'];
@@ -26,11 +34,11 @@ else{
 	echo "<form enctype='multipart/form-data' action='blog.php?id=$id_art&rep=$id_com' method='post' class='col-md-12 col-lg-12 well'>";
 	}
 
-	if (!$bFormNew) echo "<legend>Vous répondez à $nom_com</legend>";
+	if (!$bFormNew) echo "<legend> {$aItems[$sLang]['txt_frm_res']} $nom_com</legend>";
 	
 	//formulaire
 	echo "<div class='control-group'>";				
-		echo "<label class='control-label'>Votre prénom</label>";
+		echo "<label class='control-label'> {$aItems[$sLang]['lib_input_name']} </label>";
 		echo "<div class='controls'>";	
 			echo "<input type='text' name='nom' maxlength='50' class='form-control' required />";
 			echo "<p class='help-block'></p>";				
@@ -39,7 +47,7 @@ else{
 	
 	//Photo
 	echo"<div class='form-group'>";
-		echo"<label for='texte'>Une photo :</label>";
+		echo"<label for='texte'> {$aItems[$sLang]['lib_input_picture']} </label>";
 		echo"<input type='file' name='imagefichier'>";
 	echo "</div>";
 	
@@ -54,7 +62,7 @@ else{
 	
 	//Site internet
 	echo "<div class='form-group'>";
-		echo "<label for='texte'>Site internet : </label>";
+		echo "<label for='texte'> {$aItems[$sLang]['lib_input_web']} </label>";
 		echo "<div class='input-group col-md-6'>";
 			echo "<span class='input-group-addon'>W.W.W</span>";
 			echo "<input type='text' name='siteweb' maxlength='50' class='form-control'>";
@@ -76,5 +84,8 @@ else{
 	}	
 	
 	//Bouton submit
-	echo "<button class='btn btn-primary' type='submit'>Envoyer message</button>";
+	echo "<button class='btn btn-primary' type='submit'> {$aItems[$sLang]['lib_btt_val']} </button>";
 echo "</form>";
+
+
+

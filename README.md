@@ -49,4 +49,7 @@ Versions:
 
     - futur version : multilanguage version
     - V1 : french version
+    administrator login test: admin / azerty123
+
+PhpDocumentation : x-WORK/PHPDocumentation/index.html    
 	

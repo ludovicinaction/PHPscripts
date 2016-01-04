@@ -5,6 +5,8 @@
  * @package BLOG
  * @category Vue du module "Blog"
  */
+//$lang = filter_var($_SESSION['lang'], FILTER_SANITIZE_STRING);
+$aItemsForm = $oAdmin->getItemTransation('BLOG', 'FRONT', $lang, 'HOME');
 
 //Récupération des paramétrages d'affichage des vignettes en fonction de la résolution de l'écran
 $oArticles->lecture_config();
@@ -15,7 +17,12 @@ $iLg = (int) $oArticles->aff_lg;
 
 echo "<div class='row'>";
 
+
+
 foreach ($aArticles as $ligne => $val){	
+	if ($lang == 'FR') $sDate = utf8_encode($val['date_crea_art']);
+	elseif ($lang == 'EN') $sDate = date('d F', strtotime($val['date_crea_art']));
+
 	$vignette = $val['vignette_art'];
 	echo "<div class='col-xs-$iXs col-sm-$iSm col-md-$iMd col-lg-$iLg'>";
 		echo "<div class='thumbnail'>";						
@@ -30,9 +37,11 @@ foreach ($aArticles as $ligne => $val){
 				}
 				else echo '<h6><i>' . $resume . '...</i></h6>';
 				echo "<span class='label label-info'>";
-					echo utf8_encode($val['date_crea_art']);
+					echo $sDate;
 				echo "</span>";
-				echo '<a href=\'blog.php?id=' . $val['id_art'] . '\' class=\'pull-right\'><span class=\'glyphicon glyphicon-search\'></span> Lire la suite</a>';
+				//echo '<a href=\'blog.php?id=' . $val['id_art'] . '\' class=\'pull-right\'><span class=\'glyphicon glyphicon-search\'></span> Lire la suite</a>';
+				echo '<a href=\'blog.php?id=' . $val['id_art'] . '\' class=\'pull-right\'><span class=\'glyphicon glyphicon-search\'></span> ' . $aItemsForm[$lang]['txt_read_more'] . '</a>';
+
 			echo '</div>';
 		echo '</div>';
 	echo '</div>';

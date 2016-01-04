@@ -7,7 +7,7 @@ require_once 'core/SPDO.class.php';
 require_once 'core/blog/classes/articles.class.php';
 require_once 'core/utilitaires.class.php';
 require_once 'core/Pagination.class.php';
-
+require_once 'core/admin/admin.class.php';
 
 setlocale(LC_TIME, "fr_FR", "fr_FR@euro", "fr", "FR", "fra_fra", "fra");
 ?>
@@ -61,6 +61,10 @@ setlocale(LC_TIME, "fr_FR", "fr_FR@euro", "fr", "FR", "fra_fra", "fra");
 	</div>
 		 
  <?php
+ 	$oAdmin = new Admin();
+ 	$aLang = $oAdmin -> getLanguageSetting();
+    $lang = $aLang['language'];
+
 	//Filtrages des variables $_GET et $_POST
 	$id 	= filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
 	$cat 	= filter_input(INPUT_GET, 'cat', FILTER_SANITIZE_STRING);
@@ -73,6 +77,7 @@ setlocale(LC_TIME, "fr_FR", "fr_FR@euro", "fr", "FR", "fra_fra", "fra");
 	$contenu= filter_input(INPUT_POST, 'contenu', FILTER_SANITIZE_STRING);
 	
 	$oArticles = new Articles;
+	
 
 if (!isset($id)){
     //Lecture des catégories et affichage liste déroulante de sélection des catégories	
@@ -104,14 +109,17 @@ if (!isset($id)){
 		}
 		elseif (isset($id)){	
 			//Enregistrement d'un commentaire ou réponse (si saisie formulaire)
+			$aMsg = $oAdmin->getItemTransation('BLOG', 'FRONT', $lang, 'MSG_COMMENTS_PUBLISH'); 
+
+
 			if (isset($new)){
 				//Enregistrement nouveau commentaire.				
-				$oArticles->EngNouvComm($nom, $mail, $siteweb, $contenu, $id, 'new');
+				$oArticles->EngNouvComm($nom, $mail, $siteweb, $contenu, $id, 'new', $aMsg);
 			}
 			
 			if (isset($rep)){
 				//Enregistrement d'une réponse à un commentaire.
-				$oArticles->EngNouvComm($nom, $mail, $siteweb, $contenu, $rep, 'rep');
+				$oArticles->EngNouvComm($nom, $mail, $siteweb, $contenu, $rep, 'rep', $aMsg);
 			}
 
 			//Afficher article

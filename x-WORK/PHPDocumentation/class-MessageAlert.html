@@ -19,6 +19,11 @@
 				<h3>Packages</h3>
 			<ul>
 				<li>
+					<a href="package-ADMIN.html">
+						ADMIN					</a>
+
+						</li>
+				<li>
 					<a href="package-BLOG.html">
 						BLOG					</a>
 
@@ -111,6 +116,7 @@ Methodes d'affichage de message d'alert de type bootstrap ("success, "warning", 
 
 	<div>
 		<h4>Direct Known Users</h4>
+			<a href="class-Admin.html">Admin</a>, 
 			<a href="class-Articles.html">Articles</a>, 
 			<a href="class-Images.html">Images</a>
 	</div>
@@ -124,7 +130,7 @@ Methodes d'affichage de message d'alert de type bootstrap ("success, "warning", 
 
 				<b>Author:</b>
 				Ludovic <a href="&#109;&#97;&#x69;&#108;&#x74;&#111;&#x3a;&#108;&#x75;&#100;o&#x76;&#105;&#x63;&#105;&#x6e;&#97;&#x63;&#116;&#x69;&#111;&#110;&#x40;&#121;&#x61;&#104;&#x6f;&#111;&#x2e;&#102;r">&#108;&#x75;&#100;o&#x76;&#105;&#x63;&#105;&#x6e;&#97;&#x63;&#116;&#x69;&#111;&#110;&#x40;&#121;&#x61;&#104;&#x6f;&#111;&#x2e;&#102;r</a><br>
-			<b>Located at</b> <a href="source-class-MessageAlert.html#2-66" title="Go to source code">core/messageAlert.trait.php</a>
+			<b>Located at</b> <a href="source-class-MessageAlert.html#2-104" title="Go to source code">core/messageAlert.trait.php</a>
 		<br>
 	</div>
 
@@ -144,7 +150,7 @@ Methodes d'affichage de message d'alert de type bootstrap ("success, "warning", 
 
 		<td class="name"><div>
 		<a class="anchor" href="#_AfficheAlert">#</a>
-		<code><a href="source-class-MessageAlert.html#10-26" title="Go to source code">AfficheAlert</a>( <span>string <var>$typeAlert</var></span>, <span>string <var>$titreAlert</var></span>, <span>string <var>$MsgAlert</var></span>, <span> <var>$lienBtn</var></span> )</code>
+		<code><a href="source-class-MessageAlert.html#10-37" title="Go to source code">AfficheAlert</a>( <span>string <var>$typeAlert</var></span>, <span>string <var>$titreAlert</var></span>, <span>string <var>$MsgAlert</var></span>, <span> <var>$lienBtn</var></span> )</code>
 
 		<div class="description short">
 			<p>Affiche un message d'alert avec une confirmation par un bouton</p>
@@ -189,7 +195,7 @@ Methodes d'affichage de message d'alert de type bootstrap ("success, "warning", 
 
 		<td class="name"><div>
 		<a class="anchor" href="#_DemanderConfirmation">#</a>
-		<code><a href="source-class-MessageAlert.html#28-56" title="Go to source code">DemanderConfirmation</a>( <span> <var>$action</var></span>, <span> <var>$titreAlert</var></span>, <span> <var>$lienBtnOk</var></span>, <span> <var>$lienBtnAnnule</var></span> )</code>
+		<code><a href="source-class-MessageAlert.html#39-75" title="Go to source code">DemanderConfirmation</a>( <span> <var>$action</var></span>, <span> <var>$titreAlert</var></span>, <span> <var>$lienBtnOk</var></span>, <span> <var>$lienBtnAnnule</var></span>, <span> <var>$lang</var></span> )</code>
 
 		<div class="description short">
 			<p>Affichage d'une demande de confirmation avec deux deux boutons (Ok ou annuler)
@@ -211,6 +217,49 @@ L'affichage est géré par une alert bootstrap : colorié en fonction des niveau
 					<dd>url du lien OK</dd>
 					<dt><var>$lienBtnAnnule</var></dt>
 					<dd>url du lien d'annulation</dd>
+					<dt><var>$lang</var></dt>
+					<dd></dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="AfficherResultatRqt" id="_AfficherResultatRqt">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_AfficherResultatRqt">#</a>
+		<code><a href="source-class-MessageAlert.html#79-98" title="Go to source code">AfficherResultatRqt</a>( <span>string <var>$bSauveOK</var></span>, <span>string <var>$lienBtn</var></span>, <span> <var>$successTitle</var> = <span class="php-quote">''</span></span>, <span> <var>$dangerTitle</var> = <span class="php-quote">''</span></span> )</code>
+
+		<div class="description short">
+			<p>Affichage résultat de la requête par alert bootstrap via la méthode "AfficheAlert"</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Affichage résultat de la requête par alert bootstrap via la méthode "AfficheAlert"</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$bSauveOK</var></dt>
+					<dd>= 'success' ou 'danger'</dd>
+					<dt><var>$lienBtn</var></dt>
+					<dd>$lienBrn Liens HTML pour continuer.</dd>
+					<dt><var>$successTitle</var></dt>
+					<dd></dd>
+					<dt><var>$dangerTitle</var></dt>
+					<dd></dd>
 				</dl></div>
 
 

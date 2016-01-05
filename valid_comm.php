@@ -23,7 +23,7 @@
 		require_once 'core/admin/admin.class.php';
 
 		$oAdmin = new Admin();  
-		$aLang = $oAdmin -> getLanguageSetting();
+		$aLang = $oAdmin -> getSetting();
 		$lang = $aLang['language'];
 
 		$aMsg = $oAdmin->getItemTransation('BLOG', 'FRONT', $lang, 'MSG_VALID_EMAIL');

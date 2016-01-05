@@ -20,6 +20,7 @@
 
      // Contrôle d'affichage.
      echo "<div class=margintop70></div>";
+
      echo "<legend>{$aItems[$lang]['lib_title_display_thum']} </legend>";
         echo "<p class='help-block'>{$aItems[$lang]['cmt_display_thum']}</p>";
         echo "<div class='form-group'>";

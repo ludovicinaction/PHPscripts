@@ -412,7 +412,7 @@ class Articles
 	  * @param int $id SOIT l'id de l'article (pour un commentaire) SOIT l'id du commentaire (pour une réponse à un commentaire)
 	  * @param string $type_comm 'new'=>cas du commentaire ; 'rep'=>cas d'une réponse.
 	  **/
-	public function EngNouvComm($nom, $mail, $siteweb, $contenu, $id, $type_comm, $aMsg){
+	public function EngNouvComm($nom, $mail, $siteweb, $contenu, $id, $type_comm, $aMsg, $host){
 		//Filtrage des données de type $_POST
 		$aPost = array('nom'=>$nom, 'mail'=>$mail, 'web'=>$siteweb, 'contenu'=>$contenu ,'id'=>$id);
 		$sFiltres = array('nom'=>FILTER_SANITIZE_STRING,
@@ -536,7 +536,7 @@ class Articles
 					$result =  $query->fetchAll();
 					$id = $result[0]['id_com'];
 
-					$sLien = "http://localhost/phpscripts/valid_comm.php?com=$id&t=$sJeton";
+					$sLien = "$host/valid_comm.php?com=$id&t=$sJeton";
 				}
 				elseif($type_comm == 'rep'){
 					//Détermination du id_rep (qui vient d'être créé)
@@ -544,7 +544,7 @@ class Articles
 					$result = $query->fetchAll();
 					$id = $result[0]['id_rep'];	
 
-					$sLien = "http://localhost/phpscripts/valid_comm.php?rep=$id&t=$sJeton";
+					$sLien = "$host/valid_comm.php?rep=$id&t=$sJeton";
 				}
 				
 				//Contruction du contenu : remplacement de 'VALID' par le lien

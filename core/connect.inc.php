@@ -7,7 +7,7 @@
 
  $oAdmin = new Admin();  
      
- $aLang = $oAdmin -> getLanguageSetting();
+ $aLang = $oAdmin -> getSetting();
  $lang = $aLang['language'];
 
  $aItems = $oAdmin->getItemTransation('BLOG', 'BACK', $lang, 'HOME');

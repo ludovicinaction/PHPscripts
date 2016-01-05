@@ -62,8 +62,9 @@ setlocale(LC_TIME, "fr_FR", "fr_FR@euro", "fr", "FR", "fra_fra", "fra");
 		 
  <?php
  	$oAdmin = new Admin();
- 	$aLang = $oAdmin -> getLanguageSetting();
-    $lang = $aLang['language'];
+ 	$aSet = $oAdmin -> getSetting();
+    $lang = $aSet['language'];
+    $host = $aSet['websitehost'];
 
 	//Filtrages des variables $_GET et $_POST
 	$id 	= filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
@@ -114,12 +115,12 @@ if (!isset($id)){
 
 			if (isset($new)){
 				//Enregistrement nouveau commentaire.				
-				$oArticles->EngNouvComm($nom, $mail, $siteweb, $contenu, $id, 'new', $aMsg);
+				$oArticles->EngNouvComm($nom, $mail, $siteweb, $contenu, $id, 'new', $aMsg, $host);
 			}
 			
 			if (isset($rep)){
 				//Enregistrement d'une réponse à un commentaire.
-				$oArticles->EngNouvComm($nom, $mail, $siteweb, $contenu, $rep, 'rep', $aMsg);
+				$oArticles->EngNouvComm($nom, $mail, $siteweb, $contenu, $rep, 'rep', $aMsg, $host);
 			}
 
 			//Afficher article

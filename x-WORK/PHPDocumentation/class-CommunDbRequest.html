@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 
-	<title>Trait Fichiers | PHPScripts</title>
+	<title>Trait CommunDbRequest | PHPScripts</title>
 
 	<link rel="stylesheet" href="resources/style.css?c2f33731c1948fbed7c333554678bfa68d4817da">
 
@@ -58,8 +58,8 @@
 
 			<h3>Traits</h3>
 			<ul>
-				<li><a href="class-CommunDbRequest.html">CommunDbRequest</a></li>
-				<li class="active"><a href="class-Fichiers.html">Fichiers</a></li>
+				<li class="active"><a href="class-CommunDbRequest.html">CommunDbRequest</a></li>
+				<li><a href="class-Fichiers.html">Fichiers</a></li>
 			</ul>
 
 			<h3>Exceptions</h3>
@@ -107,11 +107,11 @@
 	</div>
 
 <div id="content" class="class">
-	<h1>Trait Fichiers</h1>
+	<h1>Trait CommunDbRequest</h1>
 
 
 	<div class="description">
-	<p>Trait "Fichier" : Gestion des fichiers</p>
+	<p>Commentaire ici</p>
 	</div>
 
 
@@ -122,6 +122,7 @@
 
 	<div>
 		<h4>Direct Known Users</h4>
+			<a href="class-Admin.html">Admin</a>, 
 			<a href="class-Articles.html">Articles</a>
 	</div>
 
@@ -132,11 +133,11 @@
 		
 		
 
-				<b>Category:</b>
-				COMMON<br>
-				<b>Author:</b>
-				Ludovic <a href="&#109;&#97;&#x69;&#108;&#x74;&#111;&#x3a;&#108;&#x75;&#100;o&#x76;&#105;&#x63;&#105;&#x6e;&#97;&#x63;&#116;&#x69;&#111;&#110;&#x40;&#121;&#x61;&#104;&#x6f;&#111;&#x2e;&#102;r">&#108;&#x75;&#100;o&#x76;&#105;&#x63;&#105;&#x6e;&#97;&#x63;&#116;&#x69;&#111;&#110;&#x40;&#121;&#x61;&#104;&#x6f;&#111;&#x2e;&#102;r</a><br>
-			<b>Located at</b> <a href="source-class-Fichiers.html#2-31" title="Go to source code">core/fichier.trait.php</a>
+				<b>Param:</b>
+				type comentaire_ici<br>
+				<b>Return:</b>
+				type<br>comentaire_ici<br>
+			<b>Located at</b> <a href="source-class-CommunDbRequest.html#2-67" title="Go to source code">core/CommunDbRequest.trait.php</a>
 		<br>
 	</div>
 
@@ -144,7 +145,7 @@
 
 	<table class="summary methods" id="methods">
 	<caption>Methods summary</caption>
-	<tr data-order="DeplacerFichier" id="_DeplacerFichier">
+	<tr data-order="SupprimerInformation" id="_SupprimerInformation">
 
 		<td class="attributes"><code>
 			 public 
@@ -155,22 +156,54 @@
 		</td>
 
 		<td class="name"><div>
-		<a class="anchor" href="#_DeplacerFichier">#</a>
-		<code><a href="source-class-Fichiers.html#9-28" title="Go to source code">DeplacerFichier</a>( <span>string <var>$fichier</var></span> )</code>
+		<a class="anchor" href="#_SupprimerInformation">#</a>
+		<code><a href="source-class-CommunDbRequest.html#11-42" title="Go to source code">SupprimerInformation</a>( <span>string <var>$req</var></span>, <span>string <var>$lien</var></span> )</code>
 
 		<div class="description short">
-			<p>Déplacement d'un fichier dans le dossier "/tmp"</p>
+			<p>Suppression d'une information (articles, commentaires...) en base</p>
 		</div>
 
 		<div class="description detailed hidden">
-			<p>Déplacement d'un fichier dans le dossier "/tmp"</p>
+			<p>Suppression d'une information (articles, commentaires...) en base</p>
 
 
 				<h4>Parameters</h4>
 				<div class="list"><dl>
-					<dt><var>$fichier</var></dt>
-					<dd>du fichier à déplacer</dd>
+					<dt><var>$req</var></dt>
+					<dd>SQL de suppression</dd>
+					<dt><var>$lien</var></dt>
+					<dd>HTML pour revenir au tableau des informations</dd>
 				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="updateInformation" id="_updateInformation">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_updateInformation">#</a>
+		<code><a href="source-class-CommunDbRequest.html#44-62" title="Go to source code">updateInformation</a>( <span> <var>$sReq</var></span>, <span> <var>$aData</var></span>, <span> <var>$sMsg</var></span>, <span> <var>$slinkOk</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
 
 
 

@@ -47,7 +47,7 @@ In "x-WORK" folder, execute
 
 Versions:
 
-    - futur version : multilanguage version
+    - futur version : multilanguage version (multi-language branch)
     - V1 : french version
     administrator login test: admin / azerty123
 

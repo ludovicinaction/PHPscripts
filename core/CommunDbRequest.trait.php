@@ -55,11 +55,6 @@ public function updateInformation($sReq, $aData, $sMsg, $slinkOk){
 		echo $e->getMessage();
 	}
 
-	/*
-	$aMsg = $this->getItemTransation('BLOG', 'BACK', $this->lang, 'MSG_DB_RESULT');
-	if ($resultOK) $this->AfficherResultatRqt($resultOK, $slinkOk, $aMsg[$this->lang]['ok_return'], '');
-	else $this->AfficherResultatRqt($resultOK, $slinkOk, '', $aMsg[$this->lang]['ko_return']);		
-	*/
 	$aMsg = $this->getItemTransation('BLOG', 'BACK', Admin::$lang, 'MSG_DB_RESULT');
 	if ($resultOK) $this->AfficherResultatRqt($resultOK, $slinkOk, $aMsg[Admin::$lang]['ok_return'], '');
 	else $this->AfficherResultatRqt($resultOK, $slinkOk, '', $aMsg[Admin::$lang]['ko_return']);		

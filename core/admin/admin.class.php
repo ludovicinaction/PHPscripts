@@ -14,7 +14,7 @@ class Admin{
 	static $lang;
 
 	public function __construct(){
-		$this->getLanguageSetting();
+		$this->getSetting();
 	} 
 
 /**
@@ -48,11 +48,10 @@ class Admin{
 
  }
 
- public function getLanguageSetting(){
+ public function getSetting(){
 	$sReq = "SELECT * FROM adm_common";
 	$result = SPDO::getInstance()->query($sReq);
 	$sTrans = $result->fetch(PDO::FETCH_ASSOC);
-	//$this->lang = $sTrans['language'];
 	self::$lang = $sTrans['language'];
 	return $sTrans;
  }
@@ -66,18 +65,16 @@ public function selectDistinctOptionSelect($sTable){
 
 }
 
-
-public function setLanguageSetting($lang){
-	//$this->lang = $lang;
-	self::$lang = $lang
-;	$sReq = 'UPDATE adm_common SET language=' . "'$lang'";
+public function save_setting($lang, $host)
+{
+	self::$lang = $lang;
+	$sReq = 'UPDATE adm_common SET language=' . "'$lang'" . ', websitehost= ' . "'$host'";
     $aData = array (':lang'=>"'$lang'");
     $aItems = $this->getItemTransation('BLOG', 'BACK', $lang, 'HOME');
-    $this -> updateInformation($sReq, $aData, $aItems[$lang]['alert_msg_confirm'], 'admin.php');  
+    $this -> updateInformation($sReq, $aData, '', 'admin.php');  
 
-    $this->getLanguageSetting();
+    $this->getSetting();
 }
-
 
 
  public function getAllTranslations(){

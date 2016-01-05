@@ -61,7 +61,7 @@ $oMetaArt = new Articles;
                             <li><a href="admin.php" class="glyphicon glyphicon-home"></a></li>
                             <?php
                             $oAdmin = new Admin();  
-                            $aLang = $oAdmin -> getLanguageSetting();
+                            $aLang = $oAdmin -> getSetting();
                             $lang = $aLang['language'];
                             $aItems = $oAdmin->getItemTransation('BLOG', 'BACK', $lang, 'MENU');
                             $lib_conf = $aItems[$lang]['lib_config'];
@@ -113,8 +113,9 @@ $oMetaArt = new Articles;
 echo "<div class='margintop70'></div>";
         $oAdmin = new Admin();  
        
-        $aLang = $oAdmin -> getLanguageSetting();
-        $lang = $aLang['language'];
+        $aSet = $oAdmin -> getSetting();
+        $lang = $aSet['language'];
+        $website = $aSet['websitehost'];
 
         $aItems = $oAdmin->getItemTransation('BLOG', 'BACK', $lang, 'HOME');
 
@@ -139,6 +140,7 @@ echo "<div class='margintop70'></div>";
 
         //Filter $_POST values
         $p_lang      = filter_input(INPUT_POST, 'opt-lang', FILTER_SANITIZE_STRING);
+        $p_host      = filter_input(INPUT_POST, 'hostname', FILTER_SANITIZE_STRING);
         //translations
         $search_module = filter_input(INPUT_POST, 'search_module', FILTER_SANITIZE_STRING);
         $search_lang = filter_input(INPUT_POST, 'search_lang', FILTER_SANITIZE_STRING);
@@ -151,8 +153,8 @@ echo "<div class='margintop70'></div>";
 
         if ( !isset($p) && $_SESSION['loginOK'] === true ) {
             if ($bUpdate == FALSE) include 'core/admin/view/home-view.php';
-            
-            if ($bUpdate) $oAdmin->setLanguageSetting($p_lang);
+
+            if ($bUpdate) $oAdmin->save_setting($p_lang, $p_host);
         }   
         elseif (isset($p) && 'gest_art' === $p && $_SESSION['loginOK'] === true) {
             

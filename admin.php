@@ -25,7 +25,7 @@ $oMetaArt = new Articles;
 
         <!-- *** CSS *** -->
         <link rel="stylesheet" href="css2/cssgeneral-s1.css">
-        <!-- Gestion des boultons validation formulaires -->
+        <!-- Gestion des boutons validation formulaires -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
         <link rel="stylesheet" type="text/css" href="css2/jquery.floating-social-share.min.css" />	
 
@@ -93,7 +93,7 @@ $oMetaArt = new Articles;
                             </li>					
                         </ul>
 
-                    <?php include 'core/connect.inc.php'; // *** Gestion de la connexion utilisateur  ?>
+                    <?php include 'core/connect.inc.php'; // *** User connection administration  ?>
 
                     </div>	
                 </div>
@@ -106,9 +106,9 @@ $oMetaArt = new Articles;
        
 
        /*
-         * ***********************
-         * GESTION MODULE "BLOG"
-         * *********************** 
+         * *****************************
+         * "BLOG" MODULE ADMINISTATION
+         * *****************************
          */
 echo "<div class='margintop70'></div>";
         $oAdmin = new Admin();  
@@ -119,21 +119,21 @@ echo "<div class='margintop70'></div>";
 
         $aItems = $oAdmin->getItemTransation('BLOG', 'BACK', $lang, 'HOME');
 
-       //Filtrage des variables $_GET
-       // p:page (module général)
+       // $_GET filtering variables
+       // p:page ( module name )
        $p       = filter_input(INPUT_GET, 'p', FILTER_SANITIZE_STRING);
-            // a: action (sous menu)    
+            // a: action ( submenu )    
             $a       = filter_input(INPUT_GET, 'a', FILTER_SANITIZE_STRING);
-            // c: Choix (display, valid, delete)
+            // c: Choice (display, valid, delete)
             $c       = filter_input(INPUT_GET, 'c', FILTER_SANITIZE_STRING);
-            // eng :Demande d'enregistrement / conf : Confirmation d'enrgistrement
+            // eng :Registration Application / conf : recording validation
             $eng     = filter_input(INPUT_GET, 'eng', FILTER_SANITIZE_STRING);
             $conf    = filter_input(INPUT_GET, 'conf', FILTER_SANITIZE_STRING);
             //id (id_art or id_com or id_cat...)      
             $id      = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
             $valid   = filter_input(INPUT_GET, 'valid', FILTER_SANITIZE_STRING);
        
-            // t: type (commentaire 'com' ou réponses 'rep')
+            // t: type (comment 'com' or answer 'rep')
             $t       = filter_input(INPUT_GET, 't', FILTER_SANITIZE_STRING);
        
             $v       = filter_input(INPUT_GET, 'v', FILTER_SANITIZE_NUMBER_INT);
@@ -160,64 +160,65 @@ echo "<div class='margintop70'></div>";
             
             $oArticles = new Articles;
 
-            //Menu "GESTION ARTICLE" => Affichage du tableau de gestion des articles
+            //"BLOG" Menu => Viewing post management table
+
             if (isset($a) && 'modif' == $a) {
                 $aMsgPost = $oAdmin->getItemTransation('BLOG', 'BACK', $lang, 'MSG_POSTS_ADMIN'); 
 
-                //Si aucun article n'a été choisi alors afficher tableau de gestion
+                // If no item is chosen then display management table
                 if (!isset($id)) {
 
-                    //Recherche de tous les articles sans pagination
+                    // Search All posts without pagination
                     $aArticles = $oArticles->LireLesArticles('admin', 0);
 
-                    //Lecture des catégories	
-                    $alistCat = $oArticles->LireCategories();
+                    // Reading categories	
+                    $alistCat = $oArticles->ReadCategory();
 
-                    //Afficher formulaire
+                    // Display form
                     if ('yes' != isset($eng) && ('modif' == isset($a))) {
                         include 'core/blog/vues/adm-gestion-blog.php';
                     }
                 }
 
-                //Mode ' *** MODIFICATION DES ARTICLES *** '
+                //  *** POSTS MODIFICATION Mode *** 
 
                 if (isset($id)) {
 
-                    if (!isset($eng)) { // On n'affiche pas le formulaire aprés l'avoir validé.
+                    if (!isset($eng)) { // Does not display the form after having validated.
                         $aArticle = $oArticles->LireUnArticle($id);
                         include 'core/blog/vues/formulaire_creation_article.php';
                     }
    
-                    //Enregistrer données article en session et Demande confirmation aprés validation d'enregistrement de l'article
+                    // Save data post in sale and request confirmation of registration after validation post
                     if ((isset($eng) && 'yes' == $eng) && (!isset($conf))) {
                         $oArticles->sauvDonneesArticle();
                         $btOk = 'admin.php?p=gest_art&a=modif&id=' . $id . '&eng=yes&conf=yes';
                         $oArticles->DemanderConfirmation('modif', $aMsgPost[$lang]['msg_update_confirm'], $btOk, 'admin.php?p=gest_art', $lang);
                     }
 
-                    //Si confirmation d'enregistrement alors sauvegarder en base.   
+                    // If confirmation recording then save base.  
                     if (isset($conf) && 'yes' == $conf) {
                        $bSauveOK = $oArticles->SauveArticle('modif', $aMsgPost[$lang]['msg_result_ok'], $aMsgPost[$lang]['msg_result_ko']);
                     }               
                 }
-            } // fin Menu "gestion article"
+            } // Post administration end
             elseif (isset($a) && 'lire' === $a) {
 
-                //Mode ' *** LECTURE DE L'ARTICLE ***'
+                // *** DISPLAY POST MODE ***
 
                 $aArticle = $oArticles->LireUnArticle($id);
                 include 'core/blog/vues/afficher-un-article.php';
                 exit;
             } elseif (isset($a) && 'creer' == $a) {
 
-                //Mode ' *** CREATION ARTICLE ***'	
+                // *** CREATE POST MODE ***	
 
                 if (!isset($eng)) {
                     include 'core/blog/vues/formulaire_creation_article.php';
                 }
 
                 if (isset($eng) && (!isset($conf))) {
-                    //Sauvegarde des données uniquement aprés validation formulaire
+                    // Data backup only after validation form
                     $oArticles->sauvDonneesArticle();
                     $oArticles->DemanderConfirmation('creer', $aMsgPost[$lang]['msg_creat_confirm'], 'admin.php?p=gest_art&a=creer&eng=yes&conf=yes', 'admin.php?p=gest_art&a=modif', $lang);
                 } elseif (isset($eng) && isset($conf)) {
@@ -225,7 +226,7 @@ echo "<div class='margintop70'></div>";
                 }
             } elseif (isset($a) && 'supp' == $a) {
 
-                //Mode 'SUPPRESSION ARTICLE'	
+                // 'DELETE POST' mode	
                 if (!isset($conf)) {
 					$sToken = $oSecure->creation_jeton();
 					
@@ -237,9 +238,9 @@ echo "<div class='margintop70'></div>";
                 }
             }
             
-            // *** Sous-menu "Configuration" ***
+            // *** "Configuration" Submenu ***
 
-            // Affichage formulaire de configuration:
+            // Configuration form display
             elseif (isset($a) && 'config' === $a) {
 
                 if (isset($eng)) {                    
@@ -251,33 +252,33 @@ echo "<div class='margintop70'></div>";
                 include 'core/blog/vues/formulaire-config-blog.php';
             }   // config
 
-            // *** Menu "Gestion des commentaires" ***
+            // *** Menu "Comments administration" ***
             elseif (isset($a) && 'gest_com' === $a  ){
                 $aMsgCmt = array();
                 $aMsgCmt = $oAdmin->getItemTransation('BLOG', 'BACK', $lang, 'MSG_COMMENTS_ADMIN'); 
-                // sous Menu initial
+                // Submenu initial
                 if ( isset($c) && 'init' === $c ){
                     $aComm = $oArticles->LireTousLesCommentaires();
                     include 'core/blog/vues/adm-gestion-commentaires.php';
-                // Suppression d'un commentaire    
+                // Delete comments
                 }elseif ( isset($c) && 'delete' === $c ) {
                     if(!isset($valid)) {
                         $sToken = $oSecure->creation_jeton();
                         $btOk = 'admin.php?p=gest_art&a=gest_com&id=' . $id . '&t='. $t . '&c=delete&valid&token=' . $_SESSION['token'];
                         $oArticles->DemanderConfirmation('supp', $aMsgCmt[$lang]['msg_delete_confirm'], $btOk, 'admin.php?p=gest_art&a=gest_com&c=init', $lang);
                     }
-                    else{ // Confirmation suppression
+                    else{ // Delete confirm
                         if ($t == 'com') $req = 'delete from commentaires_blog where id_com=' . $id;
                         elseif ($t == 'rep') $req = 'delete from commentaires_rep where id_rep=' . $id;
                         $oAdmin->SupprimerInformation($req, 'admin.php?p=gest_art&a=gest_com&c=init');
                     }        
                 }
-                // Affichage un commentaire
+                // Display a comment
                 elseif ( isset($c) && 'display' === $c){
                     $aComm =  $oArticles -> LireCommentaire($id, $t);
                     include 'core/blog/vues/afficher-un-commentaire.php';
                 }
-                // Valider un commentaire
+                // Comments validation
                 elseif (isset ($c) && 'valid' === $c){
                     $msg_email_ok = $aMsgCmt[$lang]['msg_cmt_email_ok'];
                     $msg_email_ko = $aMsgCmt[$lang]['msg_cmt_email_ko'];
@@ -286,7 +287,7 @@ echo "<div class='margintop70'></div>";
                 }
             } 
                 
-            // *** Menu "Gestion des catégories" ***    
+            // *** Submenu "Category admnistration" ***    
             elseif (isset($a) && 'gest_cat' === $a){
                 $aMsg = array();
                 $aMsg = $oAdmin->getItemTransation('BLOG', 'BACK', $lang, 'MSG_CAT_ADMIN'); 
@@ -294,7 +295,7 @@ echo "<div class='margintop70'></div>";
                 if (isset($nom_cat)) $_SESSION['nom_cat'] = $nom_cat;
 
                 if ( (!isset ($valid)) ) {
-                    $aCat = $oArticles -> LireCategories();
+                    $aCat = $oArticles -> ReadCategory();
                     include 'core/blog/vues/adm-gestion-categories.php';
                 }   
                 else{
@@ -316,7 +317,7 @@ echo "<div class='margintop70'></div>";
                         if ( isset ($valid) && 'no' === $valid ){
                             $sToken = $oSecure->creation_jeton();
                             $btOk = 'admin.php?p=gest_art&a=gest_cat&id=' . $id . '&t='. $t . '&c=delete&valid&token=' . $_SESSION['token'];        
-                            $oArticles->DemanderConfirmation('supp', $aMsg[$lang]['msg_delete_confirm'], $btOk, 'admin.php?p=gest_art&a=gest_cat&c=init', $language);                            
+                            $oArticles->DemanderConfirmation('supp', $aMsg[$lang]['msg_delete_confirm'], $btOk, 'admin.php?p=gest_art&a=gest_cat&c=init', $lang);                            
                         }
                         else{
                             $sReq = 'delete from cat_article where id_cat=' . $id;
@@ -325,7 +326,7 @@ echo "<div class='margintop70'></div>";
                     }                            
                 }
             }  
-        } // Fin Module blog
+        } // End BLOG module
         elseif (isset($p) && 'trans' === $p && $_SESSION['loginOK'] === true){
             //  *** TRANSLATION MENU ***
             $aMsg = $oAdmin->getItemTransation('BLOG', 'BACK', $lang, 'MSG_TRANS'); 

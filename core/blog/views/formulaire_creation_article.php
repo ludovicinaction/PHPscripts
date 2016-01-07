@@ -34,7 +34,7 @@ else{
 	$form_action = "<form enctype='multipart/form-data' action='admin.php?p=gest_art&a=creer&eng=yes' method='post' class='col-md-12 col-lg-12 well'>";
 }
 
-$alistCat = $oArticles -> LireCategories();
+$alistCat = $oArticles -> ReadCategory();
 
 echo "<div class='margintop70'></div>";
 	

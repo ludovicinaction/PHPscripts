@@ -47,7 +47,11 @@ class Admin{
 
 
  }
-
+ /**
+  * Get général setting
+  *
+  * @return array settings values
+  */
  public function getSetting(){
 	$sReq = "SELECT * FROM adm_common";
 	$result = SPDO::getInstance()->query($sReq);
@@ -56,6 +60,13 @@ class Admin{
 	return $sTrans;
  }
 
+
+ /**
+  * Home select input values feed
+  *
+  * @param string The name column to distinct
+  * @return array The distincts values
+  */
 public function selectDistinctOptionSelect($sTable){
 	$sReq = "SELECT distinct($sTable) FROM adm_translation order by 1 ";
  	$result = SPDO::getInstance()->query($sReq);
@@ -65,6 +76,12 @@ public function selectDistinctOptionSelect($sTable){
 
 }
 
+ /**
+  * General setting save
+  *
+  * @param string $lang language
+  * @param string $host website adress
+  */
 public function save_setting($lang, $host)
 {
 	self::$lang = $lang;
@@ -77,6 +94,11 @@ public function save_setting($lang, $host)
 }
 
 
+ /**
+  * Translations get
+  *
+  * @return array all transaction
+  */
  public function getAllTranslations(){
  	$sReq = "SELECT * FROM adm_translation order by description";
  	$result = SPDO::getInstance()->query($sReq);
@@ -85,7 +107,15 @@ public function save_setting($lang, $host)
 
  }
 
-
+ /**
+  * Transactions research sort by :
+  *
+  * @param string $search_mod module filtering parameter
+  * @param string $search_lang langauge filtering parameter
+  * @param string $search_office back or front filtering parameter
+  * @param string $search_type Type filtering parameter
+  * @return array filtred translation
+  */
 public function getSearchTranslations($search_mod, $search_lang, $search_office, $search_type){
 	$where = '';
 
@@ -108,6 +138,10 @@ public function getSearchTranslations($search_mod, $search_lang, $search_office,
  	return $aTrans;
 }
 
+ /**
+  * Filter the input values (for translation page) and put in $_SESSION 
+  *
+  */
 public function filterPostValues(){
 
 	$module = filter_input(INPUT_POST, 'module', FILTER_SANITIZE_STRING);
@@ -129,6 +163,12 @@ public function filterPostValues(){
  	if (isset($translation)) $_SESSION['translation'] = $translation; 	 	
 }
 
+ /**
+  * Feed array with filtered values (Transalation page)
+  *
+  * @param type comentaire_ici
+  * @return type comentaire_ici
+  */
 private function supplyVariables(){
 	$aVar['module'] 		= $_SESSION['module'];
 	$aVar['lang'] 			= $_SESSION['lang_post'];
@@ -140,7 +180,9 @@ private function supplyVariables(){
 	return $aVar;
 }
 
-
+ /**
+  * Update Translations in database
+  */
 public function UpdateTranslation(){
 	$aVar = $this->supplyVariables();
 	$module = $aVar['module'];
@@ -161,7 +203,10 @@ public function UpdateTranslation(){
 }	
 
 
-
+ /**
+  * Insert translation data in database.
+  *
+  */
 public function CreateTranslation(){
 	$aVar = $this->supplyVariables();
 
@@ -180,12 +225,6 @@ public function CreateTranslation(){
 	} catch(PDOException $e){
 		 echo $e->getMessage();
 	}
-	
-	/*
-	$aMsg = $this->getItemTransation('BLOG', 'BACK', $this->lang, 'MSG_DB_RESULT');
-	if ($resultOK) $this->AfficherResultatRqt($resultOK, 'admin.php?p=trans&a=adm_trans&c=init', $aMsg[$this->lang]['ok_return'], '');
-	else $this->AfficherResultatRqt($resultOK, 'admin.php?p=trans&a=adm_trans&c=init', '', $aMsg[$this->lang]['ko_return']);
-	*/
 
 	$aMsg = $this->getItemTransation('BLOG', 'BACK', Admin::$lang, 'MSG_DB_RESULT');
 	if ($resultOK) $this->AfficherResultatRqt($resultOK, 'admin.php?p=trans&a=adm_trans&c=init', $aMsg[Admin::$lang]['ok_return'], '');

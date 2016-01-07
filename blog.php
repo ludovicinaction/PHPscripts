@@ -21,14 +21,14 @@ setlocale(LC_TIME, "fr_FR", "fr_FR@euro", "fr", "FR", "fra_fra", "fra");
 		$oMetaArt = new Articles;
 		$oUtil = new Utilitaires;
 		
-		//Gestion des metadonnées.
+		// Meta-data
 		if (isset($_GET['id'])) {
 			$aMetaData = $oMetaArt->LireMetaDonnees($_GET['id']);
 			$oUtil->AfficherMetaPage($aMetaData['titre_art'], $aMetaData['resum_art'], $aMetaData['keywords_art'] );
 			unset($oMetaArt);
 			unset($oUtil);
 		}
-		//Meta donnés par défaut
+		// Default meta-data
 		elseif (!isset($_GET['id'])){
 			$oUtil->AfficherMetaPage('Présentation des articles', 'Description de la page', 'php, html, css, Mysql' );
 		}
@@ -66,12 +66,12 @@ setlocale(LC_TIME, "fr_FR", "fr_FR@euro", "fr", "FR", "fra_fra", "fra");
     $lang = $aSet['language'];
     $host = $aSet['websitehost'];
 
-	//Filtrages des variables $_GET et $_POST
+	// Filtering $_GET et $_POST variables
 	$id 	= filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
 	$cat 	= filter_input(INPUT_GET, 'cat', FILTER_SANITIZE_STRING);
 	$new	= filter_input(INPUT_GET, 'new', FILTER_SANITIZE_STRING);
 	$rep	= filter_input(INPUT_GET, 'rep', FILTER_SANITIZE_STRING);
-	//$_POST variables
+	// $_POST variables
 	$nom 	= filter_input(INPUT_POST, 'nom', FILTER_SANITIZE_STRING);
 	$mail 	= filter_input(INPUT_POST, 'mail', FILTER_SANITIZE_URL);
 	$siteweb= filter_input(INPUT_POST, 'siteweb', FILTER_SANITIZE_URL);
@@ -81,49 +81,48 @@ setlocale(LC_TIME, "fr_FR", "fr_FR@euro", "fr", "FR", "fra_fra", "fra");
 	
 
 if (!isset($id)){
-    //Lecture des catégories et affichage liste déroulante de sélection des catégories	
-    $alistCat = $oArticles->LireCategories();
-	include 'core/blog/vues/formulaire-categories.php';    
+    // Reading categories and combo display for selecting categories
+    $alistCat = $oArticles->ReadCategory();
+	include 'core/blog/views/form-categories.php';    
 }
 		$oPagination = new Pagination();
 
 		if (isset($cat)) {
-			//Si une catégorie est spécifiée alors afficher les articles de cette catégorie
-			$nbrParPage = $oArticles->art_page;
-			$aArticles = $oArticles->LireLesArticles('util', $nbrParPage);
+			// If a class is specified then display the articles in this category
+			$nbrPerPage = $oArticles->art_page;
+			$aArticles = $oArticles->LireLesArticles('util', $nbrPerPage);
 			
-			//Aspect pagination
+			// Pagination
 			$nbTotArt = $oArticles->nbrTotalAffiche;
 			include 'core/blog/vues/afficher-tous-les-articles.php';
-			$oPagination->AffPagination($nbTotArt, $nbrParPage, 'blog.php', 'tri&cat=yes');
+			$oPagination->AffPagination($nbTotArt, $nbrPerPage, 'blog.php', 'tri&cat=yes');
 		}
 		elseif ((!isset($cat) OR $cat == 'Tous') AND !isset($id)) {
-			//Si aucune catégorie sélectionné ou que 'Tous' est sélectionné alors afficher tous les articles (toutes catégories confondues)				
+			// If a selected category or 'All' is selected then display all articles (all categories)
 			
-			$nbrParPage = $oArticles->art_page;
-			$aArticles = $oArticles->LireLesArticles('util', $nbrParPage);
+			$nbrPerPage = $oArticles->art_page;
+			$aArticles = $oArticles->LireLesArticles('util', $nbrPerPage);
 			$nbTotArt = $oArticles->nbrTotalAffiche;
 			include 'core/blog/vues/afficher-tous-les-articles.php';
 
-			//Pagination du résultat
-  			$oPagination->AffPagination($nbTotArt, $nbrParPage, 'blog.php', '');   
+			// Result Pagination
+  			$oPagination->AffPagination($nbTotArt, $nbrPerPage, 'blog.php', '');   
 		}
 		elseif (isset($id)){	
-			//Enregistrement d'un commentaire ou réponse (si saisie formulaire)
+			// Recording a comment or response (if entry form)
 			$aMsg = $oAdmin->getItemTransation('BLOG', 'FRONT', $lang, 'MSG_COMMENTS_PUBLISH'); 
 
-
 			if (isset($new)){
-				//Enregistrement nouveau commentaire.				
+				// Registration new comment.			
 				$oArticles->EngNouvComm($nom, $mail, $siteweb, $contenu, $id, 'new', $aMsg, $host);
 			}
 			
 			if (isset($rep)){
-				//Enregistrement d'une réponse à un commentaire.
+				// Recording a response to a comment.
 				$oArticles->EngNouvComm($nom, $mail, $siteweb, $contenu, $rep, 'rep', $aMsg, $host);
 			}
 
-			//Afficher article
+			// Article display
 			if ( (!isset($_GET['rep'])) && (!isset($new))  ){
 
 				$aArticle = $oArticles->LireUnArticle($id);

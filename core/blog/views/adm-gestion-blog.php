@@ -10,9 +10,11 @@ $aItems = $oAdmin->getItemTransation('BLOG', 'BACK', $lang, 'SUBMENU_POST_ADMIN'
 // Formulaire de tri
 echo "<div class='margintop70'></div>";
 
+echo "<div class='row'>";
+
 echo "<form method='post' class='margintop70' action='admin.php?p=gest_art&a=modif&tri' />";
 	echo "<div class='form-group'>";
-		echo "<div class='col-xs-12 col-sm-6 col-md-6 col-lg-3'>";
+		echo "<div class='col-xs-12 col-sm-6 col-md-3 col-lg-3'>";
 			echo "<label for='sel1'>{$aItems[$lang]['lib_cat_filter']}</label>";
 			echo "<select class='form-control' name='cat' maxlength='30'>";
 			echo "<option value='0'> {$aItems[$lang]['lib_select_cat']} </option>";
@@ -22,15 +24,25 @@ echo "<form method='post' class='margintop70' action='admin.php?p=gest_art&a=mod
 			echo "</select>";
 
 		echo "</div>";
-		echo "<div class='col-xs-12 col-sm-6 col-md-6 col-lg-9 form-group'>";
+		echo "<div class='col-xs-12 col-sm-3 col-md-2 col-lg-2 form-group'>";
 			echo "<label type='texte'>{$aItems[$lang]['lib_input_startdate']}</label>";
 			echo "<input type='text' name='datedebut' maxlength='10' class='form-control'>";
 			echo "<label type='texte'>{$aItems[$lang]['lib_enddate']}</label>";
 			echo "<input type='text' name='datefin' maxlength='10' class='form-control'>";
 		echo "</div>";
 	echo "</div>";
-echo "<button class='btn btn-primary' type='submit'>{$aItems[$lang]['lib_btt_post_filter']}</button>";
+
+echo "</div>";
+
+echo "<div class='row'>";
+	echo "<div class='col-xs-12 col-sm-6 col-md-1 col-lg-1'>";
+	echo "<button class='btn btn-primary' type='submit'>{$aItems[$lang]['lib_btt_post_filter']}</button>";
+	echo "</div>";
+
+echo "</div>";	
 echo "</form>";
+
+echo "<br>";
 
 if (count($aArticles) == 0){
 	echo "Il n'y a aucun article enregistré.";

@@ -9,7 +9,7 @@ require_once 'core/Exception.class.php';
 require_once 'core/CommunDbRequest.trait.php';
 
 /**
- * Classe Articles
+ * Articles Class
  * @category Class modele du module "Blog"
  * @package BLOG
  * @author Ludovic <ludovicinaction@yahoo.fr>
@@ -124,16 +124,16 @@ class Articles
 	}	
 	
 	/**
-	  * Lecture des catégories d'articles
+	  * Read post categories
 	  *
-	  * @return array Les différentes catégories.
+	  * @return array The categories.
 	  */
-	public function LireCategories(){
+	public function ReadCategory(){
 		
 		$req = 'SELECT * from cat_article order by nom_cat';
 		$aResult = SPDO::getInstance()->query($req);
-		$aListeCat = $aResult->fetchAll(PDO::FETCH_ASSOC);	
-		return $aListeCat;
+		$aListCat = $aResult->fetchAll(PDO::FETCH_ASSOC);	
+		return $aListCat;
 	}
 	
 	

@@ -1,28 +1,28 @@
 <?php
 
     /**
-     * Pagination avec affichage bootstrap
-     * La requête sql qui raméne les élément doit avoir dans sa clause where: LIMIT ' . (($cPage-1)*$parpage) . ', ' . $parpage;
-     * $cPage : La page demandé par l'utilateur
-     * $parpage : nombre d'élément à afficher par page
+     * Pagination with bootstrap display
+     * The sql query that returns the item must be in its where clause : LIMIT ' . (($cPage-1)*$parpage) . ', ' . $parpage;
+     * $cPage : user page request
+     * $parpage : items per page to display
      *
      * @package COMMON
      * @author Ludovic <ludovicinaction@yahoo.fr>
      * @uses new Pagination($nbTotArt, $nbrParPage, 'blog_page.php');
      * <code>
      *   $oPagination = new Pagination($nbTotArt, $nbrParPage, 'blog.php');
-     *   $oPagination->AffPagination(); 
+     *   $oPagination->DisplayPagination(); 
      * </code>
-     * @param int nbTotArt nombre total d'élément à afficher (raméné par la requête)
-     * @param int $nbrParPage nombre d'élément que l'on désire voir afficher sur chaque page
-     * @param string $pagination nom du fichier php à paginer.
+     * @param int nbTotArt total number of items to display (returned by the query)
+     * @param int $nbrParPage Number of elements that we want to see displayed on each page
+     * @param string $pagination Name of the php file to paginate.
      *
      * @todo : nbrParPage par gérer en backoffice.
      */
     class Pagination
     {
         
-        public function AffPagination($nbTotArt, $nbrParPage, $pagination, $crit=''){
+        public function DisplayPagination($nbTotArt, $nbrParPage, $pagination, $crit=''){
              $nbPage = ceil($nbTotArt / $nbrParPage); 
              //$nbPage = $nbTotArt / $nbrParPage; 
              $p_lien = $pagination;

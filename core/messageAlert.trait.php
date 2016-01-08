@@ -1,42 +1,63 @@
 <?php
 /**
  * Trait "MessageAlert".
- * Methodes d'affichage de message d'alert de type bootstrap ("success, "warning", "danger")
+ * Methods for displaying bootstrap alert message ("success, "warning" or "danger")
  * @package COMMON
  * @author Ludovic <ludovicinaction@yahoo.fr> 
  */
 trait MessageAlert{
 	
 	/**
-	  * Affiche un message d'alert avec une confirmation par un bouton
-	  * 
+	  * Displays an alert message with a confirmation button
       *
 	  * @param string $typeAlert success, info, warning ou danger
-	  * @param string $titreAlert Titre de l'alerte
-	  * @param string $MsgAlert Contenu du message d'alert.
-	  * @lienBtn strinf $lienBtn url du bouton pour passer à l'étape suivante.
+	  * @param string $titreAlert Title alert
+	  * @param string $MsgAlert Alert message
+	  * @lienBtn strinf $lienBtn url link to continue
 	  */
-	public function AfficheAlert($typeAlert, $titreAlert, $MsgAlert, $lienBtn){	
+	public function DisplayAlert($typeAlert, $titreAlert, $MsgAlert, $lienBtn){	
+
+		$lang = Admin::$lang;
+
+		if ($lang == 'FR') {
+			$txt = "Continuer";
+			if ($titreAlert == '') $titreAlert = 'Enregistrement effectué avec succés';
+		}	
+		elseif ($lang='EN') 
+			{
+				$txt = "Continue";
+				if ($titreAlert == '') $titreAlert = 'Recording successfully completed';
+			}	
+
+
 		echo "<div class='margintop70'></div>";
 		echo "<div class='text-center alert alert-$typeAlert fade in'>";
 		echo "<h4> $titreAlert </h4>";
-		echo "<a class='btn btn-$typeAlert' data-dismiss='alert' href='$lienBtn'>Continuer</a>";
+		echo "<a class='btn btn-$typeAlert' data-dismiss='alert' href='$lienBtn'>$txt</a>";
 		echo "<p>$MsgAlert</p>";
 		echo "</div>";	
 	}	
 	
 	/**
-	 * Affichage d'une demande de confirmation avec deux deux boutons (Ok ou annuler)
-	 * L'affichage est géré par une alert bootstrap : colorié en fonction des niveaux 'warning', 'success' ou 'alert' 
+	 * Viewing a confirmation request with two two buttons (OK or Cancel)
+	 * The display is managed by a bootstrap alert: colored according to levels 'warning', 'success' or 'alert'
 	 *
 	 * @param $action string 'warning', 'success' ou 'alert' 
-	 * @param $titreAlert string Titre de l'alerte
-	 * @param $lienBtnOk string url du lien OK
-	 * @param $lienBtnAnnule string url du lien d'annulation
+	 * @param $titreAlert string Alert title
+	 * @param $linkBtnOk string Ok url link
+	 * @param $linkBtnAnnule string Cancel url link
 	 */
-	 public function DemanderConfirmation($action, $titreAlert, $lienBtnOk, $lienBtnAnnule ){
+	 public function RequestConfirmation($action, $titleAlert, $linkBtnOk, $linkCancelBtn, $lang){
 		 $MsgAlert = ''; //optionnel
-		 
+
+		 if ($lang == 'FR'){
+		 	$confBttTxt = 'Confirmer';
+		 	$cancelBttTxt = 'Annuler';	
+		 }elseif($lang='ENG'){
+		 	$confBttTxt = 'Confirm';
+		 	$cancelBttTxt = 'Cancel';			 	
+		 }
+
 		 switch ($action){
 			 case 'modif';
 				$typeAlert = 'warning'; break;	
@@ -47,17 +68,36 @@ trait MessageAlert{
 		 }
 		echo "<div class='margintop70'></div>";
 		echo "<div class='text-center alert alert-$typeAlert fade in'>";
-			echo "<h4> $titreAlert </h4>";
-			echo "<a class='btn btn-$typeAlert' data-dismiss='alert' href='$lienBtnAnnule'>Annuler</a>";
+			echo "<h4> $titleAlert </h4>";
+			echo "<a class='btn btn-$typeAlert' data-dismiss='alert' href='$linkCancelBtn'>$cancelBttTxt</a>";
 			echo "  ";
-			echo "<a class='btn btn-$typeAlert' data-dismiss='alert' href='$lienBtnOk'>Confirmer</a>";
+			echo "<a class='btn btn-$typeAlert' data-dismiss='alert' href='$linkBtnOk'>$confBttTxt</a>";
 			echo "<p>$MsgAlert</p>";
 		echo "</div>";		 
 	 }
 
 
 
-
+	 /**
+	 * Viewing query results by alert via bootstrap method "DisplayAlert"
+	 *
+	 * @param string $bSauveOK = 'success' ou 'danger'
+	 * @param string $lienBrn HTML link to continue.
+     */ 
+	 public function DisplayResultRqt($bSauveOK, $lienBtn, $successTitle='', $dangerTitle='')
+	 {
+		$MsgAlert = '';
+	
+		if ($bSauveOK) {
+			$typeAlert = 'success';
+			$titreAlert = $successTitle;
+		}
+		else {
+			$typeAlert = 'danger';
+			$titreAlert = $dangerTitle;
+		}
+		$this -> DisplayAlert($typeAlert, $titreAlert, $MsgAlert, $lienBtn);		 
+	 }
 
 
 

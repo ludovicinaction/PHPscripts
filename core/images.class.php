@@ -29,7 +29,7 @@ Class Images{
 		if (isset($_SESSION['img']))  $f = $_SESSION['img'];
 		
 		if (!is_file($f)) 
-		$this -> AfficheAlert('danger', 'Problème de déplacement fichier', 'Le Fichier image ne peut pas être déplacé', 'admin.php?p=gest_art&a=modif');
+		$this -> DisplayAlert('danger', 'Problème de déplacement fichier', 'Le Fichier image ne peut pas être déplacé', 'admin.php?p=gest_art&a=modif');
 
 		
 		// Création de l'image depuis le fichier

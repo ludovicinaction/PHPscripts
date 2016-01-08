@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Méthodes de sécurisation d'un site.
+ * Securisation methods
  * @package COMMON
- * @see PHP5.5 necessaire pour certaines fonctions
+ * @see PHP5.5 necessary
  * @author Ludovic <ludovicinaction@yahoo.fr>
  * @todo : 
  */
@@ -62,12 +62,12 @@ class Securite
 	}
 	
 	/*
-	 * Création d'un jeton en session
-	 * Contre-mesure pour les attaques CSRF
+	 * Create tokin and put it in session
+	 * Measure against CSRF attacks 
 	 * @param : none
-	 * @return : none ( création de $_SESSION['token'] )
+	 * @return : none ( create $_SESSION['token'] )
 	 */
-	public function creation_jeton(){
+	public function create_token(){
 		$sJeton = sha1(uniqid(rand(), true)) . date('YmdHis');
 		$_SESSION['token'] = $sJeton ; 
 	 }

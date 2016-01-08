@@ -6,7 +6,7 @@
  */
 Class Utilitaires{
 	
-	public function AfficherMetaPage($titre, $description, $keywords){
+	public function DisplayPageMetaData($titre, $description, $keywords){
 		echo '<title>' . $titre . '</title>';
 		echo "\n";
 		echo '<meta name="description"' . ' content="' . $description . '"'.' />' ;

@@ -73,7 +73,7 @@ foreach($aComm as $val)
 	
 	echo "<div id='toggle$id' style='display:none;'>";
 		$bCom = true;
-		include __DIR__.'//formulaire-commentaires.php';	
+		include __DIR__.'//form-comments.php';	
 	echo "</div>";
 
 
@@ -81,7 +81,7 @@ foreach($aComm as $val)
 	 * Affichage les réponses correspondant à chaque commentaire 
 	 */
 	
-	$pReponses = $oArticles->LireReponses($val['id_com'], 'util');
+	$pReponses = $oArticles->ReadAnswers($val['id_com'], 'util');
 	
 	$aReponses = $pReponses->fetchAll(PDO::FETCH_ASSOC);
 
@@ -136,7 +136,7 @@ foreach($aComm as $val)
 
 		echo "<div id='toggle_rep$rep' style='display:none;'>";
 			$bCom = false;
-			include __DIR__.'//formulaire-commentaires.php';	
+			include __DIR__.'//form-comments.php';	
 		echo "</div>";	
 	}
 	
@@ -152,7 +152,7 @@ echo "<div class='row'>";
 	echo "<div class='col-sm-10 col-md-10 col-lg-10'>";
 	echo "<br /><br /><h3> $title_form </h3>";
 	$bFormNew = true;
-	include 'core/blog/vues/formulaire-commentaires.php';
+	include 'core/blog/views/form-comments.php';
 	echo "</div>";
 	echo "<div class='col-sm-1 col-md-1 col-lg-1'></div>";
 echo "</div>";

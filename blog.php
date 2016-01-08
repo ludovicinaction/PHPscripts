@@ -23,14 +23,14 @@ setlocale(LC_TIME, "fr_FR", "fr_FR@euro", "fr", "FR", "fra_fra", "fra");
 		
 		// Meta-data
 		if (isset($_GET['id'])) {
-			$aMetaData = $oMetaArt->LireMetaDonnees($_GET['id']);
-			$oUtil->AfficherMetaPage($aMetaData['titre_art'], $aMetaData['resum_art'], $aMetaData['keywords_art'] );
+			$aMetaData = $oMetaArt->ReadMetaData($_GET['id']);
+			$oUtil->DisplayPageMetaData($aMetaData['titre_art'], $aMetaData['resum_art'], $aMetaData['keywords_art'] );
 			unset($oMetaArt);
 			unset($oUtil);
 		}
 		// Default meta-data
 		elseif (!isset($_GET['id'])){
-			$oUtil->AfficherMetaPage('Présentation des articles', 'Description de la page', 'php, html, css, Mysql' );
+			$oUtil->DisplayPageMetaData('Présentation des articles', 'Description de la page', 'php, html, css, Mysql' );
 		}
 	?>
 
@@ -78,7 +78,7 @@ setlocale(LC_TIME, "fr_FR", "fr_FR@euro", "fr", "FR", "fra_fra", "fra");
 	$contenu= filter_input(INPUT_POST, 'contenu', FILTER_SANITIZE_STRING);
 	
 	$oArticles = new Articles;
-	
+	$aConfigValues = $oArticles->getConfigValues();
 
 if (!isset($id)){
     // Reading categories and combo display for selecting categories
@@ -90,23 +90,23 @@ if (!isset($id)){
 		if (isset($cat)) {
 			// If a class is specified then display the articles in this category
 			$nbrPerPage = $oArticles->art_page;
-			$aArticles = $oArticles->LireLesArticles('util', $nbrPerPage);
+			$aArticles = $oArticles->ReadAllArticles('util', $nbrPerPage);
 			
 			// Pagination
-			$nbTotArt = $oArticles->nbrTotalAffiche;
-			include 'core/blog/vues/afficher-tous-les-articles.php';
-			$oPagination->AffPagination($nbTotArt, $nbrPerPage, 'blog.php', 'tri&cat=yes');
+			$nbTotArt = $oArticles->TotalNbrDisplay;
+			include 'core/blog/views/display_all_articles.php';
+			$oPagination->DisplayPagination($nbTotArt, $nbrPerPage, 'blog.php', 'tri&cat=yes');
 		}
 		elseif ((!isset($cat) OR $cat == 'Tous') AND !isset($id)) {
 			// If a selected category or 'All' is selected then display all articles (all categories)
 			
-			$nbrPerPage = $oArticles->art_page;
-			$aArticles = $oArticles->LireLesArticles('util', $nbrPerPage);
-			$nbTotArt = $oArticles->nbrTotalAffiche;
-			include 'core/blog/vues/afficher-tous-les-articles.php';
+			$nbrPerPage = $aConfigValues['art_page'];
+			$aArticles = $oArticles->ReadAllArticles('util', $nbrPerPage);
+			$nbTotArt = $oArticles->TotalNbrDisplay;
+			include 'core/blog/views/display_all_articles.php';
 
 			// Result Pagination
-  			$oPagination->AffPagination($nbTotArt, $nbrPerPage, 'blog.php', '');   
+  			$oPagination->DisplayPagination($nbTotArt, $nbrPerPage, 'blog.php', '');   
 		}
 		elseif (isset($id)){	
 			// Recording a comment or response (if entry form)
@@ -114,23 +114,23 @@ if (!isset($id)){
 
 			if (isset($new)){
 				// Registration new comment.			
-				$oArticles->EngNouvComm($nom, $mail, $siteweb, $contenu, $id, 'new', $aMsg, $host);
+				$oArticles->RecordNewComm($nom, $mail, $siteweb, $contenu, $id, 'new', $aMsg, $host);
 			}
 			
 			if (isset($rep)){
 				// Recording a response to a comment.
-				$oArticles->EngNouvComm($nom, $mail, $siteweb, $contenu, $rep, 'rep', $aMsg, $host);
+				$oArticles->RecordNewComm($nom, $mail, $siteweb, $contenu, $rep, 'rep', $aMsg, $host);
 			}
 
 			// Article display
 			if ( (!isset($_GET['rep'])) && (!isset($new))  ){
 
-				$aArticle = $oArticles->LireUnArticle($id);
-				include 'core/blog/vues/afficher-un-article.php';
+				$aArticle = $oArticles->ReadOneArticle($id);
+				include 'core/blog/views/display-one-article.php';
 				
-				//Afficher les commentaires
-				$aComm = $oArticles->LireCommentaires($id);
-				include 'core/blog/vues/afficher-commentaires.php';		
+				// Displaying comments
+				$aComm = $oArticles->ReadComments($id);
+				include 'core/blog/views/display-comments.php';		
 			}				
 		} 
 	    unset($oArticles);

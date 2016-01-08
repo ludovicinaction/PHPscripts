@@ -38,7 +38,7 @@ if (!isset($_SESSION['loginOK']))
     $_SESSION['loginOK'] = false;
 
 if (isset($sloginEnter) && null !== $sloginEnter && isset($sPwdEnter) && $_SESSION['loginOK'] === false) {
-    $req = "select pwd_util from utilisateurs where nom_util= :sloginEnter";
+    $req = "select pwd_util from users where nom_util= :sloginEnter";
 
     if ($oSecure->verify_password_database($req, $sloginEnter, $sPwdEnter)) {
         //

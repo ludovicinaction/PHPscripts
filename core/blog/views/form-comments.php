@@ -27,7 +27,7 @@ if ($bFormNew) {
 }
 else{	
 	if ( !isset($repval) ) $id_com = $id;
-	else $id_com = $repval['id_commentaire'];	// necessaire lors de l'INSERT dans commentaires_rep.id_commentaire	
+	else $id_com = $repval['id_commentaire'];	// necessaire lors de l'INSERT dans blog_reply.id_commentaire	
 	
 	$id_art = $aArticle['art']['id_art'];
 

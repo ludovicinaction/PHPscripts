@@ -32,7 +32,7 @@ else{
         foreach ($aComm as $ligne=>$val)
         {
             $id_art = $val['id_art'];
-            $aArticle = $oArticles->LireUnArticle($id_art);
+            $aArticle = $oArticles->ReadOneArticle($id_art);
             $titre_art = $aArticle['art']['titre_art'];
 
             echo "<tr>";
@@ -76,7 +76,7 @@ else{
             //echo '</tbody>';
 
             // affichage des réponses du commentaire
-            $pReponses = $oArticles->LireReponses($val['id_com'], 'admin');
+            $pReponses = $oArticles->ReadAnswers($val['id_com'], 'admin');
         
             $aReponses = $pReponses->fetchAll(PDO::FETCH_ASSOC);
 

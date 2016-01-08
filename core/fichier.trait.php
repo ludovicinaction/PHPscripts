@@ -1,29 +1,29 @@
 <?php
 /**
- * Trait "Fichier" : Gestion des fichiers
+ *  "File" Trait : Files methods
  * @category COMMON
  * @author Ludovic <ludovicinaction@yahoo.fr>
  **/
 trait Fichiers{
 	
 	/**
-	  * Déplacement d'un fichier dans le dossier "/tmp"
-	  * @param string nom du fichier à déplacer 
+	  * Move file into "/tmp" folder
+	  * @param string File name 
 	  */
-	public function DeplacerFichier($fichier){
+	public function FileMove($fichier){
 
-		//Si le fichier image existe mais qu'il y a une erreur de chargement alors on déplace fichier dans tmp	
+		// If the image file exists but there is an error loading then moves tmp file
 		if (isset($_FILES[$fichier]) && ($_FILES[$fichier]['error'] == UPLOAD_ERR_OK)) {
 			$newPath = SITE_ROOT . '/tmp/' . basename($_FILES[$fichier]['name']);
 			if (move_uploaded_file($_FILES[$fichier]['tmp_name'], $newPath)) {
 				$_SESSION['img'] = $newPath;
 			} 
 			else{
-				 $this -> AfficheAlert('danger', 'Problème de déplacement fichier', 'Le Fichier image ne peut pas être déplacé', 'admin.php?p=gest_art&a=modif');
+				 $this -> DisplayAlert('danger', 'Problème de déplacement fichier', 'Le Fichier image ne peut pas être déplacé', 'admin.php?p=gest_art&a=modif');
 				}
 		} 
 		else{
-				$this -> AfficheAlert('danger', 'Téléchargement fichier', 'Le Fichier image ne peut pas être téléchargé', 'admin.php?p=gest_art&a=modif');
+				$this -> DisplayAlert('danger', 'Téléchargement fichier', 'Le Fichier image ne peut pas être téléchargé', 'admin.php?p=gest_art&a=modif');
 			}			
 	}
 	

@@ -12,7 +12,7 @@ trait CommunDbRequest{
 	  * @param string $req Delete SQL request
 	  * @param string $lien HTML link to return in initial page.
 	  */
-	 public function SupprimerInformation($req, $lien){
+	 public function DeleteInformation($req, $lien){
 		if (isset($_GET['token']) && isset($_SESSION['token']) && $_GET['token'] === $_SESSION['token']){
 			
 			$supp = SPDO::getInstance()->prepare($req);		
@@ -27,8 +27,8 @@ trait CommunDbRequest{
 			}
 			
 			$aMsg = $this->getItemTransation('BLOG', 'BACK', Admin::$lang, 'MSG_DB_RESULT');
-			if ($resultOK) $this->AfficherResultatRqt($resultOK, $lien, $aMsg[Admin::$lang]['ok_return'], '');
-			else $this->AfficherResultatRqt($resultOK, $lien, '', $aMsg[Admin::$lang]['ko_return']);			
+			if ($resultOK) $this->DisplayResultRqt($resultOK, $lien, $aMsg[Admin::$lang]['ok_return'], '');
+			else $this->DisplayResultRqt($resultOK, $lien, '', $aMsg[Admin::$lang]['ko_return']);			
 
 		}
 
@@ -57,8 +57,8 @@ public function updateInformation($sReq, $aData, $sMsg, $slinkOk){
 	}
 
 	$aMsg = $this->getItemTransation('BLOG', 'BACK', Admin::$lang, 'MSG_DB_RESULT');
-	if ($resultOK) $this->AfficherResultatRqt($resultOK, $slinkOk, $aMsg[Admin::$lang]['ok_return'], '');
-	else $this->AfficherResultatRqt($resultOK, $slinkOk, '', $aMsg[Admin::$lang]['ko_return']);		
+	if ($resultOK) $this->DisplayResultRqt($resultOK, $slinkOk, $aMsg[Admin::$lang]['ok_return'], '');
+	else $this->DisplayResultRqt($resultOK, $slinkOk, '', $aMsg[Admin::$lang]['ko_return']);		
 
 }
 

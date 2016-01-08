@@ -41,8 +41,8 @@
 			$type = 'rep';
 		}	
 
-		if ($type =='com') $sReq = "SELECT * FROM commentaires_blog WHERE id_com=$id";
-		elseif ($type =='rep') $sReq = "SELECT * FROM commentaires_rep WHERE id_rep=$id"; 	
+		if ($type =='com') $sReq = "SELECT * FROM blog_comments WHERE id_com=$id";
+		elseif ($type =='rep') $sReq = "SELECT * FROM blog_reply WHERE id_rep=$id"; 	
 
 		//Recherche de la valeur du jeton
 		$sRequete = SPDO::getInstance()->query($sReq);
@@ -51,11 +51,11 @@
 		if ($aResult['jeton'] == $t) {
 
 			//echo utf8_decode("<h2>Merci pour votre validation.<br />Votre commentaire sera validé dans les 48 heures.<br /> A bientôt<h2>");
-			$oAdmin->AfficherResultatRqt(TRUE, 'blog.php', $aMsg[$lang]['msg_valid_email'], '');
+			$oAdmin->DisplayResultRqt(TRUE, 'blog.php', $aMsg[$lang]['msg_valid_email'], '');
 
 			$val_confirm = 1;
-			if ($type == 'com') $sReq = "UPDATE commentaires_blog SET email_valid = :val WHERE id_com=$id";
-			elseif ($type == 'rep') $sReq = "UPDATE commentaires_rep SET email_valid = :val WHERE id_rep=$id";
+			if ($type == 'com') $sReq = "UPDATE blog_comments SET email_valid = :val WHERE id_com=$id";
+			elseif ($type == 'rep') $sReq = "UPDATE blog_reply SET email_valid = :val WHERE id_rep=$id";
 
 			$update = SPDO::getInstance()->prepare($sReq);
 			$update -> bindValue(':val', $val_confirm);
@@ -67,7 +67,7 @@
 			}
 			
 		}
-		else $oAdmin->AfficherResultatRqt(FALSE, 'blog.php', '', $aMsg[$lang]['msg_notvalid_email']);
+		else $oAdmin->DisplayResultRqt(FALSE, 'blog.php', '', $aMsg[$lang]['msg_notvalid_email']);
 		//else utf8_decode("<h2>Désolé, votre mail n'a pas pu être validé.<br />Veuillez contacter le webmaster de ce site.<br /> A bientôt</h2>");
 		?>
 

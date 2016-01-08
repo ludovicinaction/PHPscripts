@@ -159,24 +159,25 @@ echo "<div class='margintop70'></div>";
         elseif (isset($p) && 'gest_art' === $p && $_SESSION['loginOK'] === true) {
             
             $oArticles = new Articles;
-
+            // Get message with translation
+            $aMsgPost = $oAdmin->getItemTransation('BLOG', 'BACK', $lang, 'MSG_POSTS_ADMIN'); 
+            
             //"BLOG" Menu => Viewing post management table
-
             if (isset($a) && 'modif' == $a) {
-                $aMsgPost = $oAdmin->getItemTransation('BLOG', 'BACK', $lang, 'MSG_POSTS_ADMIN'); 
+                
 
                 // If no item is chosen then display management table
                 if (!isset($id)) {
 
                     // Search All posts without pagination
-                    $aArticles = $oArticles->LireLesArticles('admin', 0);
+                    $aArticles = $oArticles->ReadAllArticles('admin', 0);
 
                     // Reading categories	
                     $alistCat = $oArticles->ReadCategory();
 
                     // Display form
                     if ('yes' != isset($eng) && ('modif' == isset($a))) {
-                        include 'core/blog/vues/adm-gestion-blog.php';
+                        include 'core/blog/views/admin-blog-articles.php';
                     }
                 }
 
@@ -185,20 +186,20 @@ echo "<div class='margintop70'></div>";
                 if (isset($id)) {
 
                     if (!isset($eng)) { // Does not display the form after having validated.
-                        $aArticle = $oArticles->LireUnArticle($id);
-                        include 'core/blog/vues/formulaire_creation_article.php';
+                        $aArticle = $oArticles->ReadOneArticle($id);
+                        include 'core/blog/views/form-create-article.php';
                     }
    
                     // Save data post in sale and request confirmation of registration after validation post
                     if ((isset($eng) && 'yes' == $eng) && (!isset($conf))) {
-                        $oArticles->sauvDonneesArticle();
+                        $oArticles->SaveArticlesData();
                         $btOk = 'admin.php?p=gest_art&a=modif&id=' . $id . '&eng=yes&conf=yes';
-                        $oArticles->DemanderConfirmation('modif', $aMsgPost[$lang]['msg_update_confirm'], $btOk, 'admin.php?p=gest_art', $lang);
+                        $oArticles->RequestConfirmation('modif', $aMsgPost[$lang]['msg_update_confirm'], $btOk, 'admin.php?p=gest_art', $lang);
                     }
 
                     // If confirmation recording then save base.  
                     if (isset($conf) && 'yes' == $conf) {
-                       $bSauveOK = $oArticles->SauveArticle('modif', $aMsgPost[$lang]['msg_result_ok'], $aMsgPost[$lang]['msg_result_ko']);
+                       $bSauveOK = $oArticles->SaveArticle('modif', $aMsgPost[$lang]['msg_result_ok'], $aMsgPost[$lang]['msg_result_ko']);
                     }               
                 }
             } // Post administration end
@@ -206,35 +207,35 @@ echo "<div class='margintop70'></div>";
 
                 // *** DISPLAY POST MODE ***
 
-                $aArticle = $oArticles->LireUnArticle($id);
-                include 'core/blog/vues/afficher-un-article.php';
+                $aArticle = $oArticles->ReadOneArticle($id);
+                include 'core/blog/views/display-one-article.php';
                 exit;
             } elseif (isset($a) && 'creer' == $a) {
 
                 // *** CREATE POST MODE ***	
 
                 if (!isset($eng)) {
-                    include 'core/blog/vues/formulaire_creation_article.php';
+                    include 'core/blog/views/form-create-article.php';
                 }
 
                 if (isset($eng) && (!isset($conf))) {
                     // Data backup only after validation form
-                    $oArticles->sauvDonneesArticle();
-                    $oArticles->DemanderConfirmation('creer', $aMsgPost[$lang]['msg_creat_confirm'], 'admin.php?p=gest_art&a=creer&eng=yes&conf=yes', 'admin.php?p=gest_art&a=modif', $lang);
+                    $oArticles->SaveArticlesData();
+                    $oArticles->RequestConfirmation('creer', $aMsgPost[$lang]['msg_creat_confirm'], 'admin.php?p=gest_art&a=creer&eng=yes&conf=yes', 'admin.php?p=gest_art&a=modif', $lang);
                 } elseif (isset($eng) && isset($conf)) {
-                    $bSauveOK = $oArticles->SauveArticle('creer');
+                    $bSauveOK = $oArticles->SaveArticle('creer', $aMsgPost[$lang]['msg_result_ok'], $aMsgPost[$lang]['msg_result_ko']);
                 }
             } elseif (isset($a) && 'supp' == $a) {
 
                 // 'DELETE POST' mode	
                 if (!isset($conf)) {
-					$sToken = $oSecure->creation_jeton();
+					$sToken = $oSecure->create_token();
 					
                     $btOk = 'admin.php?p=gest_art&a=supp&id=' . $id . '&conf=yes&token='.$_SESSION['token'];
-                    $oArticles->DemanderConfirmation('supp', $aMsgPost[$lang]['msg_delete_confirm'], $btOk, 'admin.php?p=gest_art&a=modif', $lang);
+                    $oArticles->RequestConfirmation('supp', $aMsgPost[$lang]['msg_delete_confirm'], $btOk, 'admin.php?p=gest_art&a=modif', $lang);
                 } else {
-                    $req = 'delete from articles where id_art=' . $id;
-                    $oAdmin->SupprimerInformation($req, 'admin.php?p=gest_art&a=modif');
+                    $req = 'delete from blog_articles where id_art=' . $id;
+                    $oAdmin->DeleteInformation($req, 'admin.php?p=gest_art&a=modif');
                 }
             }
             
@@ -244,12 +245,12 @@ echo "<div class='margintop70'></div>";
             elseif (isset($a) && 'config' === $a) {
 
                 if (isset($eng)) {                    
-                    $oArticles->sauv_config();
-                    $oArticles->lecture_config();  
+                    $oArticles->SaveConfig();
+                    $oArticles->ReadBlogConfig();  
                 }else{
-                    $oArticles->lecture_config(); 
+                    $oArticles->ReadBlogConfig(); 
                 }         
-                include 'core/blog/vues/formulaire-config-blog.php';
+                include 'core/blog/views/form-setting-blog.php';
             }   // config
 
             // *** Menu "Comments administration" ***
@@ -258,32 +259,32 @@ echo "<div class='margintop70'></div>";
                 $aMsgCmt = $oAdmin->getItemTransation('BLOG', 'BACK', $lang, 'MSG_COMMENTS_ADMIN'); 
                 // Submenu initial
                 if ( isset($c) && 'init' === $c ){
-                    $aComm = $oArticles->LireTousLesCommentaires();
-                    include 'core/blog/vues/adm-gestion-commentaires.php';
+                    $aComm = $oArticles->ReadAllComments();
+                    include 'core/blog/views/admin-blog-comments.php';
                 // Delete comments
                 }elseif ( isset($c) && 'delete' === $c ) {
                     if(!isset($valid)) {
-                        $sToken = $oSecure->creation_jeton();
+                        $sToken = $oSecure->create_token();
                         $btOk = 'admin.php?p=gest_art&a=gest_com&id=' . $id . '&t='. $t . '&c=delete&valid&token=' . $_SESSION['token'];
-                        $oArticles->DemanderConfirmation('supp', $aMsgCmt[$lang]['msg_delete_confirm'], $btOk, 'admin.php?p=gest_art&a=gest_com&c=init', $lang);
+                        $oArticles->RequestConfirmation('supp', $aMsgCmt[$lang]['msg_delete_confirm'], $btOk, 'admin.php?p=gest_art&a=gest_com&c=init', $lang);
                     }
                     else{ // Delete confirm
-                        if ($t == 'com') $req = 'delete from commentaires_blog where id_com=' . $id;
-                        elseif ($t == 'rep') $req = 'delete from commentaires_rep where id_rep=' . $id;
-                        $oAdmin->SupprimerInformation($req, 'admin.php?p=gest_art&a=gest_com&c=init');
+                        if ($t == 'com') $req = 'delete from blog_comments where id_com=' . $id;
+                        elseif ($t == 'rep') $req = 'delete from blog_reply where id_rep=' . $id;
+                        $oAdmin->DeleteInformation($req, 'admin.php?p=gest_art&a=gest_com&c=init');
                     }        
                 }
                 // Display a comment
                 elseif ( isset($c) && 'display' === $c){
-                    $aComm =  $oArticles -> LireCommentaire($id, $t);
-                    include 'core/blog/vues/afficher-un-commentaire.php';
+                    $aComm =  $oArticles -> ReadOneComment($id, $t);
+                    include 'core/blog/views/display-one-comments.php';
                 }
                 // Comments validation
                 elseif (isset ($c) && 'valid' === $c){
                     $msg_email_ok = $aMsgCmt[$lang]['msg_cmt_email_ok'];
                     $msg_email_ko = $aMsgCmt[$lang]['msg_cmt_email_ko'];
-                    if ( !isset($eng) ) $oArticles -> ConfirmValideCommentaire($id, $t, $v, $msg_email_ok, $msg_email_ko);
-                    else $oArticles -> ValiderCommentaire($id, $t, $aMsgCmt[$lang]['lib_resultOK'], $aMsgCmt[$lang]['lib_resultKO']);
+                    if ( !isset($eng) ) $oArticles -> ConfirmValidateComments($id, $t, $v, $msg_email_ok, $msg_email_ko);
+                    else $oArticles -> ValidateComment($id, $t, $aMsgCmt[$lang]['lib_resultOK'], $aMsgCmt[$lang]['lib_resultKO']);
                 }
             } 
                 
@@ -296,32 +297,32 @@ echo "<div class='margintop70'></div>";
 
                 if ( (!isset ($valid)) ) {
                     $aCat = $oArticles -> ReadCategory();
-                    include 'core/blog/vues/adm-gestion-categories.php';
+                    include 'core/blog/views/admin-blog-category.php';
                 }   
                 else{
                     if (isset($c) && 'update' === $c){
                         if ( isset($valid) && 'no' === $valid ){
                             $btOk = "admin.php?p=gest_art&a=gest_cat&c=update&valid=yes";
-                            $oArticles->DemanderConfirmation('modif', $aMsg[$lang]['msg_update_confirm'], $btOk, 'admin.php?p=gest_art&a=gest_cat&c=init', $lang);                        
+                            $oArticles->RequestConfirmation('modif', $aMsg[$lang]['msg_update_confirm'], $btOk, 'admin.php?p=gest_art&a=gest_cat&c=init', $lang);                        
                         }
                         else $oArticles -> UpdateCategory();      
                     }
                     elseif (isset($c) && 'add' === $c){
                         if ( isset($valid) && 'no' === $valid ){
                             $btOk = "admin.php?p=gest_art&a=gest_cat&c=add&valid=yes";
-                            $oArticles->DemanderConfirmation('modif', $aMsg[$lang]['msg_creat_confirm'], $btOk, 'admin.php?p=gest_art&a=gest_cat&c=init', $lang);
+                            $oArticles->RequestConfirmation('modif', $aMsg[$lang]['msg_creat_confirm'], $btOk, 'admin.php?p=gest_art&a=gest_cat&c=init', $lang);
                         }
                         else $oArticles -> CreateCategory();
                     }
                     elseif (isset($c) && 'delete' === $c){
                         if ( isset ($valid) && 'no' === $valid ){
-                            $sToken = $oSecure->creation_jeton();
+                            $sToken = $oSecure->create_token();
                             $btOk = 'admin.php?p=gest_art&a=gest_cat&id=' . $id . '&t='. $t . '&c=delete&valid&token=' . $_SESSION['token'];        
-                            $oArticles->DemanderConfirmation('supp', $aMsg[$lang]['msg_delete_confirm'], $btOk, 'admin.php?p=gest_art&a=gest_cat&c=init', $lang);                            
+                            $oArticles->RequestConfirmation('supp', $aMsg[$lang]['msg_delete_confirm'], $btOk, 'admin.php?p=gest_art&a=gest_cat&c=init', $lang);                            
                         }
                         else{
-                            $sReq = 'delete from cat_article where id_cat=' . $id;
-                            $oAdmin -> SupprimerInformation($sReq, 'admin.php?p=gest_art&a=gest_cat&c=init');
+                            $sReq = 'delete from blog_cat_article where id_cat=' . $id;
+                            $oAdmin -> DeleteInformation($sReq, 'admin.php?p=gest_art&a=gest_cat&c=init');
                         }
                     }                            
                 }
@@ -349,14 +350,14 @@ echo "<div class='margintop70'></div>";
                 if (isset($c) && 'update' === $c){                    
                     if ( isset($valid) && 'no' === $valid ){
                         $btOk = "admin.php?p=trans&a=adm_trans&c=update&valid=yes";
-                        $oAdmin->DemanderConfirmation('modif', $aMsg[$lang]['msg_update_confirm'], $btOk, 'admin.php?p=trans&a=adm_trans&c=init', $lang);
+                        $oAdmin->RequestConfirmation('modif', $aMsg[$lang]['msg_update_confirm'], $btOk, 'admin.php?p=trans&a=adm_trans&c=init', $lang);
                     }
                     else $oAdmin -> UpdateTranslation();      
                 }
                 elseif (isset($c) && 'add' === $c){
                     if ( isset($valid) && 'no' === $valid ){
                         $btOk = "admin.php?p=trans&a=adm_trans&c=add&valid=yes";
-                        $oAdmin->DemanderConfirmation('modif', $aMsg[$lang]['msg_creat_confirm'], $btOk, 'admin.php?p=trans&a=adm_trans&c=init', $lang );
+                        $oAdmin->RequestConfirmation('modif', $aMsg[$lang]['msg_creat_confirm'], $btOk, 'admin.php?p=trans&a=adm_trans&c=init', $lang );
                     }
                     else{
                         $oAdmin->CreateTranslation();
@@ -365,12 +366,12 @@ echo "<div class='margintop70'></div>";
                 elseif (isset($c) && 'delete' === $c) {
                     $sReq = 'delete from adm_translation where id=' . $id;
                     if ( isset ($valid) && 'no' === $valid ){
-                        $sToken = $oSecure->creation_jeton();
+                        $sToken = $oSecure->create_token();
                         $btOk = 'admin.php?p=trans&a=adm_trans&id=' . $id . '&t='. $t . '&c=delete&valid&token=' . $_SESSION['token'];  
-                        $oAdmin->DemanderConfirmation('supp',  $aMsg[$lang]['msg_delete_confirm'], $btOk, 'admin.php?p=transt&a=adm_trans&c=init', $lang);
+                        $oAdmin->RequestConfirmation('supp',  $aMsg[$lang]['msg_delete_confirm'], $btOk, 'admin.php?p=transt&a=adm_trans&c=init', $lang);
                     }
                     else{    
-                        $oAdmin-> SupprimerInformation($sReq, 'admin.php?p=trans&a=adm_trans&c=init');
+                        $oAdmin-> DeleteInformation($sReq, 'admin.php?p=trans&a=adm_trans&c=init');
                     }    
 
                 }    

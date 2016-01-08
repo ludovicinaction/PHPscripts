@@ -227,8 +227,8 @@ public function CreateTranslation(){
 	}
 
 	$aMsg = $this->getItemTransation('BLOG', 'BACK', Admin::$lang, 'MSG_DB_RESULT');
-	if ($resultOK) $this->AfficherResultatRqt($resultOK, 'admin.php?p=trans&a=adm_trans&c=init', $aMsg[Admin::$lang]['ok_return'], '');
-	else $this->AfficherResultatRqt($resultOK, 'admin.php?p=trans&a=adm_trans&c=init', '', $aMsg[Admin::$lang]['ko_return']);
+	if ($resultOK) $this->DisplayResultRqt($resultOK, 'admin.php?p=trans&a=adm_trans&c=init', $aMsg[Admin::$lang]['ok_return'], '');
+	else $this->DisplayResultRqt($resultOK, 'admin.php?p=trans&a=adm_trans&c=init', '', $aMsg[Admin::$lang]['ko_return']);
 
 }
 

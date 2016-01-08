@@ -1,23 +1,18 @@
 <?php
 /**
- * Affichage HTML de tous les articles.
- * en fonction de la résolution de l'écran
+ * HTML display all items depending on the screen resolution
  * @package BLOG
- * @category Vue du module "Blog"
+ * @category BLOG module view
  */
-//$lang = filter_var($_SESSION['lang'], FILTER_SANITIZE_STRING);
+
 $aItemsForm = $oAdmin->getItemTransation('BLOG', 'FRONT', $lang, 'HOME');
 
-//Récupération des paramétrages d'affichage des vignettes en fonction de la résolution de l'écran
-$oArticles->lecture_config();
-$iXs = (int) $oArticles->aff_xs;
-$iSm = (int) $oArticles->aff_sm;
-$iMd = (int) $oArticles->aff_md;
-$iLg = (int) $oArticles->aff_lg;
+$iXs = (int) $aConfigValues['aff_xs'];
+$iSm = (int) $aConfigValues['aff_sm'];
+$iMd = (int) $aConfigValues['aff_md'];
+$iLg = (int) $aConfigValues['aff_lg'];
 
 echo "<div class='row'>";
-
-
 
 foreach ($aArticles as $ligne => $val){	
 	if ($lang == 'FR') $sDate = utf8_encode($val['date_crea_art']);
@@ -29,7 +24,7 @@ foreach ($aArticles as $ligne => $val){
 			echo '<a href=\'blog.php?id=' . $val['id_art'] . '\'><img src="data:image/jpeg;base64,'. base64_encode($vignette) .'" class=\'img-rounded\' /></a>';			
 			echo "<div class='caption'>";
 				echo '<h6><b>' . $val['titre_art'] . '</b></h6>';
-				// Pour le "résumer" : on affiche uniquement les 90 permiers caractères entier.				
+				//For the "summary": we see only the first 90 characters around.				
 				$resume = $val['resum_art'];
 				if (strlen($resume) >90 ) {
 					$pos=mb_strpos($resume, ' ', 90); 
@@ -38,8 +33,7 @@ foreach ($aArticles as $ligne => $val){
 				else echo '<h6><i>' . $resume . '...</i></h6>';
 				echo "<span class='label label-info'>";
 					echo $sDate;
-				echo "</span>";
-				//echo '<a href=\'blog.php?id=' . $val['id_art'] . '\' class=\'pull-right\'><span class=\'glyphicon glyphicon-search\'></span> Lire la suite</a>';
+				echo "</span>";				
 				echo '<a href=\'blog.php?id=' . $val['id_art'] . '\' class=\'pull-right\'><span class=\'glyphicon glyphicon-search\'></span> ' . $aItemsForm[$lang]['txt_read_more'] . '</a>';
 
 			echo '</div>';

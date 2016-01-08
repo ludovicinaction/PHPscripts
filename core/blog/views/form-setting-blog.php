@@ -1,18 +1,21 @@
 <?php
-    $iXs = (int) $oArticles->aff_xs;
-    $iSm = (int) $oArticles->aff_sm;
-    $iMd = (int) $oArticles->aff_md;
-    $iLg = (int) $oArticles->aff_lg;
-    $iArtPage = (int) $oArticles->art_page;
-    $bCtrl = (bool) $oArticles->ctrl_comm;
 
-    $mail_exp = htmlentities($oArticles->mail_exp, ENT_QUOTES, "UTF-8");
-    $mail_obj = htmlentities($oArticles->mail_obj, ENT_QUOTES, "UTF-8");
-    $mail_txt = htmlentities($oArticles->mail_txt, ENT_QUOTES, "UTF-8");
+ $aConfigValues = $oArticles ->getConfigValues();   
 
-    $name_exp = htmlentities($oArticles->name_exp, ENT_QUOTES, "UTF-8");
-    $name_reply = htmlentities($oArticles->name_reply, ENT_QUOTES, "UTF-8");
-    $mail_reply = htmlentities($oArticles->mail_reply, ENT_QUOTES, "UTF-8");
+    $iXs = (int) $aConfigValues['aff_xs'];
+    $iSm = (int) $aConfigValues['aff_sm'];
+    $iMd = (int) $aConfigValues['aff_md'];
+    $iLg = (int) $aConfigValues['aff_lg'];
+    $iArtPage = (int) $aConfigValues['art_page'];
+    $bCtrl = (bool) $aConfigValues['ctrl_comm'];
+
+    $mail_exp = htmlentities($aConfigValues['mail_exp'], ENT_QUOTES, "UTF-8");
+    $mail_obj = htmlentities($aConfigValues['mail_obj'], ENT_QUOTES, "UTF-8");
+    $mail_txt = htmlentities($aConfigValues['mail_txt'], ENT_QUOTES, "UTF-8");
+
+    $name_exp = htmlentities($aConfigValues['name_exp'], ENT_QUOTES, "UTF-8");
+    $name_reply = htmlentities($aConfigValues['name_reply'], ENT_QUOTES, "UTF-8");
+    $mail_reply = htmlentities($aConfigValues['mail_reply'], ENT_QUOTES, "UTF-8");
    
     $aItems = $oAdmin->getItemTransation('BLOG', 'BACK', $lang, 'SUBMENU_SET');
 

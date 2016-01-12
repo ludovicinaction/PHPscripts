@@ -40,7 +40,6 @@ $oMetaArt = new Articles;
 
 </head>
 <body>
-
     <div class="container-fluid">
 
         <div class="row">
@@ -53,7 +52,7 @@ $oMetaArt = new Articles;
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
                         </button>
-                        <a class="navbar-brand" href="#">Back-office</a>
+                        <a class="navbar-brand" href="#">Back-office </a>
                     </div>
                     <div class="navbar-collapse collapse"> 
 
@@ -110,7 +109,9 @@ $oMetaArt = new Articles;
          * "BLOG" MODULE ADMINISTATION
          * *****************************
          */
-echo "<div class='margintop70'></div>";
+//echo "<div class='margintop70'></div>";
+echo "<br><br>";
+
         $oAdmin = new Admin();  
        
         $aSet = $oAdmin -> getSetting();

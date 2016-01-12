@@ -4,6 +4,7 @@
  * @package BLOG
  * @category Vue du module "Blog"
  */
+$aArticle = $oArticles -> getPostData();
 
 $CatItems = array();
 $CatItems = $oAdmin->getItemTransation('BLOG', 'BACK', $lang, 'SUBMENU_CREATE_POST');

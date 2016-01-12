@@ -39,7 +39,37 @@ class Articles
 	private $mail_obj;	// Object
 	private $mail_txt;	// email texte
 
+	//EVOL article
+	private $_aPostData;
+	//FIN EVOL
 
+
+	public function getPostData() {
+		//var_dump($this->_aPostData);
+
+		$aFilter = array('id_art'=>FILTER_VALIDATE_INT
+			, 'contenu'=>FILTER_SANITIZE_STRING
+			, 'titre_art'=>FILTER_SANITIZE_STRING
+			, 'vignette_art'=>FILTER_SANITIZE_SPECIAL_CHARS
+			, 'date_crea_art'=>FILTER_SANITIZE_STRING
+			, 'date_pub_art'=>FILTER_SANITIZE_STRING
+			, 'resum_art'=>FILTER_SANITIZE_STRING
+			, 'keywords_art'=>FILTER_SANITIZE_STRING
+			, 'som-comm'=>FILTER_VALIDATE_INT);
+	
+		foreach ($this->_aPostData as $key => $aPost) {
+			$aDataClean[$key] = filter_var_array($aPost, $aFilter);
+		}
+
+		
+
+		//var_dump($aDataClean);		
+		
+
+
+
+		return $aDataClean;
+	}
 
 	
 	public function __construct(){
@@ -111,17 +141,16 @@ class Articles
 		$sReqSelect = 'SELECT id_art, titre_art, date_crea_art, DATE_FORMAT( date_pub_art , \'%d/%m/%Y\')  AS date_pub_art, vignette_art, resum_art, contenu, id_categorie, keywords_art FROM blog_articles WHERE id_art='.$id;
 		$aResult = SPDO::getInstance()->query($sReqSelect);
 		
-		$aUnArt = $aResult->fetch(PDO::FETCH_ASSOC);
+		$this->_aPostData = $aResult->fetch(PDO::FETCH_ASSOC);
 		// Treatment of displaying the creation date.
-		$sDateTraite = $this->TraiteDateCreation($aUnArt['date_crea_art']);
-		$aUnArt['date_crea_art'] = $sDateTraite;
+		$sDateTraite = $this->TraiteDateCreation($this->_aPostData['date_crea_art']);
+		$this->_aPostData['date_crea_art'] = $sDateTraite;
 		
 		// Readings statistics Articles
 		$aStats = $this->ReadStatsArticle($id);
 		
-		$aArticle = array('art'=>$aUnArt, 'somme-com'=>$aStats);
-		
-		return $aArticle;
+		$this->_aPostData = array('art'=>$this->_aPostData, 'somme-com'=>$aStats);
+		//var_dump($this->_aPostData);
 	}	
 	
 	/**
@@ -246,21 +275,22 @@ class Articles
 
 		//On sauvegarde toutes les données dans un tableau pour pouvoir les traiter les "date de création" (méthode 'TraiteDateCreation')
 		//Sinon suite à foreach d'un objet PDOStatement, les données sont supprimées.
-		$aListeArticles = $aResult->fetchAll(PDO::FETCH_ASSOC);
+		$this->_aPostData = $aResult->fetchAll(PDO::FETCH_ASSOC);
 
 		// Treatment of 'creation date' for display and recording stats
-		foreach ($aListeArticles as $index => $value)
+		foreach ($this->_aPostData as $index => $value)
 		{ 
 			$sDateTraite = $this->TraiteDateCreation($value['date_crea_art']);
 			//foreach manage tables by value, not reference (alternative to '& $ value' in the foreach)
-			$aListeArticles[$index]['date_crea_art'] = $sDateTraite;
+			$this->_aPostData[$index]['date_crea_art'] = $sDateTraite;
 			
 			//Add statistics
 			$aStats = $this->ReadStatsArticle($value['id_art']);
-			$aListeArticles[$index]['som-comm'] = $aStats['somme'];
+			$this->_aPostData[$index]['som-comm'] = $aStats['somme'];
 		}
-		
- 	    return $aListeArticles;
+		//var_dump($aListeArticles);
+
+ 	    //return $aListeArticles;
 	}
 	
 	public function ReadMetaData($id_art){

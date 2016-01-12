@@ -5,6 +5,9 @@
  * @package BLOG
  * @category Vue du module "Blog"
  */
+$aArticle = $oArticles->getPostData();
+//var_dump($aArticle);
+
 $vignette = $aArticle['art']['vignette_art'];
 
 //$sLang = filter_var($_SESSION['lang'], FILTER_SANITIZE_STRING);

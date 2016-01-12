@@ -166,12 +166,13 @@ echo "<br><br>";
             //"BLOG" Menu => Viewing post management table
             if (isset($a) && 'modif' == $a) {
                 
-
                 // If no item is chosen then display management table
                 if (!isset($id)) {
 
                     // Search All posts without pagination
-                    $aArticles = $oArticles->ReadAllArticles('admin', 0);
+                    
+                    //$aArticles = $oArticles->ReadAllArticles('admin', 0);
+                    $oArticles->ReadAllArticles('admin', 0);
 
                     // Reading categories	
                     $alistCat = $oArticles->ReadCategory();
@@ -187,11 +188,11 @@ echo "<br><br>";
                 if (isset($id)) {
 
                     if (!isset($eng)) { // Does not display the form after having validated.
-                        $aArticle = $oArticles->ReadOneArticle($id);
+                        $oArticles->ReadOneArticle($id);
                         include 'core/blog/views/form-create-article.php';
                     }
    
-                    // Save data post in sale and request confirmation of registration after validation post
+                    // Save data post and request confirmation of registration after validation post
                     if ((isset($eng) && 'yes' == $eng) && (!isset($conf))) {
                         $oArticles->SaveArticlesData();
                         $btOk = 'admin.php?p=gest_art&a=modif&id=' . $id . '&eng=yes&conf=yes';
@@ -206,9 +207,9 @@ echo "<br><br>";
             } // Post administration end
             elseif (isset($a) && 'lire' === $a) {
 
-                // *** DISPLAY POST MODE ***
+                // *** DISPLAY POST Mode ***
 
-                $aArticle = $oArticles->ReadOneArticle($id);
+                $oArticles->ReadOneArticle($id);
                 include 'core/blog/views/display-one-article.php';
                 exit;
             } elseif (isset($a) && 'creer' == $a) {

@@ -7,6 +7,8 @@
 
 $aItems = $oAdmin->getItemTransation('BLOG', 'BACK', $lang, 'SUBMENU_POST_ADMIN');
 
+$aPostData = $oArticles->getPostData();
+
 // Formulaire de tri
 echo "<div class='margintop70'></div>";
 
@@ -44,7 +46,7 @@ echo "</form>";
 
 echo "<br>";
 
-if (count($aArticles) == 0){
+if (count($aPostData) == 0){
 	echo "Il n'y a aucun article enregistré.";
 } 
 else{
@@ -63,7 +65,7 @@ else{
 				echo "</thead>";
 
 		//Champs de tri de recherche			
-		foreach ($aArticles as $ligne=>$val){
+		foreach ($aPostData as $ligne=>$val){
 			if ($lang == 'FR'){
 				$dDateCrea = utf8_encode($val['date_crea_art']);
 				$dDatePub = utf8_encode($val['date_pub_art']);

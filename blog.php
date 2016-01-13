@@ -82,7 +82,7 @@ setlocale(LC_TIME, "fr_FR", "fr_FR@euro", "fr", "FR", "fra_fra", "fra");
 
 if (!isset($id)){
     // Reading categories and combo display for selecting categories
-    $alistCat = $oArticles->ReadCategory();
+    $alistCat = $oArticles->getCategoryData();
 	include 'core/blog/views/form-categories.php';    
 }
 		$oPagination = new Pagination();
@@ -90,7 +90,7 @@ if (!isset($id)){
 		if (isset($cat)) {
 			// If a class is specified then display the articles in this category
 			$nbrPerPage = $oArticles->art_page;
-			$aArticles = $oArticles->ReadAllArticles('util', $nbrPerPage);
+			$oArticles->ReadAllArticles('util', $nbrPerPage);
 			
 			// Pagination
 			$nbTotArt = $oArticles->TotalNbrDisplay;

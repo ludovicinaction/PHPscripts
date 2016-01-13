@@ -44,9 +44,13 @@ class Articles
 	private $_aCatData;		// Category Data		
 
 
-
+ /**
+  * get and filter post data from private attributs
+  *
+  */
 	public function getPostData() {
-//var_dump($this->_aPostData);
+		//var_dump($this->_aPostData);
+
 		$aFilter = array('id_art'=>FILTER_VALIDATE_INT
 			, 'contenu'=>FILTER_SANITIZE_STRING
 			, 'titre_art'=>FILTER_SANITIZE_STRING
@@ -55,14 +59,15 @@ class Articles
 			, 'date_pub_art'=>FILTER_SANITIZE_STRING
 			, 'resum_art'=>FILTER_SANITIZE_STRING
 			, 'keywords_art'=>FILTER_SANITIZE_STRING
-			, 'id_categorie'=>FILTER_VALIDATE_INT
-			, 'som-comm'=>FILTER_VALIDATE_INT);
+			, 'id_categorie'=>FILTER_SANITIZE_NUMBER_INT
+			, 'somme-com'=>FILTER_SANITIZE_NUMBER_INT);
 	
 		foreach ($this->_aPostData as $key => $aPost) {
 			$aDataClean[$key] = filter_var_array($aPost, $aFilter);
 		}
-
+//var_dump($aDataClean);
 		return $aDataClean;
+		
 	}
 
 	
@@ -116,7 +121,7 @@ class Articles
 	  * @return int Total Comments for article
 	  * @todo : pour les autres stats, il faudra faire un tableau contenand les tableau des résultats pour chaque type de stats;
 	  */	
-	private function ReadStatsArticle($id_art){
+	public function ReadStatsArticle($id_art){
 		$sreq = 'select sum(tot) as somme from ( select count(*) as tot from blog_reply where (ctrl_aff=0 or valid_rep=1) and id_commentaire in (select id_com from blog_comments where (ctrl_aff=0 or valid_com=1) and id_art='.$id_art.') union select count(*) as tot from blog_comments where (ctrl_aff=0 or valid_com=1) and id_art='.$id_art.' ) AS tab_tot';
 		$result = SPDO::getInstance()->query($sreq);
 		$aSomCom = $result->fetch(PDO::FETCH_ASSOC);	//$aSomCom['somme'] = Total des commentaires+réponses.
@@ -141,9 +146,9 @@ class Articles
 		$this->_aPostData['date_crea_art'] = $sDateTraite;
 		
 		// Readings statistics Articles
-		$aStats = $this->ReadStatsArticle($id);
-		
+		$aStats = $this->ReadStatsArticle($id);		
 		$this->_aPostData = array('art'=>$this->_aPostData, 'somme-com'=>$aStats);
+		
 	}	
 	
 	/**
@@ -527,7 +532,7 @@ public function getCategoryData(){
 		$rqt -> bindValue(':nom', $nom);
 		$rqt -> bindValue(':mail', $mail);
 		$rqt -> bindValue(':web', $siteweb);
-		$rqt -> bindValue(':txt', $contenu);
+		$rqt -> bindValue(':txt', $contents);
 		$rqt -> bindValue(':valid', $iValid);
 		$rqt -> bindValue(':id', $id);
 		if ($type_comm == 'rep' ) $rqt -> bindValue(':ref_rep', $ref_rep);
@@ -721,8 +726,6 @@ public function getCategoryData(){
 		$_SESSION['texte_article'] = $_POST['texte_article'];
 
 		$image = $_FILES['vignette']['name'];
-		//var_dump($image);
-		//var_dump($_SESSION['vignette']);
 		if ( $image != '' ) $this->FileMove('vignette');
 	}
     
@@ -736,11 +739,17 @@ public function getCategoryData(){
 	 * @param string 'creer'=>insert into blog_articles ; 'modif'=>update articles
      */ 	  
 	 public function SaveArticle($action, $msg_result_ok, $msg_result_ko){
-//var_dump($this->_aPostData['vignette_art']['size']);
-//var_dump($_SESSION['img']);
+	 	//$aVignette = $_SESSION['vignette'];
 
-	 	$aVignette = $_SESSION['vignette'];
+	 	//filter $_SESSION['vignette'] => thumbnail information;
+	 	$aFilter = array('name'=>FILTER_SANITIZE_STRING
+	 		, 'type'=>FILTER_SANITIZE_STRING
+	 		, 'tmp_name'=>FILTER_SANITIZE_STRING
+	 		, 'error'=> FILTER_SANITIZE_NUMBER_INT
+	 		, 'size'=>FILTER_SANITIZE_NUMBER_INT);
 
+	 	$aVignette = filter_var_array($_SESSION['vignette'], $aFilter);
+	 	
 		//Variable initialization from session variables
         $id_cat		= filter_var($_SESSION['cat'], FILTER_VALIDATE_INT);
 		$id_art		= filter_var($_SESSION['id'], FILTER_VALIDATE_INT);

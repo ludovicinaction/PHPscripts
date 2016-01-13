@@ -32,7 +32,10 @@ else{
         foreach ($aComm as $ligne=>$val)
         {
             $id_art = $val['id_art'];
-            $aArticle = $oArticles->ReadOneArticle($id_art);
+            
+            $oArticles->ReadOneArticle($id_art);
+            $aArticle = $oArticles->getPostData();
+
             $titre_art = $aArticle['art']['titre_art'];
 
             echo "<tr>";

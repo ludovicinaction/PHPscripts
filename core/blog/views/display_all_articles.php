@@ -5,6 +5,8 @@
  * @category BLOG module view
  */
 
+$aArticles = $oArticles->getPostData();
+
 $aItemsForm = $oAdmin->getItemTransation('BLOG', 'FRONT', $lang, 'HOME');
 
 $iXs = (int) $aConfigValues['aff_xs'];

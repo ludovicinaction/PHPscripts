@@ -1,6 +1,6 @@
 <?php
 /**
- * Affichage HTML des commentaires avec affichage coté client du formulaire de réponse.
+ * Display with HTML display client side display of the reply form.
  * @package BLOG
  * @category Vue du module "Blog"
  */
@@ -17,9 +17,11 @@ $title_form = $aItemsForm[$lang]['title_form'];
 
 $_SESSION['lang'] = $lang;
 
-$bFormNew = false; //$bFormNew = true pour afficher le formulaire en bas de page
+$bFormNew = false; //$bFormNew = true to display the form footer
 
-$iNbrCmt = (int)$aArticle['somme-com']['somme'];
+// Total comment number
+$statCmt = $oArticles->ReadStatsArticle($id);
+$iNbrCmt = $statCmt['somme'];
 
 //Gestion de l'affichage du nombre de commentaire au singulier ou au pluriel (ajout du "s")
 if ($iNbrCmt > 1){

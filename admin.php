@@ -184,6 +184,7 @@ echo "<br><br><br><br><br>";
 
                     if (!isset($eng)) { // Does not display the form after having validated.
                         $oArticles->ReadOneArticle($id);
+                        $aArticle = $oArticles->getPostData();
                         include 'core/blog/views/form-create-article.php';
                     }
    

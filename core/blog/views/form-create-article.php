@@ -8,8 +8,10 @@
 $CatItems = array();
 $CatItems = $oAdmin->getItemTransation('BLOG', 'BACK', $lang, 'SUBMENU_CREATE_POST');
 
+
 if (isset($_GET['id'])){ 
 	// *** Mode "Modification article" ***
+	
 	$bModif=true; 
 	$id_art = $aArticle['art']['id_art'];
 	$id_cat = $aArticle['art']['id_categorie'];

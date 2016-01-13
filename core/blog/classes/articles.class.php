@@ -39,14 +39,14 @@ class Articles
 	private $mail_obj;	// Object
 	private $mail_txt;	// email texte
 
-	//EVOL article
+	//Data contents
 	private $_aPostData;	// Article Data
 	private $_aCatData;		// Category Data		
-	//FIN EVOL
+
 
 
 	public function getPostData() {
-
+//var_dump($this->_aPostData);
 		$aFilter = array('id_art'=>FILTER_VALIDATE_INT
 			, 'contenu'=>FILTER_SANITIZE_STRING
 			, 'titre_art'=>FILTER_SANITIZE_STRING
@@ -721,7 +721,8 @@ public function getCategoryData(){
 		$_SESSION['texte_article'] = $_POST['texte_article'];
 
 		$image = $_FILES['vignette']['name'];
-		
+		//var_dump($image);
+		//var_dump($_SESSION['vignette']);
 		if ( $image != '' ) $this->FileMove('vignette');
 	}
     
@@ -735,6 +736,10 @@ public function getCategoryData(){
 	 * @param string 'creer'=>insert into blog_articles ; 'modif'=>update articles
      */ 	  
 	 public function SaveArticle($action, $msg_result_ok, $msg_result_ko){
+//var_dump($this->_aPostData['vignette_art']['size']);
+//var_dump($_SESSION['img']);
+
+	 	$aVignette = $_SESSION['vignette'];
 
 		//Variable initialization from session variables
         $id_cat		= filter_var($_SESSION['cat'], FILTER_VALIDATE_INT);
@@ -755,7 +760,7 @@ public function getCategoryData(){
 		else $date_pub_art = null;
 		
 		// Resizing image
-		if($this->_aPostData['vignette_art']['size'] != 0){
+		if($aVignette['size'] != 0){
 			$max_width=350;
 			$max_height=234;
 			$oImage = new Images;

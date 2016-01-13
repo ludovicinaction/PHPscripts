@@ -3,7 +3,7 @@ require_once 'core/messageAlert.trait.php';
 
 /**
  * Classe Images
- * Methodes liées à la gestion des images
+ * Images management methods
  * @package COMMON
  * @author Ludovic <ludovicinaction@yahoo.fr>
  */
@@ -11,10 +11,10 @@ Class Images{
 	use MessageAlert;
 	
 	/**
-	  * Redimentionne une image avec une largeur et une hauteur maximale
+	  * Resize an image with a width and a maximum height
 	  *
-	  * @param string $sNomInput Nom du fichier à redimensionner
-	  * @return array 'type_image'=>type de l'image, 'ressource_img'=> ressource de l'image.
+	  * @param string $sNomInput File name to resize
+	  * @return array 'type_image'=>image type, 'ressource_img'=> Resource image.
 	  */
 	public function Redim($sNomInput, $max_width, $max_height){
 		

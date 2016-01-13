@@ -4,7 +4,6 @@
  * @package BLOG
  * @category Vue du module "Blog"
  */
-$aArticle = $oArticles -> getPostData();
 
 $CatItems = array();
 $CatItems = $oAdmin->getItemTransation('BLOG', 'BACK', $lang, 'SUBMENU_CREATE_POST');
@@ -35,7 +34,7 @@ else{
 	$form_action = "<form enctype='multipart/form-data' action='admin.php?p=gest_art&a=creer&eng=yes' method='post' class='col-md-12 col-lg-12 well'>";
 }
 
-$alistCat = $oArticles -> ReadCategory();
+$alistCat = $oArticles->getCategoryData();
 
 echo "<div class='margintop70'></div>";
 	

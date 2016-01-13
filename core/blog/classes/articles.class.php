@@ -40,33 +40,27 @@ class Articles
 	private $mail_txt;	// email texte
 
 	//EVOL article
-	private $_aPostData;
+	private $_aPostData;	// Article Data
+	private $_aCatData;		// Category Data		
 	//FIN EVOL
 
 
 	public function getPostData() {
-		//var_dump($this->_aPostData);
 
 		$aFilter = array('id_art'=>FILTER_VALIDATE_INT
 			, 'contenu'=>FILTER_SANITIZE_STRING
 			, 'titre_art'=>FILTER_SANITIZE_STRING
-			, 'vignette_art'=>FILTER_SANITIZE_SPECIAL_CHARS
+			, 'vignette_art'=>FILTER_UNSAFE_RAW
 			, 'date_crea_art'=>FILTER_SANITIZE_STRING
 			, 'date_pub_art'=>FILTER_SANITIZE_STRING
 			, 'resum_art'=>FILTER_SANITIZE_STRING
 			, 'keywords_art'=>FILTER_SANITIZE_STRING
+			, 'id_categorie'=>FILTER_VALIDATE_INT
 			, 'som-comm'=>FILTER_VALIDATE_INT);
 	
 		foreach ($this->_aPostData as $key => $aPost) {
 			$aDataClean[$key] = filter_var_array($aPost, $aFilter);
 		}
-
-		
-
-		//var_dump($aDataClean);		
-		
-
-
 
 		return $aDataClean;
 	}
@@ -150,23 +144,43 @@ class Articles
 		$aStats = $this->ReadStatsArticle($id);
 		
 		$this->_aPostData = array('art'=>$this->_aPostData, 'somme-com'=>$aStats);
-		//var_dump($this->_aPostData);
 	}	
 	
 	/**
-	  * Read post categories
+	  * Read post categories from database
 	  *
 	  * @return array The categories.
 	  */
-	public function ReadCategory(){
+	private function ReadCategoryData(){
 		
 		$req = 'SELECT * from blog_cat_article order by nom_cat';
 		$aResult = SPDO::getInstance()->query($req);
 		$aListCat = $aResult->fetchAll(PDO::FETCH_ASSOC);	
-		return $aListCat;
+		foreach ($aListCat as $key => $aCat) {
+			$this->_aCatData[$key]['id_cat'] = $aCat['id_cat'];
+			$this->_aCatData[$key]['nom_cat'] = $aCat['nom_cat'];
+		}
+		
 	}
 	
-	
+
+
+ /**
+  * get and filter category data
+  *
+  */	
+public function getCategoryData(){
+	$this->ReadCategoryData();
+
+	foreach ($this->_aCatData as $key => $aCat) {
+		$aCleanCat[$key]['id_cat']  = filter_var($aCat['id_cat'], FILTER_SANITIZE_NUMBER_INT);
+		$aCleanCat[$key]['nom_cat'] = filter_var($aCat['nom_cat'], FILTER_SANITIZE_STRING);
+	}
+
+	return $aCleanCat;
+
+	}
+
 	
 	/**
 	  * Reading articles according to search criteria and mode ('front' or 'back' office) 
@@ -288,9 +302,7 @@ class Articles
 			$aStats = $this->ReadStatsArticle($value['id_art']);
 			$this->_aPostData[$index]['som-comm'] = $aStats['somme'];
 		}
-		//var_dump($aListeArticles);
 
- 	    //return $aListeArticles;
 	}
 	
 	public function ReadMetaData($id_art){
@@ -687,11 +699,13 @@ class Articles
 	 
 	 }	 
 
-	  
-	/**
-	 * Sauvegarde des données articles en provenance du formulaire en session
-	 *
-     */ 	 
+
+
+ /**
+  * Save post data in session variables
+  *
+  *
+  */  
 	public function SaveArticlesData(){
 
 		if (isset($_FILES['vignette'])) $_SESSION['vignette'] = $_FILES['vignette'];  
@@ -710,7 +724,9 @@ class Articles
 		
 		if ( $image != '' ) $this->FileMove('vignette');
 	}
-	    
+    
+
+
 	  
 	  
 	/**
@@ -719,20 +735,18 @@ class Articles
 	 * @param string 'creer'=>insert into blog_articles ; 'modif'=>update articles
      */ 	  
 	 public function SaveArticle($action, $msg_result_ok, $msg_result_ko){
-	
-		//Saving the form in session variables
-	
-		//Variable initialization
-        $id_cat		= $_SESSION['cat'];
-		$id_art		= $_SESSION['id'];
-		$titre		= $_SESSION['titre'];
-		$desc		= $_SESSION['desc'];
-		$keyword	= $_SESSION['keyword'];
-		$date_pub	= $_SESSION['date_pub'];
+
+		//Variable initialization from session variables
+        $id_cat		= filter_var($_SESSION['cat'], FILTER_VALIDATE_INT);
+		$id_art		= filter_var($_SESSION['id'], FILTER_VALIDATE_INT);
+		$titre		= filter_var($_SESSION['titre'], FILTER_SANITIZE_STRING);
+		$desc		= filter_var($_SESSION['desc'], FILTER_SANITIZE_STRING);
+		$keyword	= filter_var($_SESSION['keyword'], FILTER_SANITIZE_STRING);
+		$date_pub	= filter_var($_SESSION['date_pub'], FILTER_SANITIZE_STRING);
                 
         $chaine = $_SESSION['texte_article'];
         $texte_article = htmlspecialchars($chaine, ENT_QUOTES, 'UTF-8');
-
+		
 		//Formatting the date of publication in the YYYY-MM-DD
 		if ($date_pub != ''){
 			$dt = \DateTime::createFromFormat('d/m/Y', $date_pub);
@@ -741,7 +755,7 @@ class Articles
 		else $date_pub_art = null;
 		
 		// Resizing image
-		if($_SESSION['vignette']['size'] != 0){
+		if($this->_aPostData['vignette_art']['size'] != 0){
 			$max_width=350;
 			$max_height=234;
 			$oImage = new Images;

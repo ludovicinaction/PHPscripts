@@ -8,6 +8,7 @@
 $aItems = $oAdmin->getItemTransation('BLOG', 'BACK', $lang, 'SUBMENU_POST_ADMIN');
 
 $aPostData = $oArticles->getPostData();
+$alistCat = $oArticles->getCategoryData();
 
 // Formulaire de tri
 echo "<div class='margintop70'></div>";
@@ -20,7 +21,7 @@ echo "<form method='post' class='margintop70' action='admin.php?p=gest_art&a=mod
 			echo "<label for='sel1'>{$aItems[$lang]['lib_cat_filter']}</label>";
 			echo "<select class='form-control' name='cat' maxlength='30'>";
 			echo "<option value='0'> {$aItems[$lang]['lib_select_cat']} </option>";
-			foreach ($alistCat as $ligne=>$val){
+			foreach ($alistCat as $ligne=>$val){	
 				echo '<option value=\''.$val['id_cat'].'\'>' . $val['nom_cat'] . '</option>';
 			}
 			echo "</select>";

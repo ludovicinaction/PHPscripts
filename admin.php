@@ -109,8 +109,8 @@ $oMetaArt = new Articles;
          * "BLOG" MODULE ADMINISTATION
          * *****************************
          */
-//echo "<div class='margintop70'></div>";
-echo "<br><br>";
+
+echo "<br><br><br><br><br>";
 
         $oAdmin = new Admin();  
        
@@ -170,12 +170,7 @@ echo "<br><br>";
                 if (!isset($id)) {
 
                     // Search All posts without pagination
-                    
-                    //$aArticles = $oArticles->ReadAllArticles('admin', 0);
                     $oArticles->ReadAllArticles('admin', 0);
-
-                    // Reading categories	
-                    $alistCat = $oArticles->ReadCategory();
 
                     // Display form
                     if ('yes' != isset($eng) && ('modif' == isset($a))) {
@@ -196,11 +191,11 @@ echo "<br><br>";
                     if ((isset($eng) && 'yes' == $eng) && (!isset($conf))) {
                         $oArticles->SaveArticlesData();
                         $btOk = 'admin.php?p=gest_art&a=modif&id=' . $id . '&eng=yes&conf=yes';
-                        $oArticles->RequestConfirmation('modif', $aMsgPost[$lang]['msg_update_confirm'], $btOk, 'admin.php?p=gest_art', $lang);
+                        $oArticles->RequestConfirmation('modif', $aMsgPost[$lang]['msg_update_confirm'], $btOk, 'admin.php?p=gest_art', $lang);                                                                    
                     }
 
                     // If confirmation recording then save base.  
-                    if (isset($conf) && 'yes' == $conf) {
+                    if (isset($conf) && 'yes' == $conf) {                
                        $bSauveOK = $oArticles->SaveArticle('modif', $aMsgPost[$lang]['msg_result_ok'], $aMsgPost[$lang]['msg_result_ko']);
                     }               
                 }
@@ -298,7 +293,7 @@ echo "<br><br>";
                 if (isset($nom_cat)) $_SESSION['nom_cat'] = $nom_cat;
 
                 if ( (!isset ($valid)) ) {
-                    $aCat = $oArticles -> ReadCategory();
+                    $aCat = $oArticles -> getCategoryData();
                     include 'core/blog/views/admin-blog-category.php';
                 }   
                 else{

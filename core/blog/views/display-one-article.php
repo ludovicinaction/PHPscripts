@@ -6,11 +6,9 @@
  * @category Vue du module "Blog"
  */
 $aArticle = $oArticles->getPostData();
-//var_dump($aArticle);
 
 $vignette = $aArticle['art']['vignette_art'];
 
-//$sLang = filter_var($_SESSION['lang'], FILTER_SANITIZE_STRING);
 if ($lang == 'FR') $sDate = utf8_encode($aArticle['art']['date_crea_art']);
 elseif ($lang == 'EN') $sDate = date('d F', strtotime($aArticle['art']['date_crea_art']));
 

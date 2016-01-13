@@ -48,6 +48,7 @@ trait MessageAlert{
 	 * @param $linkBtnAnnule string Cancel url link
 	 */
 	 public function RequestConfirmation($action, $titleAlert, $linkBtnOk, $linkCancelBtn, $lang){
+	
 		 $MsgAlert = ''; //optionnel
 
 		 if ($lang == 'FR'){

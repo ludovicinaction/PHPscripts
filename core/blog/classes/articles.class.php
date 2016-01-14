@@ -41,7 +41,9 @@ class Articles
 
 	//Data contents
 	private $_aPostData;	// Article Data
-	private $_aCatData;		// Category Data		
+	private $_aCatData;		// Category Data
+	private $_aComments;	// Comments Data	
+	private $_aAnswer;		// Answer Data	
 
 
  /**
@@ -348,20 +350,36 @@ public function getCategoryData(){
 
 	 /**
 	  *	Reading the comments of the article requested
+	  *	Use in the front office to display the post comments
 	  *
 	  * @param int $id_art Article ID 
 	  * @return array $aRequete Data comments found for the request.
 	  */
 	 public function ReadComments($id_art){		
-		$sReq = 'SELECT date_com,nom_com, photo_com, texte_com, id_com, photo_com, photo_type, ctrl_aff, email_valid FROM blog_comments WHERE ctrl_aff=0 or valid_com=1 and id_art='.$id_art . ' order by date_com';
+		$sReq = 'SELECT date_com,nom_com, photo_com, texte_com, id_com, photo_type, ctrl_aff, email_valid FROM blog_comments WHERE ctrl_aff=0 or valid_com=1 and id_art='.$id_art . ' order by date_com';
 		$sRequete = SPDO::getInstance()->query($sReq);
-		$aRequete = $sRequete->fetchAll(PDO::FETCH_ASSOC);
+		$this->_aComments = $sRequete->fetchAll(PDO::FETCH_ASSOC);
+
+		$aFilter = array('date_com'=>FILTER_SANITIZE_STRING
+			, 'nom_com'=>FILTER_SANITIZE_STRING
+			, 'photo_com'=>FILTER_UNSAFE_RAW
+			, 'texte_com'=>FILTER_SANITIZE_STRING
+			, 'id_com'=>FILTER_SANITIZE_NUMBER_INT
+			, 'photo_type'=>FILTER_SANITIZE_STRING
+			, 'ctrl_aff'=>FILTER_SANITIZE_NUMBER_INT
+			, 'email_valid'=>FILTER_SANITIZE_NUMBER_INT);	
 		
-		return $aRequete;
+		foreach ($this->_aComments as $key => $aComment) {
+			$aDataClean[$key] = filter_var_array($aComment, $aFilter);
+		}
+
+		return $aDataClean;
+
 	 }
 
 	 /**
 	  * Reading all comments
+	  * Use in back-office to display comments list (comments management)
 	  *
 	  * @return array $aRequete Table containing comments
 	  */
@@ -370,9 +388,23 @@ public function getCategoryData(){
 	 	//(also can see the chronology of comments / responses).
 	 	$sReq = "SELECT date_com,nom_com, email_com, texte_com, id_com, id_art, ctrl_aff, email_valid, valid_com FROM blog_comments WHERE ctrl_aff=1 order by id_art, date_com desc";
 		$sRequete = SPDO::getInstance()->query($sReq);		
-		$aRequete = $sRequete->fetchAll(PDO::FETCH_ASSOC); 
+		$this->_aComments = $sRequete->fetchAll(PDO::FETCH_ASSOC); 
+
+		$aFilter = array('date_com'=>FILTER_SANITIZE_STRING
+			, 'nom_com'=>FILTER_SANITIZE_STRING
+			, 'email_com'=>FILTER_VALIDATE_EMAIL
+			, 'texte_com'=>FILTER_SANITIZE_STRING
+			, 'id_com'=>FILTER_SANITIZE_NUMBER_INT
+			, 'id_art'=>FILTER_SANITIZE_NUMBER_INT
+			, 'ctrl_aff'=>FILTER_SANITIZE_NUMBER_INT
+			, 'email_valid'=>FILTER_SANITIZE_NUMBER_INT
+			, 'valid_com'=>FILTER_SANITIZE_NUMBER_INT);
 		
-		return $aRequete;
+		foreach ($this->_aComments as $key => $aComment) {
+			$aDataClean[$key] = filter_var_array($aComment, $aFilter);
+		}
+
+		return $aDataClean;
 	 }
 
 	 /**
@@ -383,13 +415,30 @@ public function getCategoryData(){
 	  * @
 	  */
 	 public function ReadAnswers($id_comm, $use){
+	 	$aDataClean = array();
 
-		if ($use == 'admin') $sReq = 'SELECT * FROM blog_reply WHERE ctrl_aff=1 and valid_rep=0 and id_commentaire='.$id_comm . ' order by id_rep';
-		elseif ($use == 'util') $sReq = 'SELECT * FROM blog_reply WHERE (ctrl_aff=0 or valid_rep=1) and id_commentaire='.$id_comm . ' order by id_rep';
+		if ($use == 'admin') $sReq = 'SELECT id_rep, nom_rep, texte_rep, date_rep, photo_rep, email_rep, email_valid, valid_rep, ref_rep, photo_type FROM blog_reply WHERE ctrl_aff=1 and valid_rep=0 and id_commentaire='.$id_comm . ' order by id_rep';
+		elseif ($use == 'util') $sReq = 'SELECT id_rep, nom_rep, texte_rep, date_rep, photo_rep, email_rep, email_valid, valid_rep,ref_rep, photo_type FROM blog_reply WHERE (ctrl_aff=0 or valid_rep=1) and id_commentaire='.$id_comm . ' order by id_rep';
 		
-		$aRequete = SPDO::getInstance()->query($sReq);
-		 
-		return $aRequete;
+		$sRequete = SPDO::getInstance()->query($sReq);
+		$this->_aAnswer = $sRequete->fetchAll(PDO::FETCH_ASSOC);		
+
+		$aFilter = array('id_rep'=>FILTER_SANITIZE_NUMBER_INT
+			, 'nom_rep'=>FILTER_SANITIZE_STRING
+			, 'texte_rep'=>FILTER_SANITIZE_STRING
+			, 'date_rep'=>FILTER_SANITIZE_STRING
+			, 'photo_rep'=>FILTER_UNSAFE_RAW
+			, 'email_rep'=>FILTER_VALIDATE_EMAIL
+			, 'email_valid'=>FILTER_SANITIZE_NUMBER_INT
+			, 'valid_rep'=>FILTER_SANITIZE_NUMBER_INT
+			, 'ref_rep'=>FILTER_SANITIZE_NUMBER_INT
+			, 'photo_type'=>FILTER_SANITIZE_STRING);
+
+		foreach ($this->_aAnswer as $key => $aAnswer) {
+			$aDataClean[$key] = filter_var_array($aAnswer, $aFilter);
+		}		
+
+		return $aDataClean;
 	 }
 	 
 	 /**

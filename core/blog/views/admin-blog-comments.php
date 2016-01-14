@@ -79,9 +79,11 @@ else{
             //echo '</tbody>';
 
             // affichage des réponses du commentaire
-            $pReponses = $oArticles->ReadAnswers($val['id_com'], 'admin');
+            //$pReponses = $oArticles->ReadAnswers($val['id_com'], 'admin');
+
+            $aReponses = $oArticles->ReadAnswers($val['id_com'], 'admin');
         
-            $aReponses = $pReponses->fetchAll(PDO::FETCH_ASSOC);
+            //$aReponses = $pReponses->fetchAll(PDO::FETCH_ASSOC);
 
             //On trie les données par rapport à la clé "Ref_rep"
             $aRepTrie = $oArticles->multi_sort($aReponses, $key = 'ref_rep');

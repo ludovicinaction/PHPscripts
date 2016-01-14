@@ -23,7 +23,7 @@ $bFormNew = false; //$bFormNew = true to display the form footer
 $statCmt = $oArticles->ReadStatsArticle($id);
 $iNbrCmt = $statCmt['somme'];
 
-//Gestion de l'affichage du nombre de commentaire au singulier ou au pluriel (ajout du "s")
+// Display management to comment on the number of singular or plural(add a "s")
 if ($iNbrCmt > 1){
 	echo "<br /><h2>$iNbrCmt {$aItemsForm[$lang]['txt_tot_cmts']} :</h2>";
 }elseif ($iNbrCmt == 1) {
@@ -54,14 +54,14 @@ foreach($aComm as $val)
 
 	if (isset($val['nom_com'])) $id_com = $val['nom_com'];
 	
-	if (isset($_GET['id'])) $id_art = $_GET['id']; 
+	if (isset($id)) $id_art = $id; 
 	else echo "id_art n'est pas connu"; 
 	
 	echo "<div class='thumbnail'>";
 
 		$image = $val['photo_com'];
-		
-		if (is_null($val['photo_com']))
+
+		if ($image == '')
 			echo "<img class='img-blog pull-left' src='img/blog/photo_anonyme.jpg' />";
 		else
 			echo '<img class=\'img-blog pull-left\' src="data:image/jpeg;base64,'. base64_encode($image) .'" />';
@@ -80,18 +80,16 @@ foreach($aComm as $val)
 
 
 	/*
-	 * Affichage les réponses correspondant à chaque commentaire 
+	 * Show replies corresponding to each comment
 	 */
 	
-	$pReponses = $oArticles->ReadAnswers($val['id_com'], 'util');
-	
-	$aReponses = $pReponses->fetchAll(PDO::FETCH_ASSOC);
+	$aReponses = $oArticles->ReadAnswers($val['id_com'], 'util');
 
 	//On trie les données par rapport à la clé "Ref_rep"
 	$aRepTrie = $oArticles->multi_sort($aReponses, $key = 'ref_rep');
 	
 	/*
-	 *	Affichages des réponses
+	 *	Displays answers
 	 */
 
 	foreach($aRepTrie as $repval)
@@ -123,7 +121,7 @@ foreach($aComm as $val)
 		
 		$image = $repval['photo_rep'];
 		
-		if (is_null($repval['photo_type']))
+		if ($repval['photo_type'] == '')
 			echo "<img class='img-blog pull-left' src='img/blog/photo_anonyme.jpg' />";
 		else
 			echo '<img class=\'img-blog pull-left\' src="data:image/jpeg;base64,'. base64_encode($image) .'" />';

@@ -19,9 +19,9 @@
    
     $aItems = $oAdmin->getItemTransation('BLOG', 'BACK', $lang, 'SUBMENU_SET');
 
-    echo "<form class='form-horizontal' action='admin.php?p=gest_art&a=config&eng' method='post' class='col-md-16 col-lg-16 well'>";
+    echo "<form class='form-horizontal' action='admin.php?p=gest_art&a=config&c=submit' method='post' class='col-md-16 col-lg-16 well'>";
 
-     // Contrôle d'affichage.
+     // Display control
      echo "<div class=margintop70></div>";
 
      echo "<legend>{$aItems[$lang]['lib_title_display_thum']} </legend>";
@@ -86,7 +86,7 @@
         echo "</div>";    
     echo "</div>";
     
-    //Gestion des commentaires O/N
+    // Comments management Yes/No
     echo "<legend>{$aItems[$lang]['lib_title_mail_manag']}</legend>";
     echo "<div class='form-group'>"; 
         echo "<label class='control-label col-xs-2'>{$aItems[$lang]['lib_check_comments']}</label>";
@@ -102,7 +102,7 @@
         echo "</label>";
     echo "</div>";
 
-    // configuration mail de controle commentaire
+    // Email controle configuration 
     echo "<div class='form-group'>"; 
         echo "<label class='control-label col-xs-2'>{$aItems[$lang]['lib_input_sendermail']}</label>";
         echo "<div class='col-xs-3'>";
@@ -110,7 +110,7 @@
         echo "</div>"; 
     echo "</div>";
  
-    //Mail expéditeur
+    // Email exp
     echo "<div class='form-group'>"; 
         echo "<label class='control-label col-xs-2'>{$aItems[$lang]['lib_input_returnadr']}</label>";
         echo "<div class='col-xs-3'>";
@@ -118,7 +118,7 @@
         echo "</div>"; 
     echo "</div>";
  
-    //Nom de réponse
+    // Name answer
     echo "<div class='form-group'>"; 
         echo "<label class='control-label col-xs-2'>{$aItems[$lang]['lib_input_responseadr']}</label>";
         echo "<div class='col-xs-3'>";
@@ -126,7 +126,7 @@
         echo "</div>"; 
     echo "</div>";
 
-    //email de réponse
+    // Email answer
     echo "<div class='form-group'>"; 
         echo "<label class='control-label col-xs-2'>{$aItems[$lang]['lib_adr_answer']}</label>";
         echo "<div class='col-xs-3'>";
@@ -134,7 +134,7 @@
         echo "</div>"; 
     echo "</div>";
            
-    // Objet de l'email
+    // Email object
     echo "<div class='form-group'>"; 
         echo "<label class='control-label col-xs-2'>{$aItems[$lang]['lib_object']}</label>";
         echo "<div class='col-xs-3'>";
@@ -142,7 +142,7 @@
         echo "</div>"; 
     echo "</div>";
 
-    // Texte de l'email
+    // Email Text
     echo "<div class='form-group'>"; 
         echo "<label class='control-label col-xs-2'>{$aItems[$lang]['lib_contents']}</label>";
         echo "<div class='col-xs-4'>";
@@ -152,7 +152,7 @@
 
     echo "</div>";        
 
-    //Bouton submit
+    // Submit button
     echo "<div class='form-group'>"; 
         echo "<div class='col-xs-2'>";
         echo "</div>";

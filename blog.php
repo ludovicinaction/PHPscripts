@@ -18,11 +18,24 @@ setlocale(LC_TIME, "fr_FR", "fr_FR@euro", "fr", "FR", "fra_fra", "fra");
 	<meta charset="utf-8">
         
 	<?php
+
+
+	// Filtering $_GET et $_POST variables
+	$id 	= filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
+	$cat 	= filter_input(INPUT_GET, 'cat', FILTER_SANITIZE_STRING);
+	$new	= filter_input(INPUT_GET, 'new', FILTER_SANITIZE_STRING);
+	$rep	= filter_input(INPUT_GET, 'rep', FILTER_SANITIZE_STRING);
+	// $_POST variables
+	$nom 	= filter_input(INPUT_POST, 'nom', FILTER_SANITIZE_STRING);
+	$mail 	= filter_input(INPUT_POST, 'mail', FILTER_SANITIZE_URL);
+	$siteweb= filter_input(INPUT_POST, 'siteweb', FILTER_SANITIZE_URL);
+	$contenu= filter_input(INPUT_POST, 'contenu', FILTER_SANITIZE_STRING);
+	
 		$oMetaArt = new Articles;
 		$oUtil = new Utilitaires;
 		
 		// Meta-data
-		if (isset($_GET['id'])) {
+		if (isset($id)) {
 			$aMetaData = $oMetaArt->ReadMetaData($_GET['id']);
 			$oUtil->DisplayPageMetaData($aMetaData['titre_art'], $aMetaData['resum_art'], $aMetaData['keywords_art'] );
 			unset($oMetaArt);
@@ -66,18 +79,7 @@ setlocale(LC_TIME, "fr_FR", "fr_FR@euro", "fr", "FR", "fra_fra", "fra");
     $lang = $aSet['language'];
     $host = $aSet['websitehost'];
 
-	// Filtering $_GET et $_POST variables
-	$id 	= filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
-	$cat 	= filter_input(INPUT_GET, 'cat', FILTER_SANITIZE_STRING);
-	$new	= filter_input(INPUT_GET, 'new', FILTER_SANITIZE_STRING);
-	$rep	= filter_input(INPUT_GET, 'rep', FILTER_SANITIZE_STRING);
-	// $_POST variables
-	$nom 	= filter_input(INPUT_POST, 'nom', FILTER_SANITIZE_STRING);
-	$mail 	= filter_input(INPUT_POST, 'mail', FILTER_SANITIZE_URL);
-	$siteweb= filter_input(INPUT_POST, 'siteweb', FILTER_SANITIZE_URL);
-	$contenu= filter_input(INPUT_POST, 'contenu', FILTER_SANITIZE_STRING);
-	
-	$oArticles = new Articles;
+    $oArticles = new Articles;
 	$aConfigValues = $oArticles->getConfigValues();
 
 if (!isset($id)){
@@ -123,7 +125,7 @@ if (!isset($id)){
 			}
 
 			// Article display
-			if ( (!isset($_GET['rep'])) && (!isset($new))  ){
+			if ( (!isset($rep)) && (!isset($new))  ){
 
 				$aArticle = $oArticles->ReadOneArticle($id);
 				include 'core/blog/views/display-one-article.php';

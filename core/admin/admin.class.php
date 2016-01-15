@@ -17,36 +17,13 @@ class Admin{
 		$this->getSetting();
 	} 
 
-/**
-  * Translate one item depending on the module, the office (back or front), language and type
-  * @param string $module name module
-  * @param string $office ('FRONT' or 'BACK')
-  * @param string $lang ('FR' or 'EN' - Français or English)
-  * @param string $type item designation
-  * @return array text and descritions items translation
-  * 
-  */
- public function getItemTransation($module, $office, $lang, $type){
- 	
- 	$sReq = "SELECT description, texte FROM adm_translation WHERE module='$module' and office='$office' and lang='$lang' and type='$type'";
- 	$result = SPDO::getInstance()->query($sReq);
- 	$aTrans = $result->fetchAll(PDO::FETCH_ASSOC);
 
 
-	foreach ($aTrans as $key=>$value) {
-	 	foreach ($aTrans[$key] as $cle => $valeur) { 		
-	 		if ($cle =='description') {
-	 			$aItems[$lang][$valeur] = '';
-	 			$desc = $valeur; 
-	 		}
-	 		elseif($cle == 'texte') $aItems[$lang][$desc] = $valeur;
-	 	}
-		
-	}
- 	return $aItems;
 
 
- }
+
+
+
  /**
   * Get général setting
   *
@@ -86,9 +63,10 @@ public function save_setting($lang, $host)
 {
 	self::$lang = $lang;
 	$sReq = 'UPDATE adm_common SET language=' . "'$lang'" . ', websitehost= ' . "'$host'";
-    $aData = array (':lang'=>"'$lang'");
+    $aData = array(array ('type'=>PDO::PARAM_STR, ':lang'=>"'$lang'"));
     $aItems = $this->getItemTransation('BLOG', 'BACK', $lang, 'HOME');
-    $this -> updateInformation($sReq, $aData, '', 'admin.php');  
+    
+    $this -> executeDbQuery($sReq, $aData, '', 'admin.php', true);  
 
     $this->getSetting();
 }
@@ -139,7 +117,7 @@ public function getSearchTranslations($search_mod, $search_lang, $search_office,
 }
 
  /**
-  * Filter the input values (for translation page) and put in $_SESSION 
+  * Filter the input values (for translation page) and put it in $_SESSION variables
   *
   */
 public function filterPostValues(){
@@ -180,6 +158,8 @@ private function supplyVariables(){
 	return $aVar;
 }
 
+
+
  /**
   * Update Translations in database
   */
@@ -195,10 +175,20 @@ public function UpdateTranslation(){
 	$id_trans = $aVar['id_trans']; 
 
 	$sReq = 'UPDATE adm_translation set module = :module, lang=:lang, office=:office, type=:type, description=:description, texte=:translation where id=' . $id_trans;
-	$aData = array (':module'=>$module, ':lang'=>$lang, ':office'=>$office, ':type'=>$type, ':description'=>$desc, ':translation'=>$trans);
+	//$aData = array (':module'=>$module, ':lang'=>$lang, ':office'=>$office, ':type'=>$type, ':description'=>$desc, ':translation'=>$trans);
+	$aData = array(
+		array('type'=>PDO::PARAM_STR, ':module'=>$module)
+		, array('type'=>PDO::PARAM_STR, ':lang'=>$lang)
+		, array('type'=>PDO::PARAM_STR, ':office'=>$office)
+		, array('type'=>PDO::PARAM_STR, ':type'=>$type)
+		, array('type'=>PDO::PARAM_STR, ':description'=>$desc)
+		, array('type'=>PDO::PARAM_STR, ':translation'=>$trans));
+
+//$aData = array (':module'=>$module, ':lang'=>$lang, ':office'=>$office, ':type'=>$type, ':description'=>$desc, ':translation'=>$trans);
+
 
 	$aItems = $this->getItemTransation('BLOG', 'BACK', $lang, 'MSG_TRANS');
-	$this -> updateInformation($sReq, $aData, $aItems[$lang]['msg_update_confirm'], 'admin.php?p=trans&a=adm_trans&c=init'); 
+	$this -> executeDbQuery($sReq, $aData, $aItems[$lang]['msg_update_confirm'], 'admin.php?p=trans&a=adm_trans&c=init', true); 
 
 }	
 
@@ -211,24 +201,15 @@ public function CreateTranslation(){
 	$aVar = $this->supplyVariables();
 
 	$sReq = "INSERT INTO adm_translation (module, lang, office, type, description, texte) VALUES (:module, :lang, :office, :type, :description, :translation)";
-	$Insert = SPDO::getInstance()->prepare($sReq);
-	
-	$Insert -> bindValue(':module', $aVar['module']);
-	$Insert -> bindValue(':lang', $aVar['lang']);
-	$Insert -> bindValue(':office', $aVar['office']);
-	$Insert -> bindValue(':type', $aVar['type']);	
-	$Insert -> bindValue(':description', $aVar['desc']);
-	$Insert -> bindValue(':translation', $aVar['translation']);	
 
-	try {
-		 $resultOK = $Insert->execute();
-	} catch(PDOException $e){
-		 echo $e->getMessage();
-	}
+	$aData = array(array ('type'=>PDO::PARAM_STR, ':module'=>$aVar['module'])
+		, array ('type'=>PDO::PARAM_STR, ':lang'=>$aVar['lang'])
+		, array ('type'=>PDO::PARAM_STR, ':office'=>$aVar['office'])
+		, array ('type'=>PDO::PARAM_STR, ':type'=>$aVar['type'])
+		, array ('type'=>PDO::PARAM_STR, ':description'=>$aVar['desc'])
+		, array ('type'=>PDO::PARAM_STR, ':translation'=>$aVar['translation']));
 
-	$aMsg = $this->getItemTransation('BLOG', 'BACK', Admin::$lang, 'MSG_DB_RESULT');
-	if ($resultOK) $this->DisplayResultRqt($resultOK, 'admin.php?p=trans&a=adm_trans&c=init', $aMsg[Admin::$lang]['ok_return'], '');
-	else $this->DisplayResultRqt($resultOK, 'admin.php?p=trans&a=adm_trans&c=init', '', $aMsg[Admin::$lang]['ko_return']);
+	$this -> executeDbQuery($sReq, $aData, '', 'admin.php?p=trans&a=adm_trans&c=init', true); 
 
 }
 

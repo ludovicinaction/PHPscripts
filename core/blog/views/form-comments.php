@@ -5,6 +5,8 @@
  * @category Vue du module "Blog"
  */
 
+$id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
+
 // init translation
 $sLang = filter_var($_SESSION['lang'], FILTER_SANITIZE_STRING);
 
@@ -15,8 +17,8 @@ $aItems = $oAdmin->getItemTransation('BLOG', 'FRONT', $sLang, 'FORM1');
 if (!$bFormNew){
 
 	if (isset($aArticle['id_com'])) $id_com = $aArticle['id_com'];
-	
-	if (isset($_GET['id'])) $id_art = $_GET['id']; 
+
+	if (isset($id)) $id_art = $id; 
 
 	if ($bCom) $nom_com = $val['nom_com'];
 	else $nom_com = $repval['nom_rep'];

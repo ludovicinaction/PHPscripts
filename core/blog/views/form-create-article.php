@@ -1,17 +1,17 @@
 <?php
 /**
- * Affichage HTML du formulaire de création d'un article.
+ * Displaying the HTML form for creating an article.
  * @package BLOG
- * @category Vue du module "Blog"
+ * @category BLOG module viw
  */
 
 $CatItems = array();
 $CatItems = $oAdmin->getItemTransation('BLOG', 'BACK', $lang, 'SUBMENU_CREATE_POST');
 
-
 if (isset($_GET['id'])){ 
-	// *** Mode "Modification article" ***
-	
+	// *** Modification mode" ***
+	$vignette = '';
+
 	$bModif=true; 
 	$id_art = $aArticle['art']['id_art'];
 	$id_cat = $aArticle['art']['id_categorie'];
@@ -21,10 +21,13 @@ if (isset($_GET['id'])){
 	$resum_art =  htmlentities($aArticle['art']['resum_art'], ENT_QUOTES, 'utf-8');
 	$keyswords = htmlentities($aArticle['art']['keywords_art'], ENT_QUOTES, 'utf-8');
 	$date_pub = htmlentities($aArticle['art']['date_pub_art'], ENT_QUOTES, 'utf-8');
+
+	//$_SESSION['vignette'] = $vignette;
+
 	$form_action = "<form enctype='multipart/form-data' action='admin.php?p=gest_art&a=modif&id=$id_art&eng=yes' method='post' class='col-md-12 col-lg-12 well'>";
 }
 else{ 
-	// *** Mode "création article" ***
+	// *** "Create mode" ***
 	$bModif=false;
 	$id_cat='';
 	$titre='';

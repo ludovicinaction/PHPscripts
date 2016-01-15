@@ -67,7 +67,7 @@ class Articles
 		foreach ($this->_aPostData as $key => $aPost) {
 			$aDataClean[$key] = filter_var_array($aPost, $aFilter);
 		}
-//var_dump($aDataClean);
+
 		return $aDataClean;
 		
 	}
@@ -86,7 +86,12 @@ class Articles
 
 	}
 
-	// Determination of $ this-> Total Nbr Display according to the paging request
+ /**
+  * Determination of $this->TotalNbrDisplay (according to the paging request)
+  *
+  * @param string $sReq SQL Request 
+  *
+  */ 
 	private function nbrTotalArtDisplayed($sreq){
 		$result = SPDO::getInstance()->query($sreq);
 		$atotArt = $result->fetch(PDO::FETCH_ASSOC);
@@ -356,6 +361,7 @@ public function getCategoryData(){
 	  * @return array $aRequete Data comments found for the request.
 	  */
 	 public function ReadComments($id_art){		
+		$aDataClean = array();
 		$sReq = 'SELECT date_com,nom_com, photo_com, texte_com, id_com, photo_type, ctrl_aff, email_valid FROM blog_comments WHERE ctrl_aff=0 or valid_com=1 and id_art='.$id_art . ' order by date_com';
 		$sRequete = SPDO::getInstance()->query($sReq);
 		$this->_aComments = $sRequete->fetchAll(PDO::FETCH_ASSOC);
@@ -417,8 +423,8 @@ public function getCategoryData(){
 	 public function ReadAnswers($id_comm, $use){
 	 	$aDataClean = array();
 
-		if ($use == 'admin') $sReq = 'SELECT id_rep, nom_rep, texte_rep, date_rep, photo_rep, email_rep, email_valid, valid_rep, ref_rep, photo_type FROM blog_reply WHERE ctrl_aff=1 and valid_rep=0 and id_commentaire='.$id_comm . ' order by id_rep';
-		elseif ($use == 'util') $sReq = 'SELECT id_rep, nom_rep, texte_rep, date_rep, photo_rep, email_rep, email_valid, valid_rep,ref_rep, photo_type FROM blog_reply WHERE (ctrl_aff=0 or valid_rep=1) and id_commentaire='.$id_comm . ' order by id_rep';
+		if ($use == 'admin') $sReq = 'SELECT id_rep, nom_rep, texte_rep, date_rep, photo_rep, email_rep, email_valid, valid_rep, ref_rep, photo_type, id_commentaire FROM blog_reply WHERE ctrl_aff=1 and valid_rep=0 and id_commentaire='.$id_comm . ' order by id_rep';
+		elseif ($use == 'util') $sReq = 'SELECT id_rep, nom_rep, texte_rep, date_rep, photo_rep, email_rep, email_valid, valid_rep,ref_rep, photo_type, id_commentaire FROM blog_reply WHERE (ctrl_aff=0 or valid_rep=1) and id_commentaire='.$id_comm . ' order by id_rep';
 		
 		$sRequete = SPDO::getInstance()->query($sReq);
 		$this->_aAnswer = $sRequete->fetchAll(PDO::FETCH_ASSOC);		
@@ -432,7 +438,8 @@ public function getCategoryData(){
 			, 'email_valid'=>FILTER_SANITIZE_NUMBER_INT
 			, 'valid_rep'=>FILTER_SANITIZE_NUMBER_INT
 			, 'ref_rep'=>FILTER_SANITIZE_NUMBER_INT
-			, 'photo_type'=>FILTER_SANITIZE_STRING);
+			, 'photo_type'=>FILTER_SANITIZE_STRING
+			, 'id_commentaire'=>FILTER_SANITIZE_NUMBER_INT);
 
 		foreach ($this->_aAnswer as $key => $aAnswer) {
 			$aDataClean[$key] = filter_var_array($aAnswer, $aFilter);
@@ -470,18 +477,9 @@ public function getCategoryData(){
 		 if ($type == 'com') $sReq = "UPDATE blog_comments SET valid_com = :valid WHERE id_com=$id"; 
 		 elseif ($type == 'rep') $sReq = "UPDATE blog_reply SET valid_rep = :valid WHERE id_rep=$id";
 
-		 $update = SPDO::getInstance()->prepare($sReq);
-		 $update -> bindValue(':valid', 1);
+		 $aBindVar = array(array('type'=>PDO::PARAM_INT, ':valid'=>1));
 
-		 try {
-			 $resultOK = $update->execute();
-		 } catch(PDOException $e){
-			 echo $e->getMessage();
-		 }
-
-		 $this->DisplayResultRqt($resultOK, 'admin.php?p=gest_art&a=gest_com&c=init', $successTitle, $dangerTitle);
-		  
-	
+		 $this->executeDbQuery($sReq, $aBindVar, '', 'admin.php?p=gest_art&a=gest_com&c=init', true);	
 	}
 
 
@@ -572,9 +570,53 @@ public function getCategoryData(){
 				
 			$sReq = "INSERT INTO blog_reply (date_rep, nom_rep, email_rep, siteweb_rep, texte_rep, valid_rep, id_commentaire, ref_rep, photo_rep, photo_type, ctrl_aff) ";
 			$sReq .= "VALUES (:datej, :nom, :mail, :web, :txt, :valid, :id, :ref_rep, :photo, :type_photo, :ctrl_aff)";
-		}		
+		}
+
+
+		// Insert query execution
 		
-		//Execution de la requête insert 
+		$notype=PDO::PARAM_STR;
+
+/*		$aBindVar = array(
+	 array(':datedebut'=>$datedeb, 'type'=>$notype)
+	 , array(':datefin'=>$datefin, 'type'=>$notype)
+	 , array(':nom'=>$nom, 'type'=>$type));	
+*/
+
+
+
+/*		$aBindVar = array(
+		array(':datej'=>$dDateJour, 'type'=>$notype)
+		,array(':nom'=>$nom, 'type'=>$notype)
+		,array(':mail'=>$mail, 'type'=>$notype)
+		,array(':web'=>$siteweb, 'type'=>$notype)
+		,array(':txt'=>$contents, 'type'=>$notype)
+		,array(':valid'=>$iValid, 'type'=>$notype)
+		,array(':id'=>$id, 'type'=>$notype)
+		,array(':photo'=>$img, 'type'=>PDO::PARAM_LOB)
+		,array(':type_photo'=>$typeimg, 'type'=>$notype)
+		,array(':ctrl_aff'=>$ctr_comm, 'type'=>$notype));		
+
+		if ($type_comm == 'rep' ) array_push($aBindVar, array(':ref_rep'=>$ref_rep, 'type'=>$notype));
+*/
+		$aBindVar = array(
+		array('type'=>$notype, ':datej'=>$dDateJour)
+		,array('type'=>$notype, ':nom'=>$nom)
+		,array('type'=>$notype, ':mail'=>$mail)
+		,array('type'=>$notype, ':web'=>$siteweb)
+		,array('type'=>$notype, ':txt'=>$contents)
+		,array('type'=>$notype, ':valid'=>$iValid)
+		,array('type'=>$notype, ':id'=>$id, )
+		,array('type'=>PDO::PARAM_LOB, ':photo'=>$img)
+		,array('type'=>$notype, ':type_photo'=>$typeimg)
+		,array('type'=>$notype,':ctrl_aff'=>$ctr_comm));	
+
+		if ($type_comm == 'rep' ) array_push($aBindVar, array('type'=>$notype, ':ref_rep'=>$ref_rep));
+
+		$resultOK = $this->executeDbQuery($sReq, $aBindVar, '', '', false);
+		//$resultOK = false;
+
+/*		 
 		$rqt = SPDO::getInstance()->prepare($sReq);
 		
 		$rqt -> bindValue(':datej', $dDateJour);
@@ -594,7 +636,8 @@ public function getCategoryData(){
 		}catch (PDOException $e){
 			echo $e->getMessage();
 		}
-		
+*/		
+
 		unset($oImg);
 
 		// Message according comments control 
@@ -632,8 +675,7 @@ public function getCategoryData(){
 					$sLien = "$host/valid_comm.php?rep=$id&t=$sJeton";
 				}
 				
-				// Content Construction : Replacement 'VALID' into link
-				
+				// Content Construction : Replacement 'VALID' into link				
 				$sLink = "<a href='$sLien'>". $aMsg[Admin::$lang]['msg_publish_confirm'] . '</a>';
 				$mail_txt = $this->mail_txt;
 				$pos = strpos($mail_txt, 'VALID');
@@ -666,6 +708,10 @@ public function getCategoryData(){
 		 if ($type == 'com') $sReq = "UPDATE blog_comments SET jeton = :token WHERE id_com=$id"; 
 		 elseif ($type == 'rep') $sReq = "UPDATE blog_reply SET jeton = :token WHERE id_rep=$id";
 
+		 $aBindVar = array( array('type'=>PDO::PARAM_STR, ':token'=>$token) );
+
+		 $this->executeDbQuery($sReq, $aBindVar, '', '', false);
+		 /*
 		 $update = SPDO::getInstance()->prepare($sReq);
 		 $update -> bindValue(':token', $token);
 
@@ -674,6 +720,7 @@ public function getCategoryData(){
 		 } catch(PDOException $e){
 			 echo $e->getMessage();
 		 }
+		 */
 	}
 	// *** End comment administration
 
@@ -712,18 +759,8 @@ public function getCategoryData(){
 	 public function CreateCategory(){
 		$nom_cat = filter_var($_SESSION['nom_cat'], FILTER_SANITIZE_STRING);
 	 	$sReq = 'insert into blog_cat_article (nom_cat) VALUES (:nom_cat)';
-
-		 $Insert = SPDO::getInstance()->prepare($sReq);
-		 $Insert -> bindValue(':nom_cat', $nom_cat);
-	
-		 try {
-			 $result = $Insert->execute();
-		 } catch(PDOException $e){
-			 echo $e->getMessage();
-		 }
-	
-		$this->DisplayResultRqt($result, 'admin.php?p=gest_art&a=gest_cat&c=init');
-
+	 	$aData = array(array('type'=>PDO::PARAM_STR, ':nom_cat'=>$nom_cat));
+	 	$this -> executeDbQuery($sReq, $aData, '', 'admin.php?p=gest_art&a=gest_cat&c=init', true);
 	 }
 
 
@@ -739,18 +776,9 @@ public function getCategoryData(){
         $id_cat = filter_var ($_SESSION['id_cat'], FILTER_SANITIZE_NUMBER_INT);
 
 	 	$sReq = 'UPDATE blog_cat_article set nom_cat = :nom_cat where id_cat=' . $id_cat;
+	 	$aBindVar = array(array('type'=>PDO::PARAM_STR, ':nom_cat'=>$nom_cat));
+	 	$this -> executeDbQuery($sReq, $aBindVar, '', 'admin.php?p=gest_art&a=gest_cat&c=init', true);
 
-		 $Update = SPDO::getInstance()->prepare($sReq);
-		 $Update -> bindValue(':nom_cat', $nom_cat);
-	
-		 try {
-			 $result = $Update->execute();
-		 } catch(PDOException $e){
-			 echo $e->getMessage();
-		 }
-	
-		$this->DisplayResultRqt($result, 'admin.php?p=gest_art&a=gest_cat&c=init');	 	
-	 
 	 }	 
 
 
@@ -760,9 +788,9 @@ public function getCategoryData(){
   *
   *
   */  
-	public function SaveArticlesData(){
-
-		if (isset($_FILES['vignette'])) $_SESSION['vignette'] = $_FILES['vignette'];  
+	public function SaveArticlesData(){		
+		// Thumbail image		
+		if (isset($_FILES['vignette'])) $_SESSION['vignette'] = $_FILES['vignette'];
 
 		$_SESSION['cat'] 		= filter_input(INPUT_POST, 'cat', FILTER_SANITIZE_NUMBER_INT);
 		$_SESSION['id'] 		= filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
@@ -788,9 +816,6 @@ public function getCategoryData(){
 	 * @param string 'creer'=>insert into blog_articles ; 'modif'=>update articles
      */ 	  
 	 public function SaveArticle($action, $msg_result_ok, $msg_result_ko){
-	 	//$aVignette = $_SESSION['vignette'];
-
-	 	//filter $_SESSION['vignette'] => thumbnail information;
 	 	$aFilter = array('name'=>FILTER_SANITIZE_STRING
 	 		, 'type'=>FILTER_SANITIZE_STRING
 	 		, 'tmp_name'=>FILTER_SANITIZE_STRING
@@ -833,34 +858,58 @@ public function getCategoryData(){
 			$date_crea = date('Y-m-d H:i:s');
 			$sReq = "INSERT INTO blog_articles (titre_art, date_crea_art, date_pub_art, vignette_art, resum_art, keywords_art, contenu, id_categorie)";
 			$sReq.= " VALUES (:titre, :date_crea, :date_pub, :vignette_art, :resum, :keywords, :contenu, :id_cat)";
+
+			$returnLink = 'admin.php';
 	
 		}elseif ($action == 'modif'){
-			$sReq = "UPDATE blog_articles SET titre_art=:titre, date_pub_art=:date_pub, vignette_art=:vignette_art, resum_art=:resum, keywords_art=:keywords, contenu=:contenu, id_categorie=:id_cat";
+			if ($bVignette) $sReq = "UPDATE blog_articles SET titre_art=:titre, date_pub_art=:date_pub, vignette_art=:vignette_art, resum_art=:resum, keywords_art=:keywords, contenu=:contenu, id_categorie=:id_cat";
+			else $sReq = "UPDATE blog_articles SET titre_art=:titre, date_pub_art=:date_pub, resum_art=:resum, keywords_art=:keywords, contenu=:contenu, id_categorie=:id_cat";
+
 			$sReq .= " WHERE id_art=$id_art"; 
+
+			$returnLink = 'admin.php?p=gest_art&a=modif';
 		 }
 		 
-		 $Insert = SPDO::getInstance()->prepare($sReq);
-		 $Insert -> bindValue(':titre', $titre);
-		 if ($action == 'creer') $Insert -> bindValue(':date_crea', $date_crea);
-		 
-		 $Insert -> bindValue(':date_pub', $date_pub_art);	
-		 
-		 if ($bVignette)  $Insert -> bindValue(':vignette_art', $img_vign);
-		 else $Insert -> bindValue(':vignette_art', null);
-		 
-		 $Insert -> bindValue(':resum', $desc);
-		 $Insert -> bindValue(':keywords', $keyword);
-		 $Insert -> bindValue(':contenu', $texte_article);
-		 $Insert -> bindValue(':id_cat', $id_cat);	
-		 
-		 try {
-			 $result = $Insert->execute();
-		 } catch(PDOException $e){
-			 echo $e->getMessage();
-		 }
-		
-		if (!isset($result)) $result = FALSE;
-		$this-> DisplayResultRqt($result, 'admin.php?p=gest_art&a=modif', $msg_result_ok, $msg_result_ko);
+		//Thumbail 
+		if ($bVignette) $img = $img_vign;
+		else $img = null;
+
+		// database request 
+		if ($action == 'modif'){
+			if ($bVignette) {
+				$aBindVar = array (array('type'=>PDO::PARAM_STR, ':titre'=>$titre)
+							, array('type'=>PDO::PARAM_STR, ':date_pub'=>$date_pub_art)
+							, array('type'=>PDO::PARAM_STR, ':vignette_art'=>$img)
+							, array('type'=>PDO::PARAM_STR, ':resum'=>$desc)
+							, array('type'=>PDO::PARAM_STR, ':keywords'=>$keyword)
+							, array('type'=>PDO::PARAM_STR, ':contenu'=>$texte_article)
+							, array('type'=>PDO::PARAM_INT, ':id_cat'=>$id_cat));
+							//array(':titre'=>$titre, ':date_pub'=>$date_pub_art, ':vignette_art'=>$img, ':resum'=>$desc, ':keywords'=>$keyword, ':contenu'=>$texte_article, ':id_cat'=>$id_cat);
+			}
+			else {
+				$aBindVar = array (array('type'=>PDO::PARAM_STR, ':titre'=>$titre)
+					, array('type'=>PDO::PARAM_STR, ':date_pub'=>$date_pub_art)
+					, array('type'=>PDO::PARAM_STR, ':resum'=>$desc)					
+					, array('type'=>PDO::PARAM_STR, ':keywords'=>$keyword)
+					, array('type'=>PDO::PARAM_STR, ':contenu'=>$texte_article)
+					, array('type'=>PDO::PARAM_INT, ':id_cat'=>$id_cat));
+				//$aBindVar = array(':titre'=>$titre, ':date_pub'=>$date_pub_art, ':resum'=>$desc, ':keywords'=>$keyword, ':contenu'=>$texte_article, ':id_cat'=>$id_cat);
+			}		
+		}
+		elseif($action == 'creer'){
+			//$aBindVar = array(':titre'=>$titre, ':date_crea'=>$date_crea,':date_pub'=>$date_pub_art, ':vignette_art'=>$img, ':resum'=>$desc, ':keywords'=>$keyword, ':contenu'=>$texte_article, ':id_cat'=>$id_cat);
+			$aBindVar = array(array('type'=>PDO::PARAM_STR, ':titre'=>$titre)
+				, array('type'=>PDO::PARAM_STR, ':date_crea'=>$date_crea)
+				, array('type'=>PDO::PARAM_STR, ':date_pub'=>$date_pub_art)
+				, array('type'=>PDO::PARAM_STR, ':vignette_art'=>$img)
+				, array('type'=>PDO::PARAM_STR, ':resum'=>$desc)
+				, array('type'=>PDO::PARAM_STR, ':keywords'=>$keyword)
+				, array('type'=>PDO::PARAM_STR, ':contenu'=>$texte_article)
+				, array('type'=>PDO::PARAM_INT, ':id_cat'=>$id_cat));
+		}
+
+		 $this->executeDbQuery($sReq, $aBindVar, '', $returnLink, true);
+
 		unset($oImage);
 	 }
 	 
@@ -953,26 +1002,22 @@ public function getConfigValues(){
 		$sReq= "update blog_config set aff_xs = :aff_xs, aff_sm = :aff_sm, aff_md = :aff_md, aff_lg = :aff_lg";	
 		$sReq .= ", nbr_art_page = :nb_art, control_comm = :ctrl_comm, email_from = :email_from, email_objet = :email_obj, email_text = :email_txt";
 		$sReq .= ", name_from = :name_exp, name_reply = :name_reply, email_reply = :mail_reply";
-        
-		$pUpdate = SPDO::getInstance()->prepare($sReq);
-		$pUpdate -> bindValue(':aff_xs', $aDataClean['xs']);
-		$pUpdate -> bindValue(':aff_sm', $aDataClean['sm']);
-		$pUpdate -> bindValue(':aff_md', $aDataClean['md']);
-		$pUpdate -> bindValue(':aff_lg', $aDataClean['lg']);
 
-		$pUpdate -> bindValue(':ctrl_comm', $aDataClean['ctrl_comm']);
-		$pUpdate -> bindValue(':email_from', $aDataClean['mail_exp']);
-		$pUpdate -> bindValue(':email_obj', $aDataClean['mail_obj']);
-		$pUpdate -> bindValue(':email_txt', $aDataClean['mail_texte']);
-		$pUpdate -> bindValue(':nb_art', $aDataClean['nbr_art']);
-		$pUpdate -> bindValue(':name_exp', $aDataClean['name_exp']);
-		$pUpdate -> bindValue(':name_reply', $aDataClean['name_reply']);
-		$pUpdate -> bindValue(':mail_reply', $aDataClean['mail_reply']);
+		$aBindVar = array(
+			array('type'=>PDO::PARAM_INT, ':aff_xs'=> $aDataClean['xs'])
+			, array('type'=>PDO::PARAM_INT, ':aff_sm'=> $aDataClean['sm'])
+			, array('type'=>PDO::PARAM_INT, ':aff_md'=> $aDataClean['md'])
+			, array('type'=>PDO::PARAM_INT, ':aff_lg'=> $aDataClean['lg'])			
+			, array('type'=>PDO::PARAM_INT, ':ctrl_comm'=>$aDataClean['ctrl_comm'])			
+			, array('type'=>PDO::PARAM_STR, ':email_from'=>$aDataClean['mail_exp'])
+			, array('type'=>PDO::PARAM_STR, ':email_obj'=>$aDataClean['mail_obj'])
+			, array('type'=>PDO::PARAM_STR, ':email_txt'=>$aDataClean['mail_texte'])
+			, array('type'=>PDO::PARAM_INT, ':nb_art'=>$aDataClean['nbr_art'])
+			, array('type'=>PDO::PARAM_STR, ':name_exp'=>$aDataClean['name_exp'])
+			, array('type'=>PDO::PARAM_STR, ':name_reply'=>$aDataClean['name_reply'])
+			, array('type'=>PDO::PARAM_STR, ':mail_reply'=>$aDataClean['mail_reply']));
 
-		 try {
-			 $result = $pUpdate->execute();
-		 } catch(PDOException $e){
-			 echo $e->getMessage();
-		 }	
+		$this->executeDbQuery($sReq, $aBindVar, '', 'admin.php?p=gest_art&a=config&c=init', true);
+
 	 }
 }

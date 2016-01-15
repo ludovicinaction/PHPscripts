@@ -23,8 +23,8 @@
     {
         
         public function DisplayPagination($nbTotArt, $nbrParPage, $pagination, $crit=''){
-             $nbPage = ceil($nbTotArt / $nbrParPage); 
-             //$nbPage = $nbTotArt / $nbrParPage; 
+             
+             $nbPage = ceil($nbTotArt / $nbrParPage);  
              $p_lien = $pagination;
 
             if (!isset($_GET['page'])) $p=1;

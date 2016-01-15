@@ -72,7 +72,7 @@ $oMetaArt = new Articles;
                             echo "<li><a href='admin.php?p=trans&c=init'>$lib_trans</a></li>";
                             echo "<li><a href='#''>Blog</a>";
                                 echo "<ul class='dropdown-menu'>";                                    
-                                    echo "<li><a href='admin.php?p=gest_art&a=config'>$lib_conf</a></li>";
+                                    echo "<li><a href='admin.php?p=gest_art&a=config&c=init'>$lib_conf</a></li>";
                                     echo "<li><a href='admin.php?p=gest_art&a=gest_cat&c=init'>$lib_set_cat</a></li>";
                                     echo "<li role='separator' class='divider'></li>";
                                     echo "<li><a href='admin.php?p=gest_art&a=creer'>$lib_crea_post</a></li>";
@@ -192,7 +192,7 @@ echo "<br><br><br><br><br>";
                     if ((isset($eng) && 'yes' == $eng) && (!isset($conf))) {
                         $oArticles->SaveArticlesData();
                         $btOk = 'admin.php?p=gest_art&a=modif&id=' . $id . '&eng=yes&conf=yes';
-                        $oArticles->RequestConfirmation('modif', $aMsgPost[$lang]['msg_update_confirm'], $btOk, 'admin.php?p=gest_art', $lang);                                                                    
+                        $oArticles->RequestConfirmation('modif', $aMsgPost[$lang]['msg_update_confirm'], $btOk, 'admin.php?p=gest_art&a=modif', $lang);                                                                    
                     }
 
                     // If confirmation recording then save base.  
@@ -241,14 +241,14 @@ echo "<br><br><br><br><br>";
 
             // Configuration form display
             elseif (isset($a) && 'config' === $a) {
-
-                if (isset($eng)) {                    
+                if (isset($c) && 'init' === $c){
+                    $oArticles->ReadBlogConfig();  
+                    include 'core/blog/views/form-setting-blog.php';
+                }
+                elseif (isset($c) && 'submit' === $c){
                     $oArticles->SaveConfig();
                     $oArticles->ReadBlogConfig();  
-                }else{
-                    $oArticles->ReadBlogConfig(); 
-                }         
-                include 'core/blog/views/form-setting-blog.php';
+                }
             }   // config
 
             // *** Menu "Comments administration" ***

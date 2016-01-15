@@ -79,20 +79,12 @@ trait CommunDbRequest{
 public function executeDbQuery($sReq, $aData, $sMsg, $slinkOk, $bMsgResult=''){
 
 	$update = SPDO::getInstance()->prepare($sReq);
-/*
-	foreach ($aData as $key => $value) {
-		$update -> bindValue($key, $value);		
-	}
-*/
-	//var_dump($sReq);
-//var_dump($aData);
 
 	foreach ($aData as $key => $value) {
-		//var_dump($value);
+
 		foreach ($value as $cle => $val) {
 			if ($cle == 'type') {
 				$type=$val;
-				//echo "CLE = $cle --------- VAL = $val ----------- TYPE : $type <br>";
 			}	
 			elseif($cle != 'type') {
 				$bindName = $cle;
@@ -100,13 +92,11 @@ public function executeDbQuery($sReq, $aData, $sMsg, $slinkOk, $bMsgResult=''){
 
 				if ($type != 2) $update -> bindValue($cle, $val, $type);
 				elseif ($type == '' OR $type=2) $update -> bindValue($cle, $val);	
-				//echo "CLE = $cle __________ VAL = $val _________ TYPE : $type <br>";
 			}
 
 		}
 
 	}
-
 
 	try {
 		$resultOK = $update->execute();

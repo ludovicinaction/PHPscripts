@@ -127,6 +127,8 @@ echo "<br><br><br><br><br>";
             $a       = filter_input(INPUT_GET, 'a', FILTER_SANITIZE_STRING);
             // c: Choice (display, valid, delete)
             $c       = filter_input(INPUT_GET, 'c', FILTER_SANITIZE_STRING);
+            
+            
             // eng :Registration Application / conf : recording validation
             $eng     = filter_input(INPUT_GET, 'eng', FILTER_SANITIZE_STRING);
             $conf    = filter_input(INPUT_GET, 'conf', FILTER_SANITIZE_STRING);
@@ -138,6 +140,20 @@ echo "<br><br><br><br><br>";
             $t       = filter_input(INPUT_GET, 't', FILTER_SANITIZE_STRING);
        
             $v       = filter_input(INPUT_GET, 'v', FILTER_SANITIZE_NUMBER_INT);
+
+        //Translation
+        $c2            = filter_input(INPUT_GET, 'c2', FILTER_SANITIZE_STRING);
+        $sGetMod       = filter_input(INPUT_GET, 'mod', FILTER_SANITIZE_STRING);
+        $sGetLang      = filter_input(INPUT_GET, 'lang', FILTER_SANITIZE_STRING);
+        $sGetOffice    = filter_input(INPUT_GET, 'office', FILTER_SANITIZE_STRING);
+        $sGetType      = filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING);
+
+       /* 
+        var_dump($sGetMod);
+        var_dump($sGetLang);
+        var_dump($sGetOffice);
+        var_dump($sGetType);
+        */
 
         //Filter $_POST values
         $p_lang      = filter_input(INPUT_POST, 'opt-lang', FILTER_SANITIZE_STRING);
@@ -330,11 +346,11 @@ echo "<br><br><br><br><br>";
             //  *** TRANSLATION MENU ***
             $aMsg = $oAdmin->getItemTransation('BLOG', 'BACK', $lang, 'MSG_TRANS'); 
             
-
             if ( (!isset ($valid)) ) {
 
-                if (isset($c) && 'search' === $c){
-                    $aTrans = $oAdmin->getSearchTranslations($search_module, $search_lang, $search_office, $search_type);
+                if (isset($c) && 'search' === $c OR $c2==='update'){
+                    if ($c2 === 'update') $aTrans = $oAdmin->getSearchTranslations($sGetMod, $sGetLang, $sGetOffice, $sGetType); 
+                    else $aTrans = $oAdmin->getSearchTranslations($search_module, $search_lang, $search_office, $search_type);
                 }
                 else{
                     $aTrans = $oAdmin->getAllTranslations();

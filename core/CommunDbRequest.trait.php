@@ -39,49 +39,50 @@ trait CommunDbRequest{
 
 
 
-	 /**
-	  * Delete information in data-base
-	  *
-	  * @param string $req Delete SQL request
-	  * @param string $lien HTML link to return in initial page.
-	  */
-	 public function DeleteInformation($req, $lien){
-		if (isset($_GET['token']) && isset($_SESSION['token']) && $_GET['token'] === $_SESSION['token']){
-			
-			$supp = SPDO::getInstance()->prepare($req);		
-			
-			 try {
-				 $resultOK = $supp->execute();
-			 } catch(CustomException $e){	 
-			 //Sauvegarde code qui fonctionne
-			 $err =  $e->getMessage();
-			 //$dDateJour = date('Y-m-d H:i:s');
-			 //error_log("\n" . $dDateJour . ' : [DB: query @'.$_SERVER['REQUEST_URI']."][$req]: $err", 3, "C:/wamp/www/magnetiseur-paca/tmp/php_logs/php_errors.log");			 
-			}
-			
-			$aMsg = $this->getItemTransation('BLOG', 'BACK', Admin::$lang, 'MSG_DB_RESULT');
-			if ($resultOK) $this->DisplayResultRqt($resultOK, $lien, $aMsg[Admin::$lang]['ok_return'], '');
-			else $this->DisplayResultRqt($resultOK, $lien, '', $aMsg[Admin::$lang]['ko_return']);			
-
+ /**
+  * Delete information in data-base
+  *
+  * @param string $req Delete SQL request
+  * @param string $lien HTML link to return in initial page.
+  */
+ public function DeleteInformation($req, $lien){
+	if (isset($_GET['token']) && isset($_SESSION['token']) && $_GET['token'] === $_SESSION['token']){
+		
+		$supp = SPDO::getInstance()->prepare($req);		
+		
+		 try {
+			 $resultOK = $supp->execute();
+		 } catch(CustomException $e){	 
+		 //Sauvegarde code qui fonctionne
+		 $err =  $e->getMessage();
+		 //$dDateJour = date('Y-m-d H:i:s');
+		 //error_log("\n" . $dDateJour . ' : [DB: query @'.$_SERVER['REQUEST_URI']."][$req]: $err", 3, "C:/wamp/www/magnetiseur-paca/tmp/php_logs/php_errors.log");			 
 		}
+		
+		$aMsg = $this->getItemTransation('BLOG', 'BACK', Admin::$lang, 'MSG_DB_RESULT');
+		if ($resultOK) $this->DisplayResultRqt($resultOK, $lien, $aMsg[Admin::$lang]['ok_return'], '');
+		else $this->DisplayResultRqt($resultOK, $lien, '', $aMsg[Admin::$lang]['ko_return']);			
 
-	 }
+	}
 
-	 /**
-	  * Update information in data-base (insert/update query)
-	  *
-	  * @param string $sReq Update SQL request
-	  * @param array $aData The list of data to be updated
-	  * @param string $sMsg Specific message (not standard message, ex: "Operation performed successfully")
-	  * @param string $slinkOK Link to return in initial page.
-	  * @param boolean $bMsgResult true:display result DB; false : don't display message
-	  */
+ }
+
+
+
+ /**
+  * Update information in data-base (insert/update query)
+  *
+  * @param string $sReq Update SQL request
+  * @param array $aData The list of data to be updated
+  * @param string $sMsg Specific message (not standard message, ex: "Operation performed successfully")
+  * @param string $slinkOK Link to return in initial page.
+  * @param boolean $bMsgResult true:display result DB; false : don't display message
+  */
 public function executeDbQuery($sReq, $aData, $sMsg, $slinkOk, $bMsgResult=''){
 
 	$update = SPDO::getInstance()->prepare($sReq);
 
 	foreach ($aData as $key => $value) {
-
 		foreach ($value as $cle => $val) {
 			if ($cle == 'type') {
 				$type=$val;
@@ -93,7 +94,6 @@ public function executeDbQuery($sReq, $aData, $sMsg, $slinkOk, $bMsgResult=''){
 				if ($type != 2) $update -> bindValue($cle, $val, $type);
 				elseif ($type == '' OR $type=2) $update -> bindValue($cle, $val);	
 			}
-
 		}
 
 	}

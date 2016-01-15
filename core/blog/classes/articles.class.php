@@ -711,16 +711,6 @@ public function getCategoryData(){
 		 $aBindVar = array( array('type'=>PDO::PARAM_STR, ':token'=>$token) );
 
 		 $this->executeDbQuery($sReq, $aBindVar, '', '', false);
-		 /*
-		 $update = SPDO::getInstance()->prepare($sReq);
-		 $update -> bindValue(':token', $token);
-
-		 try {
-			 $result = $update->execute();
-		 } catch(PDOException $e){
-			 echo $e->getMessage();
-		 }
-		 */
 	}
 	// *** End comment administration
 

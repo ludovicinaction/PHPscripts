@@ -12,21 +12,23 @@
 
  $aItems = $oAdmin->getItemTransation('BLOG', 'BACK', $lang, 'HOME');
 
-//$aAutorise_p = array('cat', 'gest_art', 'p');
 $oSecure = new Securite();            
 
-//Filtrage des données $_GET.
-
+//Filter $_GET data
 $val_p = filter_input(INPUT_GET, 'p', FILTER_SANITIZE_STRING);
 
+// Destroy session et session variables
 if (isset($val_p) && 'logout' == $val_p) {
     session_unset();
+    setcookie(session_name(), '', time()-2592000, '/');
+    session_destroy();
+
 }
 
 $filtres = array('login' => array('filter' => FILTER_SANITIZE_STRING),
     'pwd' => array('filter' => FILTER_SANITIZE_STRING));
 
-//Filtrage des données $_POST
+//Filter $_POST data
 $clean = filter_input_array(INPUT_POST, $filtres);
 
 $sloginEnter = $clean['login'];

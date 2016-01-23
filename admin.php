@@ -178,8 +178,8 @@ echo "<br><br><br><br><br>";
                 // If no item is chosen then display management table
                 if (!isset($id)) {
 
-                    // Search All posts without pagination
-                    $oArticles->ReadAllArticles('admin', 0);
+                    // Search All posts without pagination and for all category
+                    $oArticles->ReadAllArticles('admin', 0, 0);
 
                     // Display form
                     if ('yes' != isset($eng) && ('modif' == isset($a))) {

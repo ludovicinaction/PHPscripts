@@ -29,7 +29,6 @@ trait MessageAlert{
 				if ($titreAlert == '') $titreAlert = 'Recording successfully completed';
 			}	
 
-
 		echo "<div class='margintop70'></div>";
 		echo "<div class='text-center alert alert-$typeAlert fade in'>";
 		echo "<h4> $titreAlert </h4>";

@@ -38,17 +38,20 @@
             echo "<center>";
             echo "<nav>";
                 echo "<ul class='pagination'>";
+                    // Previous item
                     echo "<li>";
                         echo "<a href='$p_lien?page=$p_prec' aria-label='Previous'>";
                         echo "<span aria-hidden='false'>&laquo;</span>";
                         echo "</a>";
                     echo "</li>";
 
+                    // Page number index
                     for ($i=1 ; $i<=$nbPage ; $i++){
                         if ($p == $i) echo "<li class='active'><a href='$p_lien?page=$i&$crit'> $i </a></li>";
                         else echo"<li><a href='$p_lien?page=$i&$crit'> $i </a></li>";
                         }
 
+                    // Next item
                     echo "<li>";
                         echo "<a href='$p_lien?page=$p_suiv' aria-label='Next'>";
                         echo "<span aria-hidden='false'>&raquo;</span>";

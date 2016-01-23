@@ -24,13 +24,13 @@ class Articles
 	
 	// Blog configuration attributes
 	
-	public $TotalNbrDisplay; 
+	public $TotalNbrDisplay; // Total number of post to display 
 	// BLOG settings
 	private $aff_xs;	// Cellphone display
 	private $aff_sm;	// Tablet
 	private $aff_md;	// Laptop
 	private $aff_lg;	// Desktop
-	private $art_page;	// Post number to display per page
+	public $art_page;	// Post number to display per page
 	private $ctrl_comm;	// Checking comments
 	private $mail_exp;	// Sender mail
 	private $name_exp;	// Return address
@@ -51,8 +51,6 @@ class Articles
   *
   */
 	public function getPostData() {
-		//var_dump($this->_aPostData);
-
 		$aFilter = array('id_art'=>FILTER_VALIDATE_INT
 			, 'contenu'=>FILTER_SANITIZE_STRING
 			, 'titre_art'=>FILTER_SANITIZE_STRING
@@ -199,22 +197,34 @@ public function getCategoryData(){
 	  *
 	  * @param string $mode mode ('util' ou 'admin') Posts are displayed according to the date of publication.
 	  * @param int $parpage Number of items to be searched for a page
+	  * @param
 	  * @return array $aListeArticles The parameters of articles found
       *	@todo : Gérer les erreurs ou si aucun articles n'est trouvé
 	  */
-	public function ReadAllArticles($mode, $parpage=0)
+	public function ReadAllArticles($mode, $parpage=0, $cat)
 	{
-		if ( (isset($_POST['cat'])) && ($_POST['cat'] !=0)  ) {
-			$aCrit['cat'] = $_POST['cat'];
-			$cat = (int) $_POST['cat'];
-			$sReq = "SELECT count(id_art) as nbrTotArt FROM blog_articles WHERE id_categorie=$cat and DATE(date_pub_art) < DATE(NOW()) OR date_pub_art is null";
+		//if (isset($_POST['cat'])) $cat = filter_input(INPUT_POST, 'cat', FILTER_SANITIZE_NUMBER_INT);
+		//elseif (isset($_GET['cat'])) $cat = filter_input(INPUT_GET, 'cat', FILTER_SANITIZE_NUMBER_INT);
+		
+		//if (!isset($cat)) $cat=0;
+		
+		$cat = (int) $cat;
+
+		//var_dump($cat);
+		//if (isset($_POST['cat'])) echo "<br>POST : {$_POST['cat']}<br>";
+		//elseif (isset($_GET['cat'])) echo "<br>GET : {$_GET['cat']}<br>";
+
+		if ( isset($cat) && $cat !=0  ) {
+			$aCrit['cat'] = $cat;
+
+			$sReq = "SELECT count(id_art) as nbrTotArt FROM blog_articles WHERE id_categorie=$cat and (DATE(date_pub_art) < DATE(NOW()) OR date_pub_art is null)";
 		}
-		elseif ( (!isset($_POST['cat'])) || ($_POST['cat']==0) ) {
+		elseif ( (!isset($cat)) || ($cat == 0) ) {
 			$sReq = "SELECT count(id_art) as nbrTotArt FROM blog_articles WHERE DATE(date_pub_art) < DATE(NOW()) OR date_pub_art is null";	
 
 			$cat = 0;
 		} 
-		
+
 		// Retrieving sorting criteria if they exist.
 		if (isset($_GET['tri'])){
 			if (isset($_POST['datedebut'])) $aCrit['datedebut'] = $_POST['datedebut'];
@@ -273,11 +283,13 @@ public function getCategoryData(){
 		else $sReqWhere = '';
 		
 		$aResult = array();	
+		
+		//update TotalNbrDisplay (total number of post to display ) according a category or not
 		$this->nbrTotalArtDisplayed($sReq);
 		$NbrTotArt = $this->TotalNbrDisplay;
 
 		// set pagination index
-		if (isset($_GET['page']) && $_GET['page']>0 && $_GET['page']< $NbrTotArt)
+		if (isset($_GET['page']) && $_GET['page'] > 0 && $_GET['page'] < $NbrTotArt)
 			$cPage = $_GET['page'];
 		else $cPage = 1;
 		
@@ -286,7 +298,7 @@ public function getCategoryData(){
 			$sReqFrom 	= 'FROM blog_articles inner join blog_cat_article on id_categorie=id_cat';
 			
 			if ($cat == 0) $sReqWhere = ' WHERE DATE(date_pub_art) < DATE(NOW()) OR date_pub_art is null';
-			else $sReqWhere = " WHERE id_categorie=$cat AND DATE(date_pub_art) < DATE(NOW()) OR date_pub_art is null";
+			else $sReqWhere = " WHERE id_categorie=$cat AND (DATE(date_pub_art) < DATE(NOW()) OR date_pub_art is null)";
 			$sReqOrder 	= ' order by date_crea_art desc LIMIT ' . (($cPage-1)*$parpage) . ', ' . $parpage;
 		 }
 		elseif($mode == 'admin') {

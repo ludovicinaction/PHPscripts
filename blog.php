@@ -18,11 +18,9 @@ setlocale(LC_TIME, "fr_FR", "fr_FR@euro", "fr", "FR", "fra_fra", "fra");
 	<meta charset="utf-8">
         
 	<?php
-
-
 	// Filtering $_GET et $_POST variables
 	$id 	= filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
-	$cat 	= filter_input(INPUT_GET, 'cat', FILTER_SANITIZE_STRING);
+	$cat 	= filter_input(INPUT_GET, 'cat', FILTER_SANITIZE_NUMBER_INT);
 	$new	= filter_input(INPUT_GET, 'new', FILTER_SANITIZE_STRING);
 	$rep	= filter_input(INPUT_GET, 'rep', FILTER_SANITIZE_STRING);
 	// $_POST variables
@@ -82,34 +80,37 @@ setlocale(LC_TIME, "fr_FR", "fr_FR@euro", "fr", "FR", "fra_fra", "fra");
     $oArticles = new Articles;
 	$aConfigValues = $oArticles->getConfigValues();
 
-if (!isset($id)){
-    // Reading categories and combo display for selecting categories
-    $alistCat = $oArticles->getCategoryData();
-	include 'core/blog/views/form-categories.php';    
-}
-		$oPagination = new Pagination();
+	if (!isset($id)){
+	    // Reading categories and combo display for selecting categories
+	    $alistCat = $oArticles->getCategoryData();
+		include 'core/blog/views/form-categories.php';    
+	}
+	
+	$oPagination = new Pagination();
 
-		if (isset($cat)) {
-			// If a class is specified then display the articles in this category
-			$nbrPerPage = $oArticles->art_page;
-			$oArticles->ReadAllArticles('util', $nbrPerPage);
+	if (isset($cat)) {
+		// If a category is specified then display the articles in this category
+		$nbrPerPage = $oArticles->art_page;
+		$oArticles->ReadAllArticles('util', $nbrPerPage , $cat);
 			
-			// Pagination
-			$nbTotArt = $oArticles->TotalNbrDisplay;
-			include 'core/blog/views/display_all_articles.php';
-			$oPagination->DisplayPagination($nbTotArt, $nbrPerPage, 'blog.php', 'tri&cat=yes');
-		}
-		elseif ((!isset($cat) OR $cat == 'Tous') AND !isset($id)) {
-			// If a selected category or 'All' is selected then display all articles (all categories)
-			
-			$nbrPerPage = $aConfigValues['art_page'];
-			$aArticles = $oArticles->ReadAllArticles('util', $nbrPerPage);
-			$nbTotArt = $oArticles->TotalNbrDisplay;
-			include 'core/blog/views/display_all_articles.php';
+		// Pagination
+		$nbTotArt = $oArticles->TotalNbrDisplay;
+		//var_dump($nbTotArt);
 
-			// Result Pagination
-  			$oPagination->DisplayPagination($nbTotArt, $nbrPerPage, 'blog.php', '');   
-		}
+		include 'core/blog/views/display_all_articles.php';
+		$oPagination->DisplayPagination($nbTotArt, $nbrPerPage, 'blog.php', "cat=$cat");
+	}
+	elseif ((!isset($cat) OR $cat == 'Tous') AND !isset($id)) {
+		// If a selected category or 'All' is selected then display all articles (all categories)
+			
+		$nbrPerPage = $aConfigValues['art_page'];
+		$aArticles = $oArticles->ReadAllArticles('util', $nbrPerPage, 0);
+		$nbTotArt = $oArticles->TotalNbrDisplay;
+		include 'core/blog/views/display_all_articles.php';
+
+		// Result Pagination
+  		$oPagination->DisplayPagination($nbTotArt, $nbrPerPage, 'blog.php', '');   
+	}
 		elseif (isset($id)){	
 			// Recording a comment or response (if entry form)
 			$aMsg = $oAdmin->getItemTransation('BLOG', 'FRONT', $lang, 'MSG_COMMENTS_PUBLISH'); 

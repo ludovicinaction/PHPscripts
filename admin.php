@@ -79,7 +79,7 @@ $oMetaArt = new Articles;
                                     echo "<li><a href='admin.php?p=gest_art&a=modif'>$lib_adm_post</a></li>";
                                     echo "<li role='separator' class='divider'></li>";
                                     echo "<li><a href='admin.php?p=gest_art&a=gest_com&c=init'>$lib_adm_com</a></li>";
-                                    ?>
+                            ?>
                                 </ul>
                             </li>
                             <li><a href="#">Page 2</a>
@@ -147,13 +147,6 @@ echo "<br><br><br><br><br>";
         $sGetLang      = filter_input(INPUT_GET, 'lang', FILTER_SANITIZE_STRING);
         $sGetOffice    = filter_input(INPUT_GET, 'office', FILTER_SANITIZE_STRING);
         $sGetType      = filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING);
-
-       /* 
-        var_dump($sGetMod);
-        var_dump($sGetLang);
-        var_dump($sGetOffice);
-        var_dump($sGetType);
-        */
 
         //Filter $_POST values
         $p_lang      = filter_input(INPUT_POST, 'opt-lang', FILTER_SANITIZE_STRING);

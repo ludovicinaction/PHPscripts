@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>Trait MessageAlert | PHPScripts</title>
+
+	<link rel="stylesheet" href="resources/style.css?c2f33731c1948fbed7c333554678bfa68d4817da">
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+				<h3>Packages</h3>
+			<ul>
+				<li>
+					<a href="package-ADMIN.html">
+						ADMIN					</a>
+
+						</li>
+				<li>
+					<a href="package-BLOG.html">
+						BLOG					</a>
+
+						</li>
+				<li>
+					<a href="package-COMMON.html">
+						COMMON					</a>
+
+						</li>
+				<li>
+					<a href="package-None.html">
+						None					</a>
+
+						</li>
+				<li>
+					<a href="package-PHP.html">
+						PHP					</a>
+
+						</li>
+			</ul>
+		</div>
+
+		<hr>
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li><a href="class-Images.html">Images</a></li>
+				<li><a href="class-Pagination.html">Pagination</a></li>
+				<li><a href="class-Securite.html">Securite</a></li>
+				<li><a href="class-Utilitaires.html">Utilitaires</a></li>
+			</ul>
+
+
+			<h3>Traits</h3>
+			<ul>
+				<li class="active"><a href="class-MessageAlert.html">MessageAlert</a></li>
+			</ul>
+
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="">
+		<input type="hidden" name="ie" value="UTF-8">
+		<input type="text" name="q" class="text" placeholder="Search">
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li>
+<span>Package</span>			</li>
+			<li class="active">
+<span>Class</span>			</li>
+		</ul>
+		<ul>
+			<li>
+				<a href="tree.html" title="Tree view of classes, interfaces, traits and exceptions"><span>Tree</span></a>
+			</li>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<div id="content" class="class">
+	<h1>Trait MessageAlert</h1>
+
+
+	<div class="description">
+	<p>Trait "MessageAlert".
+Methods for displaying bootstrap alert message ("success, "warning" or "danger")</p>
+	</div>
+
+
+
+
+
+
+
+	<div>
+		<h4>Direct Known Users</h4>
+			<a href="class-Admin.html">Admin</a>, 
+			<a href="class-Articles.html">Articles</a>, 
+			<a href="class-Images.html">Images</a>
+	</div>
+
+
+	<div class="info">
+		
+		
+		
+		<b>Package:</b> <a href="package-COMMON.html">COMMON</a><br>
+
+				<b>Author:</b>
+				Ludovic <a href="&#109;&#97;&#x69;&#108;&#x74;&#111;&#x3a;&#108;&#x75;&#100;o&#x76;&#105;&#x63;&#105;&#x6e;&#97;&#x63;&#116;&#x69;&#111;&#110;&#x40;&#121;&#x61;&#104;&#x6f;&#111;&#x2e;&#102;r">&#108;&#x75;&#100;o&#x76;&#105;&#x63;&#105;&#x6e;&#97;&#x63;&#116;&#x69;&#111;&#110;&#x40;&#121;&#x61;&#104;&#x6f;&#111;&#x2e;&#102;r</a><br>
+			<b>Located at</b> <a href="source-class-MessageAlert.html#2-107" title="Go to source code">core/messageAlert.trait.php</a>
+		<br>
+	</div>
+
+
+
+	<table class="summary methods" id="methods">
+	<caption>Methods summary</caption>
+	<tr data-order="DisplayAlert" id="_DisplayAlert">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_DisplayAlert">#</a>
+		<code><a href="source-class-MessageAlert.html#10-39" title="Go to source code">DisplayAlert</a>( <span>string <var>$typeAlert</var></span>, <span>string <var>$titreAlert</var></span>, <span>string <var>$MsgAlert</var></span>, <span> <var>$lienBtn</var></span> )</code>
+
+		<div class="description short">
+			<p>Displays an alert message with a confirmation button</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Displays an alert message with a confirmation button</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$typeAlert</var></dt>
+					<dd>success, info, warning ou danger</dd>
+					<dt><var>$titreAlert</var></dt>
+					<dd>Title alert</dd>
+					<dt><var>$MsgAlert</var></dt>
+					<dd>Alert message</dd>
+					<dt><var>$lienBtn</var></dt>
+					<dd></dd>
+				</dl></div>
+
+
+
+				<h4>Lienbtn</h4>
+				<div class="list">
+						strinf $lienBtn url link to continue<br>
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="RequestConfirmation" id="_RequestConfirmation">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_RequestConfirmation">#</a>
+		<code><a href="source-class-MessageAlert.html#41-78" title="Go to source code">RequestConfirmation</a>( <span> <var>$action</var></span>, <span> <var>$titleAlert</var></span>, <span> <var>$linkBtnOk</var></span>, <span> <var>$linkCancelBtn</var></span>, <span> <var>$lang</var></span> )</code>
+
+		<div class="description short">
+			<p>Viewing a confirmation request with two two buttons (OK or Cancel)
+The display is managed by a bootstrap alert: colored according to levels 'warning', 'success' or 'alert'</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Viewing a confirmation request with two two buttons (OK or Cancel)
+The display is managed by a bootstrap alert: colored according to levels 'warning', 'success' or 'alert'</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$action</var></dt>
+					<dd>'warning', 'success' ou 'alert'</dd>
+					<dt><var>$titleAlert</var></dt>
+					<dd>Alert title</dd>
+					<dt><var>$linkBtnOk</var></dt>
+					<dd>Ok url link</dd>
+					<dt><var>$linkCancelBtn</var></dt>
+					<dd>Cancel url link</dd>
+					<dt><var>$lang</var></dt>
+					<dd></dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="DisplayResultRqt" id="_DisplayResultRqt">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_DisplayResultRqt">#</a>
+		<code><a href="source-class-MessageAlert.html#82-101" title="Go to source code">DisplayResultRqt</a>( <span>string <var>$bSauveOK</var></span>, <span>string <var>$lienBtn</var></span>, <span> <var>$successTitle</var> = <span class="php-quote">''</span></span>, <span> <var>$dangerTitle</var> = <span class="php-quote">''</span></span> )</code>
+
+		<div class="description short">
+			<p>Viewing query results by alert via bootstrap method "DisplayAlert"</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Viewing query results by alert via bootstrap method "DisplayAlert"</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$bSauveOK</var></dt>
+					<dd>= 'success' ou 'danger'</dd>
+					<dt><var>$lienBtn</var></dt>
+					<dd>$lienBrn HTML link to continue.</dd>
+					<dt><var>$successTitle</var></dt>
+					<dd></dd>
+					<dt><var>$dangerTitle</var></dt>
+					<dd></dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+	<div id="footer">
+		PHPScripts API documentation generated by <a href="http://apigen.org">ApiGen</a>
+	</div>
+</div>
+</div>
+<script src="resources/combined.js"></script>
+<script src="elementlist.js"></script>
+</body>
+</html>

@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>Class Admin | PHPScripts</title>
+
+	<link rel="stylesheet" href="resources/style.css?c2f33731c1948fbed7c333554678bfa68d4817da">
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+				<h3>Packages</h3>
+			<ul>
+				<li>
+					<a href="package-ADMIN.html">
+						ADMIN					</a>
+
+						</li>
+				<li>
+					<a href="package-BLOG.html">
+						BLOG					</a>
+
+						</li>
+				<li>
+					<a href="package-COMMON.html">
+						COMMON					</a>
+
+						</li>
+				<li>
+					<a href="package-None.html">
+						None					</a>
+
+						</li>
+				<li>
+					<a href="package-PHP.html">
+						PHP					</a>
+
+						</li>
+			</ul>
+		</div>
+
+		<hr>
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li class="active"><a href="class-Admin.html">Admin</a></li>
+			</ul>
+
+
+
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="">
+		<input type="hidden" name="ie" value="UTF-8">
+		<input type="text" name="q" class="text" placeholder="Search">
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li>
+<span>Package</span>			</li>
+			<li class="active">
+<span>Class</span>			</li>
+		</ul>
+		<ul>
+			<li>
+				<a href="tree.html" title="Tree view of classes, interfaces, traits and exceptions"><span>Tree</span></a>
+			</li>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<div id="content" class="class">
+	<h1>Class Admin</h1>
+
+
+	<div class="description">
+	<p>Classe Admin
+Back-office administration</p>
+	</div>
+
+	<dl class="tree">
+		<dd style="padding-left:0px">
+<b><span>Admin</span></b>			
+			
+			 uses 
+					<a href="class-MessageAlert.html"><span>MessageAlert</span></a>, 
+			
+					<a href="class-CommunDbRequest.html"><span>CommunDbRequest</span></a>
+			
+		</dd>
+	</dl>
+
+
+
+
+
+
+
+
+	<div class="info">
+		
+		
+		
+		<b>Package:</b> <a href="package-ADMIN.html">ADMIN</a><br>
+
+				<b>Author:</b>
+				Ludovic <a href="&#109;&#97;&#x69;&#108;&#x74;&#111;&#x3a;&#108;&#x75;&#100;o&#x76;&#105;&#x63;&#105;&#x6e;&#97;&#x63;&#116;&#x69;&#111;&#110;&#x40;&#121;&#x61;&#104;&#x6f;&#111;&#x2e;&#102;r">&#108;&#x75;&#100;o&#x76;&#105;&#x63;&#105;&#x6e;&#97;&#x63;&#116;&#x69;&#111;&#110;&#x40;&#121;&#x61;&#104;&#x6f;&#111;&#x2e;&#102;r</a><br>
+				<b>Version:</b>
+				1.2<br>
+			<b>Located at</b> <a href="source-class-Admin.html#4-207" title="Go to source code">core/admin/admin.class.php</a>
+		<br>
+	</div>
+
+
+
+	<table class="summary methods" id="methods">
+	<caption>Methods summary</caption>
+	<tr data-order="__construct" id="___construct">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#___construct">#</a>
+		<code><a href="source-class-Admin.html#16-18" title="Go to source code">__construct</a>( )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getSetting" id="_getSetting">
+
+		<td class="attributes"><code>
+			 public 
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getSetting">#</a>
+		<code><a href="source-class-Admin.html#22-33" title="Go to source code">getSetting</a>( )</code>
+
+		<div class="description short">
+			<p>Get general setting (used by __construct)</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Get general setting (used by __construct)</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					array<br>settings values
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="selectDistinctOptionSelect" id="_selectDistinctOptionSelect">
+
+		<td class="attributes"><code>
+			 public 
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_selectDistinctOptionSelect">#</a>
+		<code><a href="source-class-Admin.html#36-49" title="Go to source code">selectDistinctOptionSelect</a>( <span>string <var>$sTable</var></span> )</code>
+
+		<div class="description short">
+			<p>Home select input values feed</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Home select input values feed</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$sTable</var></dt>
+					<dd>name column to distinct</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					array<br>The distincts values
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="save_setting" id="_save_setting">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_save_setting">#</a>
+		<code><a href="source-class-Admin.html#51-67" title="Go to source code">save_setting</a>( <span>string <var>$lang</var></span>, <span>string <var>$host</var></span> )</code>
+
+		<div class="description short">
+			<p>General setting save</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>General setting save</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$lang</var></dt>
+					<dd>language</dd>
+					<dt><var>$host</var></dt>
+					<dd>website adress</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getAllTranslations" id="_getAllTranslations">
+
+		<td class="attributes"><code>
+			 public 
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getAllTranslations">#</a>
+		<code><a href="source-class-Admin.html#70-81" title="Go to source code">getAllTranslations</a>( )</code>
+
+		<div class="description short">
+			<p>Translations get</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Translations get</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					array<br>all transaction
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getSearchTranslations" id="_getSearchTranslations">
+
+		<td class="attributes"><code>
+			 public 
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getSearchTranslations">#</a>
+		<code><a href="source-class-Admin.html#83-112" title="Go to source code">getSearchTranslations</a>( <span>string <var>$search_mod</var></span>, <span>string <var>$search_lang</var></span>, <span>string <var>$search_office</var></span>, <span>string <var>$search_type</var></span> )</code>
+
+		<div class="description short">
+			<p>Transactions research sort by :</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Transactions research sort by :</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$search_mod</var></dt>
+					<dd>module filtering parameter</dd>
+					<dt><var>$search_lang</var></dt>
+					<dd>langauge filtering parameter</dd>
+					<dt><var>$search_office</var></dt>
+					<dd>back or front filtering parameter</dd>
+					<dt><var>$search_type</var></dt>
+					<dd>Type filtering parameter</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					array<br>filtred translation
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="filterPostValues" id="_filterPostValues">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_filterPostValues">#</a>
+		<code><a href="source-class-Admin.html#114-137" title="Go to source code">filterPostValues</a>( )</code>
+
+		<div class="description short">
+			<p>Filter the input values (for translation page) and put it in $_SESSION variables</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Filter the input values (for translation page) and put it in $_SESSION variables</p>
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="UpdateTranslation" id="_UpdateTranslation">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_UpdateTranslation">#</a>
+		<code><a href="source-class-Admin.html#158-183" title="Go to source code">UpdateTranslation</a>( )</code>
+
+		<div class="description short">
+			<p>Update Translations in database</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Update Translations in database</p>
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="CreateTranslation" id="_CreateTranslation">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_CreateTranslation">#</a>
+		<code><a href="source-class-Admin.html#186-204" title="Go to source code">CreateTranslation</a>( )</code>
+
+		<div class="description short">
+			<p>Insert translation data in database.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Insert translation data in database.</p>
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+	<table class="summary used">
+	<caption>Methods used from <a href="class-MessageAlert.html#methods">MessageAlert</a></caption>
+	<tr>
+		<td><code>
+			<a href="class-MessageAlert.html#_DisplayAlert">DisplayAlert()</a>, 
+			<a href="class-MessageAlert.html#_DisplayResultRqt">DisplayResultRqt()</a>, 
+			<a href="class-MessageAlert.html#_RequestConfirmation">RequestConfirmation()</a>
+		</code></td>
+	</tr>
+	</table>
+	<table class="summary used">
+	<caption>Methods used from <a href="class-CommunDbRequest.html#methods">CommunDbRequest</a></caption>
+	<tr>
+		<td><code>
+			<a href="class-CommunDbRequest.html#_DeleteInformation">DeleteInformation()</a>, 
+			<a href="class-CommunDbRequest.html#_executeDbQuery">executeDbQuery()</a>, 
+			<a href="class-CommunDbRequest.html#_getItemTransation">getItemTransation()</a>
+		</code></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+
+
+
+	<table class="summary properties" id="properties">
+	<caption>Properties summary</caption>
+	<tr data-order="lang" id="$lang">
+		<td class="attributes"><code>
+			public static 
+			
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Admin.html#14" title="Go to source code"><var>$lang</var></a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$lang" class="anchor">#</a>
+				<code></code>
+			</div>
+		</td>
+	</tr>
+	</table>
+
+
+
+
+
+
+</div>
+
+	<div id="footer">
+		PHPScripts API documentation generated by <a href="http://apigen.org">ApiGen</a>
+	</div>
+</div>
+</div>
+<script src="resources/combined.js"></script>
+<script src="elementlist.js"></script>
+</body>
+</html>

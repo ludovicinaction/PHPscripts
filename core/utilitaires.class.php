@@ -31,6 +31,9 @@ Class Utilitaires{
 	  */
 	public function sendEmail($to, $sujet, $message_html, $from_name, $from_adr, $replay_name, $replay_adr){
 
+		//filter_var à utiliser pour chaque arguments passé en paramétre.
+
+
 		if (preg_match("#@(hotmail|live|msn).[a-z]{2,4}$#", $to))
 		{
 			$passage_ligne = "\n";

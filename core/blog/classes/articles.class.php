@@ -24,13 +24,13 @@ class Articles
 	
 	// Blog configuration attributes
 	
-	public $TotalNbrDisplay; // Total number of post to display 
+	private $TotalNbrDisplay; // Total number of post to display 
 	// BLOG settings
 	private $aff_xs;	// Cellphone display
 	private $aff_sm;	// Tablet
 	private $aff_md;	// Laptop
 	private $aff_lg;	// Desktop
-	public $art_page;	// Post number to display per page
+	private $art_page;	// Post number to display per page
 	private $ctrl_comm;	// Checking comments
 	private $mail_exp;	// Sender mail
 	private $name_exp;	// Return address
@@ -71,8 +71,7 @@ class Articles
 	}
 
 	
-	public function __construct(){
-		
+	public function __construct(){	
 		//Total number of articles to display for users
 		$sReq = 'SELECT count(id_art) as nbrTotArt FROM blog_articles WHERE DATE(date_pub_art) < DATE(NOW()) OR date_pub_art is null';
 
@@ -81,7 +80,6 @@ class Articles
 
 		// Read configuration
 		$aConfig = $this->ReadBlogConfig();
-
 	}
 
  /**
@@ -197,22 +195,17 @@ public function getCategoryData(){
 	  *
 	  * @param string $mode mode ('util' ou 'admin') Posts are displayed according to the date of publication.
 	  * @param int $parpage Number of items to be searched for a page
-	  * @param
+	  * @param int $cat Id category (sort of filter). if $cat=0 => All category.
 	  * @return array $aListeArticles The parameters of articles found
       *	@todo : Gérer les erreurs ou si aucun articles n'est trouvé
 	  */
-	public function ReadAllArticles($mode, $parpage=0, $cat)
+	public function ReadAllArticles($mode, $cat)
 	{
-		//if (isset($_POST['cat'])) $cat = filter_input(INPUT_POST, 'cat', FILTER_SANITIZE_NUMBER_INT);
-		//elseif (isset($_GET['cat'])) $cat = filter_input(INPUT_GET, 'cat', FILTER_SANITIZE_NUMBER_INT);
-		
-		//if (!isset($cat)) $cat=0;
+		//get $this->art_page
+		$aConfig=  $this->getConfigValues();
+		$parpage = (int) $aConfig['art_page'];
 		
 		$cat = (int) $cat;
-
-		//var_dump($cat);
-		//if (isset($_POST['cat'])) echo "<br>POST : {$_POST['cat']}<br>";
-		//elseif (isset($_GET['cat'])) echo "<br>GET : {$_GET['cat']}<br>";
 
 		if ( isset($cat) && $cat !=0  ) {
 			$aCrit['cat'] = $cat;
@@ -287,6 +280,7 @@ public function getCategoryData(){
 		//update TotalNbrDisplay (total number of post to display ) according a category or not
 		$this->nbrTotalArtDisplayed($sReq);
 		$NbrTotArt = $this->TotalNbrDisplay;
+
 
 		// set pagination index
 		if (isset($_GET['page']) && $_GET['page'] > 0 && $_GET['page'] < $NbrTotArt)
@@ -958,6 +952,7 @@ public function getConfigValues(){
 	$aConfigValues['name_exp']		= $this->name_exp;
 	$aConfigValues['name_reply']	= $this->name_reply;
 	$aConfigValues['mail_reply']	= $this->mail_reply;
+	$aConfigValues['total_nbr_display'] = $this->TotalNbrDisplay;
 
 	return $aConfigValues;
 

@@ -9,14 +9,6 @@ if (!isset($val_cat)) $val_cat=0;
 
 $val_cat = (int) $val_cat;
 
-/*
-        if (isset($_POST['cat'])) echo "<br>POST : {$_POST['cat']}<br>";
-        elseif (isset($_GET['cat'])) echo "<br>GET : {$_GET['cat']}<br>";
-        var_dump($val_cat);
-        echo "<br> blog.php?cat=$val_cat";
-*/
-
-
 echo "<form method='get' class='margintop70' action='blog.php?cat=$val_cat' />";
 
 echo "<div class='form-group'>";

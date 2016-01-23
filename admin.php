@@ -179,7 +179,7 @@ echo "<br><br><br><br><br>";
                 if (!isset($id)) {
 
                     // Search All posts without pagination and for all category
-                    $oArticles->ReadAllArticles('admin', 0, 0);
+                    $oArticles->ReadAllArticles('admin', 0);
 
                     // Display form
                     if ('yes' != isset($eng) && ('modif' == isset($a))) {

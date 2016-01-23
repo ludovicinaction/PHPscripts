@@ -73,12 +73,13 @@ setlocale(LC_TIME, "fr_FR", "fr_FR@euro", "fr", "FR", "fra_fra", "fra");
 		 
  <?php
  	$oAdmin = new Admin();
+ 	$oPagination = new Pagination();
+ 	// get administration vconfig values
  	$aSet = $oAdmin -> getSetting();
     $lang = $aSet['language'];
     $host = $aSet['websitehost'];
 
     $oArticles = new Articles;
-	$aConfigValues = $oArticles->getConfigValues();
 
 	if (!isset($id)){
 	    // Reading categories and combo display for selecting categories
@@ -86,58 +87,57 @@ setlocale(LC_TIME, "fr_FR", "fr_FR@euro", "fr", "FR", "fra_fra", "fra");
 		include 'core/blog/views/form-categories.php';    
 	}
 	
-	$oPagination = new Pagination();
-
 	if (isset($cat)) {
 		// If a category is specified then display the articles in this category
-		$nbrPerPage = $oArticles->art_page;
-		$oArticles->ReadAllArticles('util', $nbrPerPage , $cat);
-			
-		// Pagination
-		$nbTotArt = $oArticles->TotalNbrDisplay;
-		//var_dump($nbTotArt);
-
+		$oArticles->ReadAllArticles('util', $cat);	
+		$aConfigValues = $oArticles->getConfigValues();
 		include 'core/blog/views/display_all_articles.php';
+		
+		// Pagination
+		$nbTotArt = $aConfigValues['total_nbr_display'];
+		$nbrPerPage = $aConfigValues['art_page'];
 		$oPagination->DisplayPagination($nbTotArt, $nbrPerPage, 'blog.php', "cat=$cat");
 	}
 	elseif ((!isset($cat) OR $cat == 'Tous') AND !isset($id)) {
-		// If a selected category or 'All' is selected then display all articles (all categories)
-			
-		$nbrPerPage = $aConfigValues['art_page'];
-		$aArticles = $oArticles->ReadAllArticles('util', $nbrPerPage, 0);
-		$nbTotArt = $oArticles->TotalNbrDisplay;
+		// If no selected category or 'All' is selected then display all articles (all categories)	
+		$aArticles = $oArticles->ReadAllArticles('util', 0);
+
+		$aConfigValues = $oArticles->getConfigValues();
 		include 'core/blog/views/display_all_articles.php';
 
 		// Result Pagination
+		$nbTotArt = $aConfigValues['total_nbr_display'];
+		$nbrPerPage = $aConfigValues['art_page'];
   		$oPagination->DisplayPagination($nbTotArt, $nbrPerPage, 'blog.php', '');   
 	}
-		elseif (isset($id)){	
-			// Recording a comment or response (if entry form)
-			$aMsg = $oAdmin->getItemTransation('BLOG', 'FRONT', $lang, 'MSG_COMMENTS_PUBLISH'); 
+	// otherwise if a post is displaying
+	elseif (isset($id)){	
+		// Recording a comment or response (if entry form)
+		$aMsg = $oAdmin->getItemTransation('BLOG', 'FRONT', $lang, 'MSG_COMMENTS_PUBLISH'); 
 
-			if (isset($new)){
-				// Registration new comment.			
-				$oArticles->RecordNewComm($nom, $mail, $siteweb, $contenu, $id, 'new', $aMsg, $host);
-			}
+		if (isset($new)){
+			// Registration new comment.			
+			$oArticles->RecordNewComm($nom, $mail, $siteweb, $contenu, $id, 'new', $aMsg, $host);
+		}
 			
-			if (isset($rep)){
-				// Recording a response to a comment.
-				$oArticles->RecordNewComm($nom, $mail, $siteweb, $contenu, $rep, 'rep', $aMsg, $host);
-			}
+		if (isset($rep)){
+			// Recording a response to a comment.
+			$oArticles->RecordNewComm($nom, $mail, $siteweb, $contenu, $rep, 'rep', $aMsg, $host);
+		}
 
-			// Article display
-			if ( (!isset($rep)) && (!isset($new))  ){
+		// Article display
+		if ( (!isset($rep)) && (!isset($new))  ){
 
-				$aArticle = $oArticles->ReadOneArticle($id);
-				include 'core/blog/views/display-one-article.php';
+			$aArticle = $oArticles->ReadOneArticle($id);
+			include 'core/blog/views/display-one-article.php';
 				
-				// Displaying comments
-				$aComm = $oArticles->ReadComments($id);
-				include 'core/blog/views/display-comments.php';		
-			}				
-		} 
-	    unset($oArticles);
-		?>
+			// Displaying comments
+			$aComm = $oArticles->ReadComments($id);
+			include 'core/blog/views/display-comments.php';		
+		}				
+	} 
+    unset($oArticles);
+?>
 
 
   <!-- JavaScript

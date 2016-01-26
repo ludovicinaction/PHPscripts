@@ -79,7 +79,6 @@ trait CommunDbRequest{
   * @param boolean $bMsgResult true:display result DB; false : don't display message
   */
 public function executeDbQuery($sReq, $aData, $sMsg, $slinkOk, $bMsgResult=''){
-
 	$update = SPDO::getInstance()->prepare($sReq);
 
 	foreach ($aData as $key => $value) {
@@ -91,7 +90,9 @@ public function executeDbQuery($sReq, $aData, $sMsg, $slinkOk, $bMsgResult=''){
 				$bindName = $cle;
 				$bindValue = $val;
 
+				// if not PDO::PARAM_STR (PDO::PARAM_LOB, for example)
 				if ($type != 2) $update -> bindValue($cle, $val, $type);
+				//PDO::PARAM_STR bindvalue
 				elseif ($type == '' OR $type=2) $update -> bindValue($cle, $val);	
 			}
 		}

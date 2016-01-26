@@ -3,7 +3,7 @@ if (!isset($p_lang)) $p_lang = $lang;
 
 $aItems = $oAdmin->getItemTransation('BLOG', 'BACK', $p_lang, 'HOME');
 echo "<form role='form' action='admin.php' method='post'>";
-echo "<div class='margintop70'></div>"; 
+//echo "<div class='margintop70'></div>"; 
 
 
 echo "<div class='row'>";
@@ -34,11 +34,41 @@ echo "<div class='row'>";
 	 echo "<div class='form-group'>";
 	 	echo "<label class='control-label col-xs-2'>Host</label>";
 	    echo "<div class='col-xs-2'>";
-	    	echo "<input type='text' class='form-control input-xs' name='hostname' maxlength='100' value=$website />";
+	    	echo "<input type='text' class='form-control input-xs' name='hostname' maxlength='50' value=$website />";
 	    echo "</div>";
 	echo "</div>";
-
 echo "</div>";
+
+// SMTP send mail
+echo "<div class='row'>";
+	echo "<div class='form-group'>";
+	    echo "<label class='control-label col-xs-2'>SMTP</label>";
+	    echo "<div class='col-xs-2'>";
+	    	echo "<input type='text' class='form-control input-xs' name='smtp' maxlength='20' value=$smtp />";
+	    echo "</div>";
+	echo "</div>"; 
+echo "</div>";
+
+// Port send mail
+echo "<div class='row'>";
+	echo "<div class='form-group'>";
+	    echo "<label class='control-label col-xs-2'>Port</label>";
+	    echo "<div class='col-xs-2'>";
+	    	echo "<input type='text' class='form-control input-xs' name='port' maxlength='3' value=$port />";
+	    echo "</div>";
+	echo "</div>"; 
+echo "</div>";
+
+//Send mail adresse
+echo "<div class='row'>";
+	echo "<div class='form-group'>";
+	    echo "<label class='control-label col-xs-2'>Send mail</label>";
+	    echo "<div class='col-xs-2'>";
+	    	echo "<input type='email' class='form-control input-xs' name='sendmail' maxlength='100' value=$email_send />";
+	    echo "</div>";
+	echo "</div>"; 
+echo "</div>";
+
 
     //Bouton submit
 echo "<div class='row'>";
@@ -54,7 +84,7 @@ echo "<br>";
 echo "</div>";
 echo "<input type='hidden' name='val_update' value='true'>"; 
 
-	echo "</form>";
+echo "</form>";
 /*
 echo "<div class='row'>";
 	echo "<div class='col-sm-1 col-md-4 col-lg-4'></div>";

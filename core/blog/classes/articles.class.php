@@ -524,7 +524,7 @@ public function getCategoryData(){
 		$contents = $aDataclean['contenu'];
 		$id = $aDataclean['id'];
 		$id_art = (int) $_GET['id'];
-		//Fin filtrage
+		//end filtering
 
 		//Checking if comments are controlled
 		$result = SPDO::getInstance()->query('select * from blog_config');
@@ -559,7 +559,7 @@ public function getCategoryData(){
 			{  
 				// Answers already given a reply
 				$ref=$_POST['ref_rep'];	
-				//Recherche du ref_rep à utiliser pour une nouvelle réponse.
+				//sarch ref_rep tu use for a new answer.
 				for ($i=1 ; $i<100 ; $i++){
 					$reqCount = 'select count(id_rep) from blog_reply where id_commentaire=' . $id . ' and ref_rep='.$ref.$i;
 					$pRes = SPDO::getInstance()->query($reqCount);
@@ -574,8 +574,8 @@ public function getCategoryData(){
 			}
 			else 
 			{
-				//Réponse à un commentaire initial. Dans ce cas "ref_rep" égal l'id suivant
-				//$id correspond à id_com
+				//Answer to a initial comment. So "ref_rep" is next id
+				//$id is id_com
 				$iNbrRep = SPDO::getInstance()->query('select count(id_rep) from blog_reply where id_commentaire='.$id);			
 				$ref_rep =  $iNbrRep->fetchAll();
 				$ref_rep = (int)$ref_rep[0][0];
@@ -590,28 +590,6 @@ public function getCategoryData(){
 		
 		$notype=PDO::PARAM_STR;
 
-/*		$aBindVar = array(
-	 array(':datedebut'=>$datedeb, 'type'=>$notype)
-	 , array(':datefin'=>$datefin, 'type'=>$notype)
-	 , array(':nom'=>$nom, 'type'=>$type));	
-*/
-
-
-
-/*		$aBindVar = array(
-		array(':datej'=>$dDateJour, 'type'=>$notype)
-		,array(':nom'=>$nom, 'type'=>$notype)
-		,array(':mail'=>$mail, 'type'=>$notype)
-		,array(':web'=>$siteweb, 'type'=>$notype)
-		,array(':txt'=>$contents, 'type'=>$notype)
-		,array(':valid'=>$iValid, 'type'=>$notype)
-		,array(':id'=>$id, 'type'=>$notype)
-		,array(':photo'=>$img, 'type'=>PDO::PARAM_LOB)
-		,array(':type_photo'=>$typeimg, 'type'=>$notype)
-		,array(':ctrl_aff'=>$ctr_comm, 'type'=>$notype));		
-
-		if ($type_comm == 'rep' ) array_push($aBindVar, array(':ref_rep'=>$ref_rep, 'type'=>$notype));
-*/
 		$aBindVar = array(
 		array('type'=>$notype, ':datej'=>$dDateJour)
 		,array('type'=>$notype, ':nom'=>$nom)
@@ -619,37 +597,14 @@ public function getCategoryData(){
 		,array('type'=>$notype, ':web'=>$siteweb)
 		,array('type'=>$notype, ':txt'=>$contents)
 		,array('type'=>$notype, ':valid'=>$iValid)
-		,array('type'=>$notype, ':id'=>$id, )
+		,array('type'=>$notype, ':id'=>$id)
 		,array('type'=>PDO::PARAM_LOB, ':photo'=>$img)
 		,array('type'=>$notype, ':type_photo'=>$typeimg)
 		,array('type'=>$notype,':ctrl_aff'=>$ctr_comm));	
 
 		if ($type_comm == 'rep' ) array_push($aBindVar, array('type'=>$notype, ':ref_rep'=>$ref_rep));
 
-		$resultOK = $this->executeDbQuery($sReq, $aBindVar, '', '', false);
-		//$resultOK = false;
-
-/*		 
-		$rqt = SPDO::getInstance()->prepare($sReq);
-		
-		$rqt -> bindValue(':datej', $dDateJour);
-		$rqt -> bindValue(':nom', $nom);
-		$rqt -> bindValue(':mail', $mail);
-		$rqt -> bindValue(':web', $siteweb);
-		$rqt -> bindValue(':txt', $contents);
-		$rqt -> bindValue(':valid', $iValid);
-		$rqt -> bindValue(':id', $id);
-		if ($type_comm == 'rep' ) $rqt -> bindValue(':ref_rep', $ref_rep);
-		$rqt -> bindValue(':photo', $img, PDO::PARAM_LOB);
-		$rqt -> bindValue(':type_photo', $typeimg);
-		$rqt -> bindValue(':ctrl_aff', $ctr_comm);
-
-		try {
-			$resultOK = $rqt->execute();
-		}catch (PDOException $e){
-			echo $e->getMessage();
-		}
-*/		
+		$resultOK = $this->executeDbQuery($sReq, $aBindVar, '', '', false);	
 
 		unset($oImg);
 
@@ -806,7 +761,7 @@ public function getCategoryData(){
 		$_SESSION['texte_article'] = $_POST['texte_article'];
 
 		$image = $_FILES['vignette']['name'];
-		if ( $image != '' ) $this->FileMove('vignette');
+		if ( $image != '' ) $this->FileMove('vignette', 'BLOG', 'BACK');
 	}
     
 

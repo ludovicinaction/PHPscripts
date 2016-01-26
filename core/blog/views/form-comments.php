@@ -13,7 +13,6 @@ $sLang = filter_var($_SESSION['lang'], FILTER_SANITIZE_STRING);
 //Items Translation
 $aItems = $oAdmin->getItemTransation('BLOG', 'FRONT', $sLang, 'FORM1');
 
-
 if (!$bFormNew){
 
 	if (isset($aArticle['id_com'])) $id_com = $aArticle['id_com'];
@@ -23,17 +22,19 @@ if (!$bFormNew){
 	if ($bCom) $nom_com = $val['nom_com'];
 	else $nom_com = $repval['nom_rep'];
 }	
+
+
 	
 if ($bFormNew) {
 	echo '<form enctype=\'multipart/form-data\' action=blog.php?id=' . $_GET['id'] . '&new=1 method=\'post\' class=\'col-md-6 col-lg-6 well\'>';
 }
 else{	
-	if ( !isset($repval) ) $id_com = $id;
-	else $id_com = $repval['id_commentaire'];	// necessaire lors de l'INSERT dans blog_reply.id_commentaire	
-	
+	$id_com = $val['id_com'];
+
 	$id_art = $aArticle['art']['id_art'];
 
 	echo "<form enctype='multipart/form-data' action='blog.php?id=$id_art&rep=$id_com' method='post' class='col-md-12 col-lg-12 well'>";
+
 	}
 
 	if (!$bFormNew) echo "<legend> {$aItems[$sLang]['txt_frm_res']} $nom_com</legend>";

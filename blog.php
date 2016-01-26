@@ -18,6 +18,17 @@ setlocale(LC_TIME, "fr_FR", "fr_FR@euro", "fr", "FR", "fra_fra", "fra");
 	<meta charset="utf-8">
         
 	<?php
+	// Get administration setting
+    $oAdmin = new Admin();      
+    $aSet = $oAdmin -> getSetting();
+    $smtp = $aSet['smtp_sendmail'];
+    $port = $aSet['port_sendmail'];
+    $email_send = $aSet['email_sendmail'];
+
+    ini_set('SMTP', $smtp);
+    ini_set('smtp_port', $port);
+    ini_set('sendmail_from', $email_send);
+
 	// Filtering $_GET et $_POST variables
 	$id 	= filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
 	$cat 	= filter_input(INPUT_GET, 'cat', FILTER_SANITIZE_NUMBER_INT);
@@ -119,7 +130,7 @@ setlocale(LC_TIME, "fr_FR", "fr_FR@euro", "fr", "FR", "fra_fra", "fra");
 			// Registration new comment.			
 			$oArticles->RecordNewComm($nom, $mail, $siteweb, $contenu, $id, 'new', $aMsg, $host);
 		}
-			
+		
 		if (isset($rep)){
 			// Recording a response to a comment.
 			$oArticles->RecordNewComm($nom, $mail, $siteweb, $contenu, $rep, 'rep', $aMsg, $host);

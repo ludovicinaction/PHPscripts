@@ -104,11 +104,7 @@ $oMetaArt = new Articles;
 
        
 
-       /*
-         * *****************************
-         * "BLOG" MODULE ADMINISTATION
-         * *****************************
-         */
+
 
 echo "<br><br><br><br><br>";
 
@@ -117,8 +113,25 @@ echo "<br><br><br><br><br>";
         $aSet = $oAdmin -> getSetting();
         $lang = $aSet['language'];
         $website = $aSet['websitehost'];
+        $smtp = $aSet['smtp_sendmail'];
+        $port = $aSet['port_sendmail'];
+        $email_send = $aSet['email_sendmail'];
+
+        ini_set('SMTP', $smtp);
+        ini_set('smtp_port', $port);
+        ini_set('sendmail_from', $email_send);
 
         $aItems = $oAdmin->getItemTransation('BLOG', 'BACK', $lang, 'HOME');
+
+
+
+       /*
+         * *****************************
+         * "BLOG" MODULE ADMINISTATION
+         * *****************************
+         */
+
+
 
        // $_GET filtering variables
        // p:page ( module name )
@@ -154,6 +167,9 @@ echo "<br><br><br><br><br>";
         //Filter $_POST values
         $p_lang      = filter_input(INPUT_POST, 'opt-lang', FILTER_SANITIZE_STRING);
         $p_host      = filter_input(INPUT_POST, 'hostname', FILTER_SANITIZE_STRING);
+        $p_smtp      = filter_input(INPUT_POST, 'smtp', FILTER_SANITIZE_STRING);
+        $p_port      = filter_input(INPUT_POST, 'port', FILTER_SANITIZE_NUMBER_INT);
+        $p_mailsend  = filter_input(INPUT_POST, 'sendmail', FILTER_SANITIZE_STRING);
         //translations
         $search_module = filter_input(INPUT_POST, 'search_module', FILTER_SANITIZE_STRING);
         $search_lang = filter_input(INPUT_POST, 'search_lang', FILTER_SANITIZE_STRING);
@@ -167,7 +183,7 @@ echo "<br><br><br><br><br>";
         if ( !isset($p) && $_SESSION['loginOK'] === true ) {
             if ($bUpdate == FALSE) include 'core/admin/view/home-view.php';
 
-            if ($bUpdate) $oAdmin->save_setting($p_lang, $p_host);
+            if ($bUpdate) $oAdmin->save_setting($p_lang, $p_host, $p_smtp, $p_port, $p_mailsend);
         }   
         elseif (isset($p) && 'gest_art' === $p && $_SESSION['loginOK'] === true) {
             

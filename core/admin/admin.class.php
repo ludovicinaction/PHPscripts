@@ -19,11 +19,6 @@ class Admin{
 
 
 
-
-
-
-
-
  /**
   * Get général setting
   *
@@ -58,12 +53,23 @@ public function selectDistinctOptionSelect($sTable){
   *
   * @param string $lang language
   * @param string $host website adress
+  * @param string $smtp SMTP send mail
+  * @param int $port port send mail
+  * @param string $email_send Send mail adress
   */
-public function save_setting($lang, $host)
+public function save_setting($lang, $host, $smtp, $port, $email_send)
 {
 	self::$lang = $lang;
-	$sReq = 'UPDATE adm_common SET language=' . "'$lang'" . ', websitehost= ' . "'$host'";
-    $aData = array(array ('type'=>PDO::PARAM_STR, ':lang'=>"'$lang'"));
+
+	$sReq = "UPDATE adm_common SET language =:lang, websitehost = :webhost, smtp_sendmail= :smtp, port_sendmail = :port_sendmail, email_sendmail = :email_sendmail";
+
+    $aData = array(array ('type'=>PDO::PARAM_STR, ':lang'=>"'$lang'")
+    	, array ('type'=>PDO::PARAM_STR, ':lang'=>$lang)
+    	, array ('type'=>PDO::PARAM_STR, ':webhost'=>$host)
+    	, array ('type'=>PDO::PARAM_STR, ':smtp'=>$smtp)
+    	, array ('type'=>PDO::PARAM_STR, ':port_sendmail'=>$port)
+    	, array ('type'=>PDO::PARAM_STR, ':email_sendmail'=>$email_send)
+    	);
     $aItems = $this->getItemTransation('BLOG', 'BACK', $lang, 'HOME');
     
     $this -> executeDbQuery($sReq, $aData, '', 'admin.php', true);  
@@ -175,7 +181,7 @@ public function UpdateTranslation(){
 	$id_trans = $aVar['id_trans']; 
 
 	$sReq = 'UPDATE adm_translation set module = :module, lang=:lang, office=:office, type=:type, description=:description, texte=:translation where id=' . $id_trans;
-	//$aData = array (':module'=>$module, ':lang'=>$lang, ':office'=>$office, ':type'=>$type, ':description'=>$desc, ':translation'=>$trans);
+
 	$aData = array(
 		array('type'=>PDO::PARAM_STR, ':module'=>$module)
 		, array('type'=>PDO::PARAM_STR, ':lang'=>$lang)
@@ -183,9 +189,6 @@ public function UpdateTranslation(){
 		, array('type'=>PDO::PARAM_STR, ':type'=>$type)
 		, array('type'=>PDO::PARAM_STR, ':description'=>$desc)
 		, array('type'=>PDO::PARAM_STR, ':translation'=>$trans));
-
-//$aData = array (':module'=>$module, ':lang'=>$lang, ':office'=>$office, ':type'=>$type, ':description'=>$desc, ':translation'=>$trans);
-
 
 	$aItems = $this->getItemTransation('BLOG', 'BACK', $lang, 'MSG_TRANS');
 	$this -> executeDbQuery($sReq, $aData, $aItems[$lang]['msg_update_confirm'], 'admin.php?p=trans&a=adm_trans&c=init', true); 

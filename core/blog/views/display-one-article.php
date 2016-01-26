@@ -1,7 +1,7 @@
 
 <?php
 /**
- * Affichage HTML d'un article
+ * Display a post
  * @package BLOG
  * @category Vue du module "Blog"
  */

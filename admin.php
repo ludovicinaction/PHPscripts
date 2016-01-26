@@ -128,7 +128,10 @@ echo "<br><br><br><br><br>";
             // c: Choice (display, valid, delete)
             $c       = filter_input(INPUT_GET, 'c', FILTER_SANITIZE_STRING);
             
-            
+            // category criterion
+            $cat    = filter_input(INPUT_POST, 'cat', FILTER_SANITIZE_NUMBER_INT);
+            $begindate = filter_input(INPUT_POST, 'begindate', FILTER_SANITIZE_STRING);
+            $enddate = filter_input(INPUT_POST, 'enddate', FILTER_SANITIZE_STRING);
             // eng :Registration Application / conf : recording validation
             $eng     = filter_input(INPUT_GET, 'eng', FILTER_SANITIZE_STRING);
             $conf    = filter_input(INPUT_GET, 'conf', FILTER_SANITIZE_STRING);
@@ -179,7 +182,7 @@ echo "<br><br><br><br><br>";
                 if (!isset($id)) {
 
                     // Search All posts without pagination and for all category
-                    $oArticles->ReadAllArticles('admin', 0);
+                    $oArticles->ReadAllArticles('admin', $cat);
 
                     // Display form
                     if ('yes' != isset($eng) && ('modif' == isset($a))) {

@@ -51,6 +51,7 @@ class Articles
   *
   */
 	public function getPostData() {
+		$aDataClean = array();
 		$aFilter = array('id_art'=>FILTER_VALIDATE_INT
 			, 'contenu'=>FILTER_SANITIZE_STRING
 			, 'titre_art'=>FILTER_SANITIZE_STRING
@@ -201,6 +202,8 @@ public function getCategoryData(){
 	  */
 	public function ReadAllArticles($mode, $cat)
 	{
+		if (isset($_GET['tri'])) $get_tri = filter_var($_GET['tri'], FILTER_SANITIZE_STRING);
+
 		//get $this->art_page
 		$aConfig=  $this->getConfigValues();
 		$parpage = (int) $aConfig['art_page'];
@@ -219,11 +222,12 @@ public function getCategoryData(){
 		} 
 
 		// Retrieving sorting criteria if they exist.
-		if (isset($_GET['tri'])){
-			if (isset($_POST['datedebut'])) $aCrit['datedebut'] = $_POST['datedebut'];
-			if (isset($_POST['datefin'])) $aCrit['datefin'] = $_POST['datefin'];
+		if (isset($get_tri)){
+			if (isset($_POST['begindate'])) $aCrit['datedebut'] = filter_var($_POST['begindate'], FILTER_SANITIZE_STRING);
+			if (isset($_POST['enddate'])) $aCrit['datefin'] = filter_var($_POST['enddate'], FILTER_SANITIZE_STRING);
 		}
 		
+
 		// Initialize sort variables
 		if (isset($aCrit))
 		{   
@@ -298,6 +302,9 @@ public function getCategoryData(){
 		elseif($mode == 'admin') {
 			$sReqSelect = 'SELECT id_art, titre_art, vignette_art, date_crea_art, DATE_FORMAT( date_pub_art , \'%d/%m/%Y\') AS date_pub_art, resum_art, keywords_art';			
 			$sReqFrom = ' FROM blog_articles inner join blog_cat_article on id_categorie=id_cat';
+
+			//if ($cat !=0) $sReqWhere = " WHERE id_categorie=$cat";
+
 			$sReqOrder = ' order by date_crea_art desc';
 		}
 		

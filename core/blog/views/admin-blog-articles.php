@@ -1,8 +1,8 @@
 <?php
 /**
- * Affichage HTML du formulaire BACK-END. Gestion des articles
+ * HTML Display back-office form. Item Management
  * @package BLOG
- * @category Vue du module "Blog"
+ * @category View blog module
  */
 
 $aItems = $oAdmin->getItemTransation('BLOG', 'BACK', $lang, 'SUBMENU_POST_ADMIN');
@@ -10,8 +10,8 @@ $aItems = $oAdmin->getItemTransation('BLOG', 'BACK', $lang, 'SUBMENU_POST_ADMIN'
 $aPostData = $oArticles->getPostData();
 $alistCat = $oArticles->getCategoryData();
 
-// Formulaire de tri
-echo "<div class='margintop70'></div>";
+// sorting form
+//echo "<div class='margintop70'></div>";
 
 echo "<div class='row'>";
 
@@ -22,16 +22,19 @@ echo "<form method='post' class='margintop70' action='admin.php?p=gest_art&a=mod
 			echo "<select class='form-control' name='cat' maxlength='30'>";
 			echo "<option value='0'> {$aItems[$lang]['lib_select_cat']} </option>";
 			foreach ($alistCat as $ligne=>$val){	
-				echo '<option value=\''.$val['id_cat'].'\'>' . $val['nom_cat'] . '</option>';
+				if ($cat == $val['id_cat']) echo '<option value=\''.$val['id_cat'].'\' selected>' . $val['nom_cat'] . '</option>';
+				else echo '<option value=\''.$val['id_cat'].'\'>' . $val['nom_cat'] . '</option>';
 			}
 			echo "</select>";
 
 		echo "</div>";
 		echo "<div class='col-xs-12 col-sm-3 col-md-2 col-lg-2 form-group'>";
 			echo "<label type='texte'>{$aItems[$lang]['lib_input_startdate']}</label>";
-			echo "<input type='text' name='datedebut' maxlength='10' class='form-control'>";
+			echo "<input type='text' name='begindate' maxlength='10' value='$begindate' class='form-control'>";
+			echo "<p class='help-block'><i>{$aItems[$lang]['date_format']}</i></p>";
 			echo "<label type='texte'>{$aItems[$lang]['lib_enddate']}</label>";
-			echo "<input type='text' name='datefin' maxlength='10' class='form-control'>";
+			echo "<input type='text' name='enddate' maxlength='10' value='$enddate' class='form-control'>";
+			echo "<p class='help-block'><i>{$aItems[$lang]['date_format']}</i></p>";
 		echo "</div>";
 	echo "</div>";
 
@@ -48,11 +51,11 @@ echo "</form>";
 echo "<br>";
 
 if (count($aPostData) == 0){
-	echo "Il n'y a aucun article enregistré.";
+	echo $aItems[$lang]['no_record_found'];
 } 
 else{
 
-	// Affichage du tableau de gestion des articles
+	// Viewing item management table
 	echo "<div class='row'>";
 		echo "<article class='col-sm-10 col-md-10 col-lg-10'>";	
 			echo "<table class='table table-bordered table-striped table-condensed'>";
@@ -65,7 +68,7 @@ else{
 					echo "</tr>";
 				echo "</thead>";
 
-		//Champs de tri de recherche			
+		// Search sort fields			
 		foreach ($aPostData as $ligne=>$val){
 			if ($lang == 'FR'){
 				$dDateCrea = utf8_encode($val['date_crea_art']);

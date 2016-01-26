@@ -18,7 +18,7 @@ if (count($aTrans) == 0){
 else{
 
 	echo "<div class='row'>";
-		echo "<article class='col-xs-12 col-sm-10 col-md-8 col-lg-10'>";	
+		echo "<article class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>";	
 			echo "<table class='table table-hover table-striped table-condensed '>";
 				echo "<thead>";
 					echo "<tr>";

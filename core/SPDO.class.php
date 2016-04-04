@@ -104,10 +104,15 @@ class SPDO
   public function prepare($query)
   {
     return $this->PDOInstance->prepare($query);
-  }
-  
+  }       
 
-  
+  public function beginTransaction(){
+    return $this->PDOInstance->beginTransaction();
+  }
+
+  public function lastInsertId(){
+    return $this->PDOInstance->lastInsertId();
+  }
 
   
   

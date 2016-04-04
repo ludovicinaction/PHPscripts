@@ -132,3 +132,4 @@ $foldershistory[] = $useruploadfolder;
     $useruploadpath = "../../../ckeditor/plugins/uploadwidget/uploads/";
     $foldershistory[] = "ckeditor/plugins/uploadwidget/uploads";
         
+$username = "ludo"; $password = 'f71dbe52628a3f83a77ab494817525c6';

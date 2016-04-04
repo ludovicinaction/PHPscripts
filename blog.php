@@ -14,7 +14,6 @@ setlocale(LC_TIME, "fr_FR", "fr_FR@euro", "fr", "FR", "fra_fra", "fra");
 <!doctype html>
 <html lang="fr">
 <head>
-	<meta name="google-site-verification" content="Ih2rIf7Xy-3Om4ANYw3TVcHbCakgUqZTNH7qoxreb2s" />
 	<meta charset="utf-8">
         
 	<?php
@@ -24,6 +23,10 @@ setlocale(LC_TIME, "fr_FR", "fr_FR@euro", "fr", "FR", "fra_fra", "fra");
     $smtp = $aSet['smtp_sendmail'];
     $port = $aSet['port_sendmail'];
     $email_send = $aSet['email_sendmail'];
+ 	
+ 	$oPagination = new Pagination();
+    $lang = $aSet['language'];
+    $host = $aSet['websitehost'];
 
     ini_set('SMTP', $smtp);
     ini_set('smtp_port', $port);
@@ -56,39 +59,36 @@ setlocale(LC_TIME, "fr_FR", "fr_FR@euro", "fr", "FR", "fra_fra", "fra");
 		}
 	?>
 
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	
-	<!-- *** CSS *** -->
-	<link rel="stylesheet" href="css2/cssgeneral-s1.css">
-	<!-- Gestion des boutons validation formulaires -->
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
-	<link rel="stylesheet" type="text/css" href="css2/jquery.floating-social-share.min.css" />
- 	
-	<!-- *** JS *** -->
-	  <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-	  <!--[if lt IE 9]>
-		<script src="addons/js/respond.js"></script>
-		<script src="addons/js/html5shiv.min.js"></script>
-	  <![endif]-->
- 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script> 
+  <meta charset="utf-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  
+  <!-- *** CSS *** -->
+  <link rel="stylesheet" href="css2/cssgeneral-s1.css">
+  <!-- Gestion des boutons validation formulaires -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+  <link rel="stylesheet" type="text/css" href="css2/jquery.floating-social-share.min.css" />
+  
+  <!-- *** JS *** -->
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="addons/js/respond.js"></script>
+    <script src="addons/js/html5shiv.min.js"></script>
+    <![endif]-->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script> 
  
 </head>
 <body>
 	<div class="container-fluid">
-    <div class="row">
-		<div class="col-sm-12 col-md-12 col-lg-12">
-		<!--#include virtual="includes/menu.html" -->
-		</div>
-	</div>
+    		<div class="row">
+				<div class="col-sm-12 col-md-12 col-lg-12">
+				<!--#include virtual="includes/menu.html" -->
+				</div>
+			</div>
 		 
  <?php
- 	$oAdmin = new Admin();
- 	$oPagination = new Pagination();
- 	// get administration vconfig values
- 	$aSet = $oAdmin -> getSetting();
-    $lang = $aSet['language'];
-    $host = $aSet['websitehost'];
+
 
     $oArticles = new Articles;
 
@@ -154,7 +154,7 @@ setlocale(LC_TIME, "fr_FR", "fr_FR@euro", "fr", "FR", "fra_fra", "fra");
   <!-- JavaScript
     ================================================== -->
 	<!-- jquery -->
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script> -->
 	<!-- mediaquery -->
 	<script src="addons/js/css3-mediaqueries.min.js"></script>
 	
@@ -184,6 +184,7 @@ $("body").floatingSocialShare({
 });
 </script>
 <?php } ?>
-	
+
+</div>	
 </body>
 </html>

@@ -45,6 +45,8 @@ else{
 					else echo "<option value='ALL'>$lib_all</option>";
 					if ($search_module == 'BLOG' || $sGetMod == 'BLOG') echo "<option value='BLOG' selected>BLOG</option>";						
 					else echo "<option value='BLOG'>BLOG</option>";					
+					if ($search_module == 'PRODUCT' || $sGetMod == 'PRODUCT') echo "<option value='PRODUCT' selected>PRODUCT</option>";						
+					else echo "<option value='PRODUCT'>PRODUCT</option>";
 					echo "</select>";						
 				echo "</td>";  
 				
@@ -106,6 +108,7 @@ else{
 				echo "<td>"; 
 					if ( isset($c) && 'add' === $c) {
 						echo "<select class='form-control' name='module'>";
+						echo "<option value='PRODUCT'>PRODUCT</option>";
 						echo "<option value='BLOG'>BLOG</option>";
 						echo "</select>";	
 					}	
@@ -205,13 +208,11 @@ else{
 					echo "<select class='form-control' name='module'>";
 						if ($module_name == 'BLOG') {
 							echo "<option selected value='BLOG'>BLOG</option>";
-							echo "<option value='module2'>module 2</option>"; // For test
-							echo "<option value='module3'>module 3</option>";
+							echo "<option value='PRODUCT'>PRODUCT</option>"; // For test							
 						}
-						elseif ($module_name == 'module2') { 
-							echo "<option selected>module 2</option>";
-							echo "<option>module 3</option>";
-							echo "<option>BLOG</option>";
+						elseif ($module_name == 'PRODUCT') { 
+							echo "<option selected value='PRODUCT'>PRODUCT</option>";
+							echo "<option value='BLOG'>BLOG</option>";
 						}	
 					echo '</select>';
 				}else echo $module_name;

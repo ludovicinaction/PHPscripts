@@ -47,7 +47,7 @@ trait CommunDbRequest{
   */
  public function DeleteInformation($req, $lien){
 	if (isset($_GET['token']) && isset($_SESSION['token']) && $_GET['token'] === $_SESSION['token']){
-		
+
 		$supp = SPDO::getInstance()->prepare($req);		
 		
 		 try {
@@ -90,9 +90,9 @@ public function executeDbQuery($sReq, $aData, $sMsg, $slinkOk, $bMsgResult=''){
 				$bindName = $cle;
 				$bindValue = $val;
 
-				// if not PDO::PARAM_STR (PDO::PARAM_LOB, for example)
+				// if it's not PDO::PARAM_STR (PDO::PARAM_LOB, for example)
 				if ($type != 2) $update -> bindValue($cle, $val, $type);
-				//PDO::PARAM_STR bindvalue
+				//else it's PDO::PARAM_STR bindvalue
 				elseif ($type == '' OR $type=2) $update -> bindValue($cle, $val);	
 			}
 		}
@@ -104,6 +104,9 @@ public function executeDbQuery($sReq, $aData, $sMsg, $slinkOk, $bMsgResult=''){
 	} catch(PDOException $e){
 		echo $e->getMessage();
 	}
+
+	if (!isset($resultOK)) $resultOK = false;
+	
 
 	if ($bMsgResult) {
 		$aMsg = $this->getItemTransation('BLOG', 'BACK', Admin::$lang, 'MSG_DB_RESULT');

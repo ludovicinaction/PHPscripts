@@ -23,7 +23,8 @@ foreach ($aArticles as $ligne => $val){
 	$vignette = $val['vignette_art'];
 	echo "<div class='col-xs-$iXs col-sm-$iSm col-md-$iMd col-lg-$iLg'>";
 		echo "<div class='thumbnail'>";						
-			echo '<a href=\'blog.php?id=' . $val['id_art'] . '\'><img src="data:image/jpeg;base64,'. base64_encode($vignette) .'" class=\'img-rounded\' /></a>';			
+			echo '<a href=\'blog.php?id=' . $val['id_art'] . '\'><img src="data:image/jpeg;base64,'. base64_encode($vignette) .'" class=\'img-rounded\'></a>';
+
 			echo "<div class='caption'>";
 				echo '<h6><b>' . $val['titre_art'] . '</b></h6>';
 				//For the "summary": we see only the first 90 characters around.				

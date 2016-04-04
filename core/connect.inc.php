@@ -4,6 +4,8 @@
   utiliser pour input_session et FILTER_VALIDATE_BOOLEAN
  *
  */
+//ob_start();
+
 
  $oAdmin = new Admin();  
      
@@ -43,8 +45,8 @@ if (isset($sloginEnter) && null !== $sloginEnter && isset($sPwdEnter) && $_SESSI
     $req = "select pwd_util from users where nom_util= :sloginEnter";
 
     if ($oSecure->verify_password_database($req, $sloginEnter, $sPwdEnter)) {
-        //
-        session_regenerate_id();
+        //ob_end_clean();
+        //session_regenerate_id();
         $_SESSION['loginOK'] = true;
         $_SESSION['nom'] = $sloginEnter;
     } else {

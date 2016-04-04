@@ -68,6 +68,7 @@ class Securite
 	 * @return : none ( create $_SESSION['token'] )
 	 */
 	public function create_token(){
+		date_default_timezone_set('Europe/Paris');
 		$sJeton = sha1(uniqid(rand(), true)) . date('YmdHis');
 		$_SESSION['token'] = $sJeton ; 
 	 }

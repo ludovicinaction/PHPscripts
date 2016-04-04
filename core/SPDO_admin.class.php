@@ -107,21 +107,21 @@ class SPDO
   {
     return $this->PDOInstance->prepare($query);
   }
-  
-
-  
-
-  
-  
- /* 
-  public function prepare($req, $tbValeur)
-  { //Il faut s'inspirer pour les requete de maj (update/insert) de la méthode "queryMany" du fichier SPDO2.class.php
-	  $bdd = self::getInstance();
-	  $res = $bdd->prepare($req);   
-	  $res = execute($tbValeur);
-	  $res->setFetchMode(PDO::FETCH_BOTH);
-	  return $res;
+ 
+ 
+  public function beginTransaction(){
+    return $this->PDOInstance->beginTransaction();
   }
-  */
-  
+
+  public function lastInsertId(){
+    return $this->PDOInstance->lastInsertId();
+  }
+
+  public function commit(){
+    return $this->PDOInstance->commit();
+  }
+
+  public function rollback(){
+    return $this->PDOInstance->rollback();
+  }
 }

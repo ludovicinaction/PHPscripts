@@ -1,12 +1,21 @@
 <?php
-require_once 'core/images.class.php';
-require_once 'core/Pagination.class.php';
+//set_include_path('/live_demo/core/;core/');
 
+require_once 'core/images.class.php';
+
+require_once 'core/Pagination.class.php';
 require_once 'core/messageAlert.trait.php';
 require_once 'core/fichier.trait.php';
-
 require_once 'core/Exception.class.php';
 require_once 'core/CommunDbRequest.trait.php';
+
+/*
+require_once 'Pagination.class.php';
+require_once 'messageAlert.trait.php';
+require_once 'fichier.trait.php';
+require_once 'Exception.class.php';
+require_once 'CommunDbRequest.trait.php';
+*/
 
 /**
  * Articles Class
@@ -103,7 +112,8 @@ class Articles
 	* @return string treated date
 	*/	
 	private function TraiteDateCreation($dDate){
-
+		date_default_timezone_set('Europe/Paris');
+		
 		if (Admin::$lang == 'FR'){
 			if (date('Y') == date('Y', strtotime($dDate))) 
 				$sDateTraite = strftime('%d %B', strtotime($dDate));
@@ -531,6 +541,7 @@ public function getCategoryData(){
 		$aConfig = $result->fetch(PDO::FETCH_ASSOC);
 		$ctr_comm = $aConfig['control_comm'];
 
+		date_default_timezone_set('Europe/Paris');
 		$dDateJour = date('Y-m-d H:i:s');
 		$iValid = 0; // By default, the comment is validated.
 
@@ -620,10 +631,11 @@ public function getCategoryData(){
 				$obj 		= $this->mail_obj; 
 				$from_name		= $this->name_exp;
 				$from_adr		= $this->mail_exp;
-				$replay_name	= $this->name_reply;
-				$replay_adr		= $this->mail_reply;
+				$replay_name	= '';
+				$replay_adr		= '';
 
 				// Insert token into mail
+				date_default_timezone_set('Europe/Paris');
 				$sJeton = md5(uniqid(rand(), true)) . date('YmdHis');
 
 				if ($type_comm == 'new') {
@@ -656,6 +668,7 @@ public function getCategoryData(){
 				// Send email
 				$oUtil = new Utilitaires();
 				$bSendOK = $oUtil -> sendEmail($mail, $obj, nl2br($mail_exp), $from_name, $from_adr, $replay_name, $replay_adr);				
+				//echo "mail : $mail / from_name : $from_name / from_adr : $from_adr";
 				if(!$bSendOK) $this->DisplayAlert('danger', $aMsg[Admin::$lang]['msg_conf_not_send'], '', "blog.php?id=$id_art");
 
 			}
@@ -813,6 +826,7 @@ public function getCategoryData(){
 		else $bVignette = false;
 			 
 		if ($action == 'creer') {
+			date_default_timezone_set('Europe/Paris');
 			$date_crea = date('Y-m-d H:i:s');
 			$sReq = "INSERT INTO blog_articles (titre_art, date_crea_art, date_pub_art, vignette_art, resum_art, keywords_art, contenu, id_categorie)";
 			$sReq.= " VALUES (:titre, :date_crea, :date_pub, :vignette_art, :resum, :keywords, :contenu, :id_cat)";
@@ -896,8 +910,6 @@ public function getCategoryData(){
 		$this->mail_obj = $aRequete['email_objet'];
 		$this->mail_txt = $aRequete['email_text'];
 		$this->name_exp = $aRequete['name_from'];
-		$this->name_reply = $aRequete['name_reply'];
-		$this->mail_reply = $aRequete['email_reply'];
 	 }
 
 
@@ -937,8 +949,6 @@ public function getConfigValues(){
 	 		,'mail_obj'=>$_POST['mail_obj']
 	 		,'mail_texte'=>$_POST['mail_texte']
 	 		,'name_exp'=>$_POST['name_exp']
-	 		,'name_reply'=>$_POST['name_reply']
-	 		,'mail_reply'=>$_POST['mail_reply']
 	 		);
 	 	
 	 	$aFiltres = array('xs'=>FILTER_VALIDATE_INT
@@ -951,8 +961,6 @@ public function getConfigValues(){
 	 		,'mail_obj'		=>FILTER_SANITIZE_STRING
 	 		,'mail_texte'	=>FILTER_FLAG_NO_ENCODE_QUOTES
 	 		,'name_exp'		=>FILTER_SANITIZE_STRING
-	 		,'name_reply'	=>FILTER_SANITIZE_STRING
-	 		,'mail_reply'	=>FILTER_VALIDATE_EMAIL
 	 		);
 	 	
 	 	$aDataClean = filter_var_array($aPost, $aFiltres);
@@ -960,7 +968,7 @@ public function getConfigValues(){
 
 		$sReq= "update blog_config set aff_xs = :aff_xs, aff_sm = :aff_sm, aff_md = :aff_md, aff_lg = :aff_lg";	
 		$sReq .= ", nbr_art_page = :nb_art, control_comm = :ctrl_comm, email_from = :email_from, email_objet = :email_obj, email_text = :email_txt";
-		$sReq .= ", name_from = :name_exp, name_reply = :name_reply, email_reply = :mail_reply";
+		$sReq .= ", name_from = :name_exp";
 
 		$aBindVar = array(
 			array('type'=>PDO::PARAM_INT, ':aff_xs'=> $aDataClean['xs'])
@@ -972,9 +980,7 @@ public function getConfigValues(){
 			, array('type'=>PDO::PARAM_STR, ':email_obj'=>$aDataClean['mail_obj'])
 			, array('type'=>PDO::PARAM_STR, ':email_txt'=>$aDataClean['mail_texte'])
 			, array('type'=>PDO::PARAM_INT, ':nb_art'=>$aDataClean['nbr_art'])
-			, array('type'=>PDO::PARAM_STR, ':name_exp'=>$aDataClean['name_exp'])
-			, array('type'=>PDO::PARAM_STR, ':name_reply'=>$aDataClean['name_reply'])
-			, array('type'=>PDO::PARAM_STR, ':mail_reply'=>$aDataClean['mail_reply']));
+			, array('type'=>PDO::PARAM_STR, ':name_exp'=>$aDataClean['name_exp']));
 
 		$this->executeDbQuery($sReq, $aBindVar, '', 'admin.php?p=gest_art&a=config&c=init', true);
 

@@ -49,8 +49,7 @@
 		$aResult = $sRequete->fetch(PDO::FETCH_ASSOC);		 
 
 		if ($aResult['jeton'] == $t) {
-
-			//echo utf8_decode("<h2>Merci pour votre validation.<br />Votre commentaire sera validé dans les 48 heures.<br /> A bientôt<h2>");
+			
 			$oAdmin->DisplayResultRqt(TRUE, 'blog.php', $aMsg[$lang]['msg_valid_email'], '');
 
 			$val_confirm = 1;
@@ -67,8 +66,7 @@
 			}
 			
 		}
-		else $oAdmin->DisplayResultRqt(FALSE, 'blog.php', '', $aMsg[$lang]['msg_notvalid_email']);
-		//else utf8_decode("<h2>Désolé, votre mail n'a pas pu être validé.<br />Veuillez contacter le webmaster de ce site.<br /> A bientôt</h2>");
+		else $oAdmin->DisplayResultRqt(FALSE, 'blog.php', '', $aMsg[$lang]['msg_notvalid_email']);	
 		?>
 
     </body>

@@ -66,7 +66,7 @@
 
         echo "<div class='form-group'>";
             echo "<label for='inputPassword' class='control-label col-xs-2'>{$aItems[$lang]['lib_input_desktop']}</label>";
-            echo "<div class='col-xs-4'>";
+            echo "<div class='col-xs-6'>";
                 echo "<select name='aff_lg'>";
                 for ($i=1 ; $i<13 ; $i++){
                     if ($iLg == $i) echo "<option value=$i selected> $iLg </option>";
@@ -115,22 +115,6 @@
         echo "<label class='control-label col-xs-2'>{$aItems[$lang]['lib_input_returnadr']}</label>";
         echo "<div class='col-xs-3'>";
             echo "<input type='email' class='form-control input-md' name='mail_exp' maxlength='100' value='$mail_exp' />";
-        echo "</div>"; 
-    echo "</div>";
- 
-    // Name answer
-    echo "<div class='form-group'>"; 
-        echo "<label class='control-label col-xs-2'>{$aItems[$lang]['lib_input_responseadr']}</label>";
-        echo "<div class='col-xs-3'>";
-            echo "<input type='text' class='form-control input-md' name='name_reply' maxlength='50' value='$name_reply' />";
-        echo "</div>"; 
-    echo "</div>";
-
-    // Email answer
-    echo "<div class='form-group'>"; 
-        echo "<label class='control-label col-xs-2'>{$aItems[$lang]['lib_adr_answer']}</label>";
-        echo "<div class='col-xs-3'>";
-            echo "<input type='email' class='form-control input-md' name='mail_reply' maxlength='100' value='$mail_reply' />";
         echo "</div>"; 
     echo "</div>";
            

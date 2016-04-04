@@ -1,5 +1,6 @@
 <?php
-
+require_once 'core/messageAlert.trait.php';
+require_once 'core/CommunDbRequest.trait.php';
 
 /**
  * Classe Admin

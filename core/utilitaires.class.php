@@ -30,6 +30,7 @@ Class Utilitaires{
 	  * @return bool Email send return (true=send is ok / false=send is ko)
 	  */
 	public function sendEmail($to, $sujet, $message_html, $from_name, $from_adr, $replay_name, $replay_adr){
+		$parts = explode("@", $from_adr);
 
 		//filter_var à utiliser pour chaque arguments passé en paramétre.
 
@@ -43,32 +44,26 @@ Class Utilitaires{
 		}
 
 		$boundary = "-----=".md5(rand());
-		//$message_html = nl2br($message_html);
 		$message_txt = strip_tags($message_html);
-
 		$message_html = utf8_decode($message_html);
 
-
-		$headers = "From: \"$from_name\"<$from_adr>" . $passage_ligne;
+		$headers = "MIME-Version: 1.0\r\n";
+		$headers .= "From: ".imap_rfc822_write_address($parts[0], $parts[1], $sujet)."\r\n";
 		$headers.= "Reply-to: \"$replay_name\" <$replay_adr>" . $passage_ligne;
-		$headers.= "MIME-Version: 1.0" . $passage_ligne;
-		$headers.= "Content-Type: multipart/alternative;" . $passage_ligne . " boundary=\"" . $boundary . "\"" . $passage_ligne;
+		$headers .= "Content-Type: multipart/alternative;boundary=" . $boundary . "\r\n";
 
-		$message = $passage_ligne . $boundary . $passage_ligne;
 
-		$message .= "Content-Type: text/plain; charset=\"ISO-8859-1\"" . $passage_ligne;
-		$message .= "Content-Transfer-Encoding: 8bit" . $passage_ligne;
-		$message .= $passage_ligne . $message_txt . $passage_ligne;
+		 $message .= "\r\n\r\n--" . $boundary . "\r\n";
+		 $message .= "Content-type: text/plain;charset=utf-8\r\n\r\n";
+		 $message .= $message_txt;
 
-		$message .= $passage_ligne . "--" . $boundary . $passage_ligne;
+		 $message .= "\r\n\r\n--" . $boundary . "\r\n";
+		 $message .= "Content-type: text/html;charset=utf-8\r\n\r\n";
+		 $message .= $message_html;
 
-		$message .= "Content-Type: text/html; charset=\"ISO-8859-1\"" . $passage_ligne;
-		$message .= "Content-Transfer-Encoding: 8bit" . $passage_ligne;
-		$message .= $passage_ligne . $message_html . $passage_ligne;
+		 $message .= "\r\n\r\n--" . $boundary . "--";
 
-		$message .= $passage_ligne . "--" . $boundary . "--" . $passage_ligne;
-		$message .= $passage_ligne . "--" . $boundary . "--" . $passage_ligne;
-
+		//return mail($to, $sujet, $message, $headers);
 		return mail($to, $sujet, $message, $headers);
 	}
 

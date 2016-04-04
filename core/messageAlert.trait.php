@@ -81,7 +81,7 @@ trait MessageAlert{
 	 /**
 	 * Viewing query results by alert via bootstrap method "DisplayAlert"
 	 *
-	 * @param string $bSauveOK = 'success' ou 'danger'
+	 * @param string $bSauveOK false (error) or true (success)
 	 * @param string $lienBrn HTML link to continue.
      */ 
 	 public function DisplayResultRqt($bSauveOK, $lienBtn, $successTitle='', $dangerTitle='')
@@ -98,8 +98,6 @@ trait MessageAlert{
 		}
 		$this -> DisplayAlert($typeAlert, $titreAlert, $MsgAlert, $lienBtn);		 
 	 }
-
-
 
 
 	

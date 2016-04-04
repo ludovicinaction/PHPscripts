@@ -7,5 +7,6 @@ This project aims to bring together PHP modules based on the following principle
     - Based on MVC structure.
     - Based on Boostrap for the display.
 
-For descriptions, demo, tutorial, see :
+![solarized palette](https://github.com/ludovicinaction/PHPscripts/blob/master/img/logo_php_scripts.jpg)
+For descriptions, demo, tutorial, SEE :
 http://phpscripts.website/	

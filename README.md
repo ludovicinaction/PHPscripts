@@ -1,12 +1,16 @@
+![solarized palette](https://github.com/ludovicinaction/PHPscripts/blob/master/img/logo_php_scripts.jpg)
 # PHPscripts
+The "PHPscripts" includes a modules assembly (shown below) all configurable through the "back-office". 
+This project is intended for all those who want to easily add functionality to a PHP website without a CMS and thus retain control over the code. 
+
 PHP modules based on PHP5.5, MVC design pattern, Bootstrap and CKEditor
 
-This project aims to bring together PHP modules based on the following principles :
+To date three modules are currently under development :
 
-    - a scalable OO Php code.
-    - Based on MVC structure.
-    - Based on Boostrap for the display.
+    - Ticket booking and payment (Paypal ExpressCheckout used)
+    - Blogging.
+    - Multilingual translation.
 
-![solarized palette](https://github.com/ludovicinaction/PHPscripts/blob/master/img/logo_php_scripts.jpg)
+
 For descriptions, demo, tutorial, SEE :
 http://phpscripts.website/	
